@@ -1,0 +1,14 @@
+26-09-2013 Gaetano F. Anastasi
+
+  * SmartFed 0.1.1 Released
+	* Better support for scheduling 
+	* Packaging
+	
+	
+13-03-2013 Emanuele Carlini
+
+  * SmartFed 0.1 Released  
+        * Basic functionalities as described in the following paper:
+            Gaetano F. Anastasi, Emanuele Carlini, and Patrizio Dazzi. 2013. Smart cloud federation simulations 
+            with CloudSim. In Proceedings of the first ACM workshop on Optimization techniques for resources 
+            management in clouds (ORMaCloud '13). ACM, New York, NY, USA, 9-16. DOI=10.1145/2465823.2465828 http://doi.acm.org/10.1145/2465823.2465828 

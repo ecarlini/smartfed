@@ -1,5 +1,5 @@
 /*
-Copyright 2013 ISTI-CNR
+Copyright 2014 ISTI-CNR
 
 This file is part of SmartFed.
 

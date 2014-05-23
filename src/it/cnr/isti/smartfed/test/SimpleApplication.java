@@ -1,5 +1,5 @@
 /*
-Copyright 2013 ISTI-CNR
+Copyright 2013 2014 ISTI-CNR
  
 This file is part of SmartFed.
 
@@ -33,6 +33,10 @@ import org.cloudbus.cloudsim.Vm;
 
 public class SimpleApplication extends Application
 {
+	/**
+	 * Application with a vertex containing a single VM 
+	 * @param userId
+	 */
 	public SimpleApplication(int userId)
 	{
 		List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();
@@ -51,6 +55,12 @@ public class SimpleApplication extends Application
 		}
 	}
 	
+	/**
+	 * Application Constructor 
+	 * @param userId
+	 * @param vertexNumber
+	 * @param customType
+	 */
 	public SimpleApplication (int userId, int vertexNumber, Vm customType)
 	{
 		List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();

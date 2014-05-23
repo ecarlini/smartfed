@@ -31,7 +31,11 @@ public class Experiment
 	protected InterfaceDataSet dataset;
 	protected long randomSeed;
 
-
+	/**
+	 * If using this constructor you should set manually the random seed for the experiment.
+	 * @param allocator
+	 * @param d
+	 */
 	public Experiment(AbstractAllocator allocator, InterfaceDataSet d)
 	{
 		this.allocator = allocator;

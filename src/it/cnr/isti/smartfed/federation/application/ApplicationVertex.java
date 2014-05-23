@@ -96,6 +96,12 @@ public class ApplicationVertex
 		construct(userId, cloudlets, vmtype);
 	}
 	
+	/**
+	 * Constructor for ApplicationVertex
+	 * @param userId
+	 * @param cloudlets
+	 * @param vmtype
+	 */
 	public ApplicationVertex(int userId, List<Cloudlet> cloudlets, VmType vmtype)
 	{
 		this("", userId, cloudlets, vmtype);

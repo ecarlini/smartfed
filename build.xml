@@ -1,5 +1,5 @@
 <project>
-    <property name="packageName" value="ContrailCloudSimExtension" /> 
+    <property name="packageName" value="SmartFed" /> 
     <property name="lib.dir"     value="lib"/>
     <property name="main-class"  value="it.cnr.isti.Main"/>
     <property name="test-class"  value="it.cnr.isti.test.Scalability"/>

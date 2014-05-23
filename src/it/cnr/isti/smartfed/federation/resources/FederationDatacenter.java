@@ -22,6 +22,7 @@ package it.cnr.isti.smartfed.federation.resources;
 
 import it.cnr.isti.smartfed.federation.CostComputer;
 import it.cnr.isti.smartfed.federation.FederationLog;
+import it.cnr.isti.smartfed.federation.resources.VmFactory.VmType;
 import it.cnr.isti.smartfed.federation.utils.UtilityPrint;
 
 import java.text.DecimalFormat;
@@ -273,7 +274,14 @@ public class FederationDatacenter extends Datacenter implements Comparable<Feder
 	 * @post $none
 	 */
 	protected void processVmCreate(SimEvent ev, boolean ack) {
-		VmTyped vm = (VmTyped) ev.getData();
+		VmTyped vm; 
+		try {
+			vm = (VmTyped) ev.getData();
+		}
+		catch (ClassCastException e){
+			Vm generic_vm = (Vm) ev.getData();
+			vm = new VmTyped(generic_vm, VmType.CUSTOM);
+		}
 
 		boolean result = getVmAllocationPolicy().allocateHostForVm(vm);
 

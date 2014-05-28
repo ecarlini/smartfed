@@ -30,20 +30,15 @@ import it.cnr.isti.smartfed.federation.resources.HostProfile.HostParams;
 import it.cnr.isti.smartfed.federation.utils.DistributionAssignment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.math3.distribution.AbstractIntegerDistribution;
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
-import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.cloudbus.cloudsim.Host;
-import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 
 public class DatacenterGenerator 
@@ -121,26 +116,46 @@ public class DatacenterGenerator
 	
 	/**
 	 * Generates the list of datacenters, and assigns the host to datacenters according
-	 * the given distribution. If a datacenter will result with 0 hosts, it will not
-	 * be created.
-	 * @param numOfDatacenters
-	 * @param numHost
+	 * the given distribution. 
+	 * 
+	 * Note that a distribution can very well assign zero hosts to a datacenter.
+	 * However, since cloudsim does not support zero-host datacenter, we do not create 
+	 * the empty datacenters.
+	 * 
+	 * @param approxNumberDatacenters - the approximate total number of datacenters that will be created
+	 * @param numberTotalHost - the total number of host in all datacenters
 	 * @param distribution
 	 * @return
 	 */
-	public List<FederationDatacenter> getDatacenters(int numOfDatacenters, int numHost, AbstractRealDistribution distribution)
+	public List<FederationDatacenter> getDatacenters(int approxNumberDatacenters, int numberTotalHost, AbstractRealDistribution distribution)
 	{
+		
 		// create the list
-		List<FederationDatacenter> list = new ArrayList<FederationDatacenter>(numOfDatacenters);
+		List<FederationDatacenter> list = new ArrayList<FederationDatacenter>(approxNumberDatacenters);
 		
 		// Here get the assignment vector
-		int[] assign = DistributionAssignment.getAssignmentArray(numOfDatacenters, numHost, distribution);
+		int[] assign = DistributionAssignment.getAssignmentArray(approxNumberDatacenters, numberTotalHost, distribution);
 		
-		for (int i=0; i<numOfDatacenters; i++)
+		for (int i=0; i<approxNumberDatacenters; i++)
 		{
-			if (assign[i] == 0)
+			if (assign[i] <= 0)
 				continue;
 			
+			// create the datacenters
+			FederationDatacenterProfile profile = FederationDatacenterProfile.getDefault();
+			profile.set(DatacenterParams.COST_PER_BW, costPerBw.sample()+"");
+			profile.set(DatacenterParams.COST_PER_STORAGE, costPerSto.sample()+"");
+			// profile.set(DatacenterParams.COST_PER_SEC, costPerSec.sample()+"");
+			profile.set(DatacenterParams.COST_PER_SEC, "0");
+			profile.set(DatacenterParams.COST_PER_MEM, costPerMem.sample()+"");
+			
+			// create the storage
+			List<Storage> storageList = new ArrayList<Storage>(); // if empty, no SAN attached
+			
+			// create the hosts
+			List<Host> hostList = new ArrayList<Host>();
+			
+
 			// create the virtual processor (PE)
 			List<Pe> peList = new ArrayList<Pe>();
 			int numCore = coreAmount.sample();
@@ -152,7 +167,6 @@ public class DatacenterGenerator
 			}
 			
 			// create the hosts
-			List<Host> hostList = new ArrayList<Host>();
 			HostProfile prof = HostProfile.getDefault();
 			
 			prof.set(HostParams.RAM_AMOUNT_MB, ramAmount.sample()+"");
@@ -164,19 +178,9 @@ public class DatacenterGenerator
 			{
 				hostList.add(HostFactory.get(prof, peList));
 			}
-			
-			// create the storage
-			List<Storage> storageList = new ArrayList<Storage>(); // if empty, no SAN attached
-			
-			// create the datacenters
-			FederationDatacenterProfile profile = FederationDatacenterProfile.getDefault();
-			profile.set(DatacenterParams.COST_PER_BW, costPerBw.sample()+"");
-			profile.set(DatacenterParams.COST_PER_STORAGE, costPerSto.sample()+"");
-			// profile.set(DatacenterParams.COST_PER_SEC, costPerSec.sample()+"");
-			profile.set(DatacenterParams.COST_PER_SEC, "0");
-			profile.set(DatacenterParams.COST_PER_MEM, costPerMem.sample()+"");
-			
-			list.add(FederationDatacenterFactory.get(profile, hostList, storageList));
+
+			// populate the list
+			list.add(FederationDatacenterFactory.get(profile, hostList, storageList));		
 		}
 		
 				

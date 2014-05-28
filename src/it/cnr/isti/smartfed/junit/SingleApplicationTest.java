@@ -75,8 +75,8 @@ public class SingleApplicationTest
 	{
 		data = new TestDataset();
 		expectedResult = (new Double(vmMem) * Double.parseDouble(costPerMem) / 1024) +
-				(new Double(vmDisk) * Double.parseDouble(costPerStorage) / 1024); 
-				//  + (new Double(cpu) * Double.parseDouble(costPerCPU)); 
+				(new Double(vmDisk) * Double.parseDouble(costPerStorage) / 1024)
+				 + (new Double(cpu) * Double.parseDouble(costPerCPU)); 
 	}
 	
 	@Before

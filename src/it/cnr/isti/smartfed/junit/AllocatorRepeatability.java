@@ -65,6 +65,9 @@ public class AllocatorRepeatability
 		// create the datacenter
 		DatacenterGenerator dg = new DatacenterGenerator(124);
 		datacenters = dg.getDatacenters(10, 20);
+		for (FederationDatacenter c : datacenters){
+			System.out.println(c.getId());
+		}
 		
 		// create the application
 		ApplicationGenerator ag = new ApplicationGenerator(1235566);

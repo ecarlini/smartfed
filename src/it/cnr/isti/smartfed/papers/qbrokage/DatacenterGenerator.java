@@ -103,7 +103,7 @@ public class DatacenterGenerator
 	}
 
 	/**
-	 * Generates the list of datacenters, and assigns the host to datacenters according
+	 * Generates the list of datacenters by assigning hosts to datacenters according
 	 * to a uniform distribution. If a datacenter will result with 0 hosts, it will not
 	 * be created.
 	 * 

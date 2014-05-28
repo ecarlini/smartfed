@@ -175,9 +175,9 @@ class InternalDefaultConfiguration extends Configuration implements ICloneable {
 		super("", "");
 		
 		if (JGAPMapping.MUTATION == 0 || JGAPMapping.CROSSOVER == 0){
-			throw new RuntimeException();
-			// JGAPMapping.MUTATION = 10;
-			// JGAPMapping.CROSSOVER = 0.35;
+			// throw new RuntimeException();
+			JGAPMapping.MUTATION = 10;
+			JGAPMapping.CROSSOVER = 0.35;
 		}
 		
 		BestChromosomesSelector bestSelector;

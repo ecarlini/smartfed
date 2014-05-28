@@ -46,7 +46,7 @@ import org.cloudbus.cloudsim.Vm;
  * This class also contains the method to get the associated VM from
  * a cloudlet, and viceversa.
  * 
- * @author carlini, gae
+ * @author carlini, anastasi
  *
  */
 public class ApplicationVertex

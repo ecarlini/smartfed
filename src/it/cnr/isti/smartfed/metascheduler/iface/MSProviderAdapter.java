@@ -143,6 +143,7 @@ public class MSProviderAdapter {
 	}
 	
 	public static IMSProvider findProviderById(List<IMSProvider> providerList, Integer providerID) {
+		System.out.println("MSPROVIDERADAPTER " + providerID);
 		return providerList.get(providerID-3);
 	}
 

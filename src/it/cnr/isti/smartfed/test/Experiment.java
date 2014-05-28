@@ -144,7 +144,7 @@ public class Experiment
 				TestResult.getBerger().addValue(Math.log(total / budget));
 			}
 			else
-				System.out.println("PUPAZZA");
+				System.out.println("Not completed");
 		}
 		
 	}

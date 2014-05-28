@@ -45,12 +45,16 @@ public class SimpleApplication extends Application
 		this.addVertex(new ApplicationVertex(userId, cloudletList, VmType.SMALL));
 	}
 	
+	/**
+	 * Creates one cloudlet for each vertex. VertexNumber is given as parameter.
+	 * @param userId
+	 * @param vertexNumber
+	 */
 	public SimpleApplication (int userId, int vertexNumber)
 	{
-		List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();
-		cloudletList.add(CloudletProvider.getDefault());
-		
 		for (int i=0; i<vertexNumber; i++){
+			List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();
+			cloudletList.add(CloudletProvider.getDefault());
 			this.addVertex(new ApplicationVertex(userId, cloudletList, VmType.SMALL));
 		}
 	}

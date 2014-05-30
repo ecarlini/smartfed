@@ -71,6 +71,10 @@ public class CloudletProvider
 		return uCPU;
 	}
 	
+	/**
+	 * The length is 4000, 1 PES, file_size and output is 100
+	 * @return a Cloudlet
+	 */
 	public static Cloudlet getDefault()
 	{
 		return createCloudlet(CloudletProfile.getDefault());

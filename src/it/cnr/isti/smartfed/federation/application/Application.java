@@ -21,6 +21,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 package it.cnr.isti.smartfed.federation.application;
 
 
+import it.cnr.isti.smartfed.federation.resources.VmTyped;
 import it.cnr.isti.smartfed.federation.utils.UtilityPrint;
 
 import java.util.ArrayList;
@@ -199,6 +200,21 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 		for (ApplicationVertex av: vertexSet())
 		{
 			list.addAll(av.getVms());
+		}
+		
+		return list;
+	}
+	
+	public List<VmTyped> getAllVmsTyped()
+	{
+		List<VmTyped> list = new ArrayList<VmTyped>();
+		
+		for (ApplicationVertex av: vertexSet())
+		{
+			List<Vm> l = av.getVms();
+			for (Vm v : l){
+				list.add(new VmTyped(v, av.getVmType()));
+			}
 		}
 		
 		return list;

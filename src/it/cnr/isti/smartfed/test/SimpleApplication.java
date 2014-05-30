@@ -1,5 +1,5 @@
 /*
-Copyright 2013 ISTI-CNR
+Copyright 2013 2014 ISTI-CNR
  
 This file is part of SmartFed.
 
@@ -33,6 +33,10 @@ import org.cloudbus.cloudsim.Vm;
 
 public class SimpleApplication extends Application
 {
+	/**
+	 * Application with a vertex containing a single VM 
+	 * @param userId
+	 */
 	public SimpleApplication(int userId)
 	{
 		List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();
@@ -41,16 +45,26 @@ public class SimpleApplication extends Application
 		this.addVertex(new ApplicationVertex(userId, cloudletList, VmType.SMALL));
 	}
 	
+	/**
+	 * Creates one cloudlet for each vertex. VertexNumber is given as parameter.
+	 * @param userId
+	 * @param vertexNumber
+	 */
 	public SimpleApplication (int userId, int vertexNumber)
 	{
-		List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();
-		cloudletList.add(CloudletProvider.getDefault());
-		
 		for (int i=0; i<vertexNumber; i++){
+			List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();
+			cloudletList.add(CloudletProvider.getDefault());
 			this.addVertex(new ApplicationVertex(userId, cloudletList, VmType.SMALL));
 		}
 	}
 	
+	/**
+	 * Application Constructor 
+	 * @param userId
+	 * @param vertexNumber
+	 * @param customType
+	 */
 	public SimpleApplication (int userId, int vertexNumber, Vm customType)
 	{
 		List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();

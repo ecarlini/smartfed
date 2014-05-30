@@ -68,6 +68,10 @@ public abstract class AbstractAllocator
 		return solution;
 	}
 
+	/**
+	 * It sets the solution of this allocator with a mapping solution object
+	 * @param solution
+	 */
 	public void setSolution(MappingSolution solution) {
 		this.solution = solution;
 	}

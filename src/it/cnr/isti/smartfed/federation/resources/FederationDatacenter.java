@@ -20,10 +20,15 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.federation.resources;
 
+import it.cnr.isti.smartfed.federation.CostComputer;
 import it.cnr.isti.smartfed.federation.FederationLog;
+import it.cnr.isti.smartfed.federation.resources.VmFactory.VmType;
 import it.cnr.isti.smartfed.federation.utils.UtilityPrint;
 
+import java.text.DecimalFormat;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletScheduler;
@@ -259,14 +264,85 @@ public class FederationDatacenter extends Datacenter implements Comparable<Feder
 		Log.enable();
 	}
 	
-	/*
-	// method introduced by Giuseppe, verify it.
-	@Override
-	protected void processOtherEvent(SimEvent ev){	
-		String str ="processOtherEvent";
-		Vm vm = (Vm) ev.getData();
-		Host host = getVmAllocationPolicy().getHost(vm);
-		getHostList().remove(host);
+	/**
+	 * Process the event for an User/Broker who wants to create a VM in this Datacenter. This
+	 * Datacenter will then send the status back to the User/Broker.
+	 * 
+	 * @param ev a Sim_event object
+	 * @param ack the ack
+	 * @pre ev != null
+	 * @post $none
+	 */
+	protected void processVmCreate(SimEvent ev, boolean ack) {
+		VmTyped vm; 
+		try {
+			vm = (VmTyped) ev.getData();
+		}
+		catch (ClassCastException e){
+			Vm generic_vm = (Vm) ev.getData();
+			vm = new VmTyped(generic_vm, VmType.CUSTOM);
+		}
+
+		boolean result = getVmAllocationPolicy().allocateHostForVm(vm);
+
+		if (ack) {
+			int[] data = new int[3];
+			data[0] = getId();
+			data[1] = vm.getId();
+
+			if (result) {
+				data[2] = CloudSimTags.TRUE;
+			} else {
+				data[2] = CloudSimTags.FALSE;
+			}
+			send(vm.getUserId(), 0.1, CloudSimTags.VM_CREATE_ACK, data);
+		}
+
+		if (result) {
+			double amount = 0.0;
+			double myamount = 0.0;
+			if (getDebts().containsKey(vm.getUserId())) {
+				amount = getDebts().get(vm.getUserId());
+			}
+			
+			// cloudsim code
+			// amount += getCharacteristics().getCostPerMem() * vm.getRam();
+			// amount += getCharacteristics().getCostPerStorage() * vm.getSize();
+			
+			// our code
+			myamount = CostComputer.singleVmCost(vm, vm.getType(), this);
+			amount += myamount;
+			
+			getDebts().put(vm.getUserId(), amount);
+
+			getVmList().add(vm);
+
+			if (vm.isBeingInstantiated()) {
+				vm.setBeingInstantiated(false);
+			}
+
+			vm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getVmScheduler()
+					.getAllocatedMipsForVm(vm));
+		}
+
 	}
-	*/
+	
+	/**
+	 * Prints the debts.
+	 */
+	public void printDebts() {
+		Log.printLine("*****Datacenter: " + getName() + "*****");
+		Log.printLine("User id\t\tDebt");
+
+		Set<Integer> keys = getDebts().keySet();
+		Iterator<Integer> iter = keys.iterator();
+		DecimalFormat df = new DecimalFormat("#.###");
+		while (iter.hasNext()) {
+			int key = iter.next();
+			double value = getDebts().get(key);
+			Log.printLine(key + "\t\t" + df.format(value));
+		}
+		
+	}
+
 }

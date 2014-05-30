@@ -32,6 +32,7 @@ import it.cnr.isti.smartfed.test.Experiment;
 import it.cnr.isti.smartfed.test.TestResult;
 import it.cnr.isti.smartfed.test.csv.ResultBean;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,7 +55,12 @@ public class PaperTestCost
 		allocators.add(randomAllocator);
 		allocators.add(geneticAllocator);
 		allocators.add(greedyAllocator);
-							
+						
+		String pathFolderName = "plots";
+		File folder = new File(pathFolderName);
+		if (!folder.isDirectory()){
+			folder.mkdir();
+		}
 		
 		ICsvBeanWriter beanWriter = new CsvBeanWriter(new FileWriter("plots/data.csv"),
 				CsvPreference.STANDARD_PREFERENCE);

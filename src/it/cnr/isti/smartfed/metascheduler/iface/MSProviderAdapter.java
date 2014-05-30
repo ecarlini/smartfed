@@ -1,22 +1,22 @@
 /*
 Copyright 2014 ISTI-CNR
- 
+
 This file is part of SmartFed.
 
 SmartFed is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
- 
+
 SmartFed is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
- 
+
 You should have received a copy of the GNU General Public License
 along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 package it.cnr.isti.smartfed.metascheduler.iface;
 
@@ -39,7 +39,7 @@ import org.cloudbus.cloudsim.Host;
 
 
 public class MSProviderAdapter {
-	
+
 	private static String hashToString(HashMap<String, Object> map, String indent){
 		String ret = "";
 		Iterator<String> keys = map.keySet().iterator();
@@ -58,7 +58,7 @@ public class MSProviderAdapter {
 		}
 		return ret;
 	}
-	
+
 	public static String providerListToString(List<IMSProvider> list){
 		String ret = "";
 		String indent = "    ";
@@ -71,9 +71,9 @@ public class MSProviderAdapter {
 		}
 		return ret;
 	}
-	
+
 	private static HashMap<String, Object> aggregateHostInfo(List<Host> hostList){
-//		System.out.println("### AGGREGATE INFO: DATACENTER_UTILITY");
+		//		System.out.println("### AGGREGATE INFO: DATACENTER_UTILITY");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		long storage =0;
 		int ram =0;
@@ -89,17 +89,17 @@ public class MSProviderAdapter {
 		map.put(Constant.MIPS, mips);
 		map.put(Constant.RAM, ram);
 		map.put(Constant.BW, bw);
-		
+
 		return map;
 	}
-	
+
 	public static IMSProvider datacenterToMSProvider(FederationDatacenter datacenter){
 		MSProvider provider = new MSProvider();
 		HashMap<String, Object> providerCharacteristic = new HashMap<String, Object>();
 		HashMap<String, Object> networkCharacteristic = new HashMap<String, Object>();
 		HashMap<String, Object> computingCharacteristic = new HashMap<String, Object>();
 		HashMap<String, Object> storageCharacteristic = new HashMap<String, Object>();
-		
+
 		List<Host> hostList = datacenter.getHostList();
 		DatacenterCharacteristicsMS dcCharacterisitc = datacenter.getMSCharacteristics();
 		//aggregazione della lista degli host
@@ -108,20 +108,20 @@ public class MSProviderAdapter {
 		aggregateHost.put(Constant.MIPS, hostList.get(0).getAvailableMips());
 		aggregateHost.put(Constant.RAM, hostList.get(0).getRam());
 		aggregateHost.put(Constant.BW, hostList.get(0).getBw());
-		
+
 		//computing
 		computingCharacteristic.put(Constant.RAM, aggregateHost.get(Constant.RAM));
 		computingCharacteristic.put(Constant.MIPS, aggregateHost.get(Constant.MIPS));
-		
+
 		//network
 		networkCharacteristic.put(Constant.BW, aggregateHost.get(Constant.BW));
 		// networkCharacteristic.put(Constant.COST_BW, dcCharacterisitc.getCostPerBw());
 		networkCharacteristic.put(Constant.COST_BW, CostComputer.getCostPerBw(datacenter));
-		
+
 		//storage
 		storageCharacteristic.put(Constant.STORE, aggregateHost.get(Constant.STORE));
 		storageCharacteristic.put(Constant.COST_STORAGE, CostComputer.getCostPerStorage(datacenter));
-		
+
 		//provider
 		providerCharacteristic.put(Constant.ID, dcCharacterisitc.getId() );
 		providerCharacteristic.put(Constant.COST_SEC, dcCharacterisitc.getCostPerSecond());
@@ -129,7 +129,7 @@ public class MSProviderAdapter {
 		providerCharacteristic.put(Constant.PLACE, dcCharacterisitc.getCountry());
 		providerCharacteristic.put(Constant.VM_INSTANCES, hostList.size());
 		providerCharacteristic.put(Constant.COST_VM, dcCharacterisitc.getCostVmTypes());
-		
+
 		provider.setID(dcCharacterisitc.getId());
 		provider.setCharacteristic(providerCharacteristic);
 		provider.setComputing(new MSProviderComputing());
@@ -138,13 +138,22 @@ public class MSProviderAdapter {
 		provider.getComputing().setCharacteristic(computingCharacteristic);
 		provider.getStorage().setCharacteristic(storageCharacteristic);
 		provider.getNetwork().setCharacteristic(networkCharacteristic);
-		
+
 		return provider;
 	}
-	
+
 	public static IMSProvider findProviderById(List<IMSProvider> providerList, Integer providerID) {
-		System.out.println("MSPROVIDERADAPTER " + providerID);
-		return providerList.get(providerID-3);
+		IMSProvider p = null;
+		boolean found = false;
+		for (int i =0; i<providerList.size() && !found; i++){
+			if (providerList.get(i).getID() == providerID){
+				found = true;
+				p = providerList.get(i);
+			}
+		}
+		return p;
+		
+		//return providerList.get(providerID-3);
 	}
 
 }

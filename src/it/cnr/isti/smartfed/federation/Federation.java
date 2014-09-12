@@ -61,6 +61,7 @@ public class Federation extends SimEntity
 	private AbstractAllocator mappingModule = null;
 	
 	private long seed;
+	private boolean emptyQueue = false;
 	
 	private void construct()
 	{
@@ -127,6 +128,10 @@ public class Federation extends SimEntity
 				FederationLog.timeLogDebug("Event received: " + "APPLICATION_IN_QUEUE (" + ev.getTag() +")");
 				processApplicationSubmit(ev);
 				break;
+			case FederationTags.EMPTY_QUEUE:
+				FederationLog.timeLogDebug("Event received: " + "EMPTY_QUEUE (" + ev.getTag() +")");
+				this.emptyQueue = true;
+				break;
 			// VM Creation answer
 			case CloudSimTags.VM_CREATE_ACK:
 				FederationLog.timeLogDebug("Event received: " + "VM_CREATE_ACK (" + ev.getTag() +")");
@@ -190,7 +195,7 @@ public class Federation extends SimEntity
 			if (sols[0].isValid() == false)
 			{
 				FederationLog.timeLog("Invalid mapping solution for application: \n" + ag);
-				mappingModule.getMonitoringHub().shutdownEntity();
+				// mappingModule.getMonitoringHub().shutdownEntity();
 				TestResult.getFailures().addValue(1);
 				return;
 			}
@@ -220,7 +225,7 @@ public class Federation extends SimEntity
 			FederationLog.timeLog("WARNING: FAILED mapping of "+app);
 			
 			// FIXME: not sure it can be here.
-			mappingModule.getMonitoringHub().shutdownEntity();
+			 // mappingModule.getMonitoringHub().shutdownEntity();
 			TestResult.getFailures().addValue(1);
 			return;
 		}
@@ -291,8 +296,8 @@ public class Federation extends SimEntity
 		FederationLog.timeLog("    Cloudlet" + cloudlet.getCloudletId() +" received");
 
 		// if all the cloudlet are finished, shutdown the monitoring
-		if (receivedCloudlet.size() >= vmToDatacenter.size())
-		{
+		if (receivedCloudlet.size() >= vmToDatacenter.size() && this.emptyQueue) {
+			
 			mappingModule.getMonitoringHub().shutdownEntity();
 		}
 	}

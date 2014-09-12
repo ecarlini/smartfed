@@ -34,6 +34,7 @@ public class FederationQueue extends SimEntity
 	private Federation federation;
 	private Object[] applicationsAndTimestamps;
 	private LinkedList<Application> applications = new LinkedList<Application>();
+	private int remainingApps;
 	
 	public FederationQueue(Federation federation, Object[] applicationsAndTimestamps)
 	{
@@ -43,6 +44,9 @@ public class FederationQueue extends SimEntity
 		//this.applications = applications;
 		
 		this.applicationsAndTimestamps = applicationsAndTimestamps;
+		
+		Application[] applications = (Application[]) applicationsAndTimestamps[0];
+		this.remainingApps = applications.length;
 		
 		// schedule the events
 		this.scheduleEvents();
@@ -72,6 +76,9 @@ public class FederationQueue extends SimEntity
 			Application app = (Application) ev.getData();
 			applications.add(app);
 			CloudSim.send(this.getId(), federation.getId(), 0, FederationTags.APPLICATION_IN_QUEUE, applications);
+			remainingApps--;
+			if (remainingApps == 0)
+				CloudSim.send(this.getId(), federation.getId(), 0, FederationTags.EMPTY_QUEUE, null);
 			break;
 		}
 	}
@@ -79,8 +86,7 @@ public class FederationQueue extends SimEntity
 
 	@Override
 	public void shutdownEntity() {
-		// TODO Auto-generated method stub
-		
+		Log.printLine("FederationQueue is shutting down...");		
 	}
 
 

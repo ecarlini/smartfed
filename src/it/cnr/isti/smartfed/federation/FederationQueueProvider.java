@@ -36,12 +36,13 @@ public class FederationQueueProvider {
 		applications.toArray(apps_array);
 		
 		String arrivalModelName = profile.get(QueueParams.INTER_ARRIVAL_MODEL);
+		String interval = profile.get(QueueParams.INTER_ARRIVAL_PARAMS); 
 		FederationQueue fq = null;
 		
 		try {
 			
 			InterArrivalModelItf arrivalModel = (InterArrivalModelItf) Class.forName(arrivalModelName).newInstance();
-			Object[] ret = arrivalModel.getSchedulingTime(apps_array);
+			Object[] ret = arrivalModel.getSchedulingTime(apps_array, interval);
 			
 			fq = new FederationQueue(federation, ret);
 			

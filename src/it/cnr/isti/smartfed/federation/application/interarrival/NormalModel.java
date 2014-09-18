@@ -31,7 +31,7 @@ public class NormalModel implements InterArrivalModelItf {
 		
 		long interval;
 		
-		if (params.length != 0){
+		if (params.length != 0 && !params[0].equals("")){
 			interval = Long.parseLong(params[0]);
 		} else {
 			interval = intervalAmongJobs;

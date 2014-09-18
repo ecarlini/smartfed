@@ -135,13 +135,15 @@ public class SimpleTest {
 		
 		System.out.println(apps.get(0).allVMsString());
 		
-		PolicyContainer constraint = MetaschedulerUtilities.createPoliciesCostPerVm(dcList);
+		// PolicyContainer constraint = MetaschedulerUtilities.createPoliciesCostPerVm(dcList);
+		PolicyContainer constraint = MetaschedulerUtilities.createPoliciesDefault(dcList);
 		Solution[] sol = Metascheduler.getMapping(apps.get(0),constraint.getList(), dcList, 1);
 	}
 
 	private void testMaxValues(){
 		assertTrue(PolicyContainer.highRamValue == 4740);
-		assertTrue(PolicyContainer.highCostValueRam == 3.0);
+		assertEquals(PolicyContainer.highCostValueRam, 3.0, 0.0001);
+		// assertTrue(PolicyContainer.highCostValueRam == 3.0);
 		assertTrue(PolicyContainer.highStorageValue == 10485760);
 	}
 	

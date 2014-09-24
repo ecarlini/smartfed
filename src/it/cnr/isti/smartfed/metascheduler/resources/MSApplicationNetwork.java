@@ -29,11 +29,7 @@ import java.util.HashMap;
 public class MSApplicationNetwork implements IMSAppNetwork, Cloneable {
 
 	private int ID;
-	/*
-	private int bandwidth;
-	private double budget;
-	private String place;
-	*/
+	
 	//testing
 	private HashMap<String, Object> characteristic;
 	
@@ -81,41 +77,5 @@ public class MSApplicationNetwork implements IMSAppNetwork, Cloneable {
 	public HashMap<String, Object> getCharacteristic() {
 		return characteristic;
 	}
-/* disabled
-	@Override
-	public void setBandwidth(int bandwidth) {
-		// TODO Auto-generated method stub
-		if(bandwidth >0)
-			this.bandwidth = bandwidth;
-		
-	}
-
-	@Override
-	public void setPlace(String place) {
-		// TODO Auto-generated method stub
-		if(place != null && place.length() >0)
-			this.place = place;
-	}
-
-	@Override
-	public int getBandwidth() {
-		// TODO Auto-generated method stub
-		return bandwidth;
-	}
-
-	@Override
-	public double getBudget() {
-		// TODO Auto-generated method stub
-		return budget;
-	}
-
-	@Override
-	public String getPlace() {
-		// TODO Auto-generated method stub
-		return place;
-	}
-	*/
-	
-
 	
 }

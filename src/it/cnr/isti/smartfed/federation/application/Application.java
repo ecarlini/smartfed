@@ -22,7 +22,6 @@ package it.cnr.isti.smartfed.federation.application;
 
 
 import it.cnr.isti.smartfed.federation.resources.VmTyped;
-import it.cnr.isti.smartfed.federation.utils.UtilityPrint;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +33,7 @@ import java.util.Set;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Vm;
-import org.jgrapht.graph.Multigraph;
+import org.jgrapht.graph.SimpleDirectedGraph;
 
 /**
  * 
@@ -44,7 +43,7 @@ import org.jgrapht.graph.Multigraph;
 
 public class Application // extends Multigraph<ApplicationVertex, ApplicationEdge>
 {
-	private Multigraph<ApplicationVertex, ApplicationEdge> graph;
+	private SimpleDirectedGraph<ApplicationVertex, ApplicationEdge> graph;
 	private List<Cloudlet> cloudlets;
 	private Map<Integer,Cloudlet> idToCloudlet;
 	private Hashtable<Cloudlet, ApplicationVertex> cloudletToVertex;
@@ -52,7 +51,7 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 
 	public Application() 
 	{
-		graph = new Multigraph<ApplicationVertex, ApplicationEdge>(ApplicationEdge.class);
+		graph = new SimpleDirectedGraph<ApplicationVertex, ApplicationEdge>(ApplicationEdge.class);
 		cloudlets = new ArrayList<Cloudlet>();
 		cloudletToVertex = new Hashtable<Cloudlet, ApplicationVertex>();
 		vmToVertex = new Hashtable<Vm, ApplicationVertex>();
@@ -125,6 +124,15 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 	public Set<ApplicationEdge> edgesOf(ApplicationVertex av1)
 	{
 		return graph.edgesOf(av1); 
+	}
+	
+	/**
+	 * Returns all the ApplicationEdges of the application.
+	 * @return
+	 */
+	public Set<ApplicationEdge> getEdges()
+	{
+		return graph.edgeSet(); 
 	}
 	
 	/**
@@ -231,6 +239,8 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 				str += "    Net: " + a.getBw()+"\n";
 				str += "    Budget: " + this.getVertexForVm(a).getBudget() + "\n";
 			}
+			str += this.edgesRepresentation();
+			
 			return str;
 	}
 	
@@ -248,18 +258,18 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 			}			
 		}
 		
+		res.append(edgesRepresentation());
 		return res.toString();
-		/*
-		for (ApplicationVertex v: set){
-			res += "\t";
-			Set<ApplicationEdge> setedge = this.edgesOf(v);
-			for (ApplicationEdge e: setedge){
+	}
+	
+
+	private String edgesRepresentation(){
+		String res = "";
+		Set<ApplicationEdge> alledges = this.graph.edgeSet();
+		for (ApplicationEdge e: alledges){
 				res += e.toString();
-				res += "[" + e.getBandwidth() + "]";
-			}
-			res += "\n";
 		}
+		res += "\n";
 		return res;
-		*/
 	}
 }

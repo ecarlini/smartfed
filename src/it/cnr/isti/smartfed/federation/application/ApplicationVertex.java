@@ -170,7 +170,19 @@ public class ApplicationVertex
 
 	@Override
 	public String toString() {
-		return this.name;
+		StringBuilder res = new StringBuilder();
+		
+		res.append("");
+		String prefix = "";
+		for (Vm vm: this.getVms())
+		{
+			res.append(prefix);
+			prefix = "-";
+			res.append("#").append(vm.getId());
+		}
+		res.append("");
+		
+		return name + res.toString();
 	}
 	
 	public String toCompleteString() 

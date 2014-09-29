@@ -39,10 +39,7 @@ public class SimpleApplication extends Application
 	 */
 	public SimpleApplication(int userId)
 	{
-		List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();
-		cloudletList.add(CloudletProvider.getDefault());
-		
-		this.addVertex(new ApplicationVertex(userId, cloudletList, VmType.SMALL));
+		this(userId, 1);
 	}
 	
 	/**
@@ -63,15 +60,14 @@ public class SimpleApplication extends Application
 	 * Application Constructor 
 	 * @param userId
 	 * @param vertexNumber
-	 * @param customType
+	 * @param customVm
 	 */
-	public SimpleApplication (int userId, int vertexNumber, Vm customType)
+	public SimpleApplication (int userId, int vertexNumber, Vm customVm)
 	{
-		List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();
-		cloudletList.add(CloudletProvider.getDefault());
-		
 		for (int i=0; i<vertexNumber; i++){
-			this.addVertex(new ApplicationVertex(userId, cloudletList, customType));
+			List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();
+			cloudletList.add(CloudletProvider.getDefault());
+			this.addVertex(new ApplicationVertex(userId, cloudletList, customVm));
 		}
 	}
 	

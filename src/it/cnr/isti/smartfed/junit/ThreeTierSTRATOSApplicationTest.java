@@ -253,17 +253,17 @@ class StratosAmazonThreeTierBusinessApplication extends Application{
 		vertexFrontend = createFrontend(userId, frontendNumber);
 		vertexFrontend.setCountry("Italy");
 		vertexFrontend.setBudget(0.5);
-		vertexFrontend.setDesiredVm(VmFactory.getCustomVm(userId, 1000, 1, 1*1024, 1000, 160*1024));
+		vertexFrontend.setDesiredVm(VmFactory.getDesiredVm(userId, 1000, 1, 1*1024, 1000, 160*1024));
 		
 		vertexBackend = createBackend(userId, backendNumber);
 		vertexBackend.setCountry("Italy");
 		vertexBackend.setBudget(0.5);
-		vertexBackend.setDesiredVm(VmFactory.getCustomVm(userId, 1000, 1, 1*1024, 1000, 160*1024));
+		vertexBackend.setDesiredVm(VmFactory.getDesiredVm(userId, 1000, 1, 1*1024, 1000, 160*1024));
 		
 		vertexDatabase = createDatabase(userId, databaseNumber);	
 		vertexDatabase.setCountry("Italy");
 		vertexDatabase.setBudget(0.5);
-		vertexDatabase.setDesiredVm(VmFactory.getCustomVm(userId, 1000, 6, 4*1024, 1000, 160*1024));
+		vertexDatabase.setDesiredVm(VmFactory.getDesiredVm(userId, 1000, 6, 4*1024, 1000, 160*1024));
 		createConnections();
 	}
 
@@ -275,11 +275,11 @@ class StratosAmazonThreeTierBusinessApplication extends Application{
 		this.addVertex(vertexDatabase);
 
 		// Network
-		ApplicationEdge frontToBack = new ApplicationEdge(1024, SecuritySupport.BASE, 1000);
-		ApplicationEdge backToDB = new ApplicationEdge(512, SecuritySupport.BASE, 1000);
+		// ApplicationEdge frontToBack = new ApplicationEdge(1024, SecuritySupport.BASE, 1000);
+		// ApplicationEdge backToDB = new ApplicationEdge(512, SecuritySupport.BASE, 1000);
 
-		this.addEdge(frontToBack, vertexFrontend, vertexBackend);
-		this.addEdge(backToDB, vertexBackend, vertexDatabase);
+		// this.addEdge(frontToBack, vertexFrontend, vertexBackend);
+		// this.addEdge(backToDB, vertexBackend, vertexDatabase);
 	}
 }
 

@@ -20,7 +20,10 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.federation;
 
+import java.util.Set;
+
 import it.cnr.isti.smartfed.federation.application.Application;
+import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.mapping.MappingSolution;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
@@ -32,7 +35,7 @@ import org.cloudbus.cloudsim.Vm;
 /**
  * This class contains facilities to compute the cost
  * for VMs.
- * @author carlini
+ * @author carlini, anastasi
  *
  */
 public class CostComputer 
@@ -75,6 +78,7 @@ public class CostComputer
 		{
 			FederationDatacenter datacenter = allocation.getAllocatedDatacenter(vm);
 			ApplicationVertex vertex = allocation.getApplication().getVertexForVm(vm);
+			Set<ApplicationEdge> edges = allocation.getApplication().edgesOf(vertex);
 			VmType type = vertex.getVmType();
 			
 			if (datacenter != null){	
@@ -88,15 +92,53 @@ public class CostComputer
 							cost = calculateCostCustomVm(datacenter, vertex.getDesiredVm());
 					}
 					amount += cost;
+					System.out.println("Net cost is for vm " + vm.getId() + " is " + computeNetCosts(vm, edges, allocation, datacenter));
+					amount += computeNetCosts(vm, edges, allocation, datacenter);
 			}
 			// System.out.println("Partial Amount is " + cost);
 		}
 		return amount;
 	}
 	
+	/**
+	 * @param vm
+	 * @param es
+	 * @param a
+	 * @return
+	 */
+	private static double computeNetCosts(Vm vm, Set<ApplicationEdge> es, Allocation a, FederationDatacenter f){
+		double cost = 0;
+		int sourceVmId = vm.getId();
+		int sourceProvId = a.getAllocatedDatacenterId(vm);
+		for (ApplicationEdge e: es){
+			Vm targetVm  = e.getTargetVm();
+			int targetProvId = a.getAllocatedDatacenterId(targetVm);
+			cost += computeLinkCost(e, sourceVmId, sourceProvId, targetProvId, getCostPerBw(f));
+		}
+		return cost;
+	}
 	
 	/**
-	 * Compute the cost of a single VM on the give datacenter.
+	 * Given an edge, compute the cost for the network to be charged to the source Vm.
+	 * @param e The Edge
+	 * @param sVmId The source Vm Id
+	 * @param sProvId The provider Id for the source Vm
+	 * @param tProvId The provider Id for the target Vm
+	 * @param price	The cost of transmitting 1 MB
+	 * @return
+	 */
+	public static double computeLinkCost(ApplicationEdge e, int sVmId, int sProvId, int tProvId, double price){
+		double cost = 0;
+		if (e.getSourceVmId() == sVmId){
+			if (sProvId != tProvId){
+				cost += e.getMBperHour() * price;
+			}
+		}
+		return cost;
+	}
+	
+	/**
+	 * Compute the cost of a single VM on the given datacenter.
 	 * @param vm
 	 * @param type
 	 * @param datacenter
@@ -135,7 +177,9 @@ public class CostComputer
 	}	
 
 	/**
-	 * Cost per GB per hour
+	 * Cost per MB per hour (in the DataCenter characteristics it is 
+	 * expressed in GB, as usual for providers, but VMs express it 
+	 * in MB)
 	 * @param fd
 	 * @return
 	 */
@@ -145,7 +189,7 @@ public class CostComputer
 	}
 	
 	/**
-	 * Cost per GB per hour
+	 * Cost per MB per hour
 	 * @param fd
 	 * @return
 	 */
@@ -155,7 +199,7 @@ public class CostComputer
 	}
 	
 	/**
-	 * Cost per GB per hour
+	 * Cost per MB per hour
 	 * @param fd
 	 * @return
 	 */
@@ -165,14 +209,16 @@ public class CostComputer
 	}
 	
 	/**
-	 * Calculating cost by considering CpuRamStorage
+	 * Calculating cost by considering Cpu, Ram, Storage.
+	 * For bandwidth we assume free charge for internal networking and thus 
+	 * it cannot be included here because we do not know the entire allocation. 
+	 * Please see actualCost or expectedCost for methods that include bandwidth charge.
 	 * @param fd
 	 * @param vm
 	 * @return
 	 */
 	private static double calculateCostCustomVm(FederationDatacenter fd, Vm vm)
 	{
-		// double costPerBand = fd.getMSCharacteristics().getCostPerBw();
 		double costPerSec = fd.getMSCharacteristics().getCostPerSecond(); // used for cost per cpu
 		
 		double costCPU = vm.getNumberOfPes() * costPerSec;

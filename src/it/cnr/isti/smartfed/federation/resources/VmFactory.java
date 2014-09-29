@@ -133,7 +133,31 @@ public class VmFactory
 
 	public static Vm getCustomVm(int userId, double mips, int cores, int ramMB, long bandMB, long diskMB)
 	{		
-		Vm vm = new Vm(ResourceCounter.nextVmID(), 
+		VmTyped vmt = new VmTyped(ResourceCounter.nextVmID(), 
+				userId, 
+				mips, 
+				cores, 
+				ramMB,
+				bandMB,
+				diskMB,
+				"Xen", 
+				new CloudletSchedulerTimeShared(), 
+				VmType.CUSTOM);	
+		return vmt;
+	}
+	
+	/**
+	 * Create a customVm that will not be actually deployed, thus it will have meaningless value as internal id. 
+	 * @param userId
+	 * @param mips
+	 * @param cores
+	 * @param ramMB
+	 * @param bandMB
+	 * @param diskMB
+	 * @return
+	 */
+	public static Vm getDesiredVm(int userId, double mips, int cores, int ramMB, long bandMB, long diskMB){
+		Vm vm = new Vm(-1, 
 				userId, 
 				mips, 
 				cores, 

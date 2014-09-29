@@ -12,11 +12,15 @@ import org.cloudbus.cloudsim.Vm;
  */
 public class VmTyped extends Vm {
 
+	VmType type = VmType.CUSTOM;
+	
 	public VmTyped(int id, int userId, double mips, int numberOfPes, int ram,
-			long bw, long size, String vmm, CloudletScheduler cloudletScheduler) {
+			long bw, long size, String vmm, CloudletScheduler cloudletScheduler, VmType vm_type) {
 		
 		super(id, userId, mips, numberOfPes, ram, bw, size, vmm, cloudletScheduler);
+		type = vm_type;
 	}
+	
 	
 	public VmTyped(Vm vm, VmType vm_type){
 		super(	vm.getId(),
@@ -31,7 +35,6 @@ public class VmTyped extends Vm {
 		setType(vm_type);
 	}
 
-	VmType type = VmType.CUSTOM;
 	
 	public VmType getType() {
 		return type;

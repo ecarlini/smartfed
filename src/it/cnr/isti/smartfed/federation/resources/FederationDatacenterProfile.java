@@ -75,8 +75,8 @@ public class FederationDatacenterProfile
 		prof.data.put(DatacenterParams.COST_PER_SEC, "0.0");
 		prof.data.put(DatacenterParams.COST_PER_MEM, "0.0");
 		prof.data.put(DatacenterParams.COST_PER_STORAGE, "0.0");
-		prof.data.put(DatacenterParams.COST_PER_BW, "0.0");
-		prof.data.put(DatacenterParams.COST_PER_VM_SMALL, "0.085");
+		prof.data.put(DatacenterParams.COST_PER_BW, "0.12"); // $ per GB (amount of transmitted data must be calculated per hour)
+		prof.data.put(DatacenterParams.COST_PER_VM_SMALL, "0.085"); // $ per hour
 		prof.data.put(DatacenterParams.COST_PER_VM_MEDIUM,"0.340");
 		prof.data.put(DatacenterParams.COST_PER_VM_LARGE,"0.340");
 		prof.data.put(DatacenterParams.COST_PER_VM_XLARGE,"0.680");
@@ -89,7 +89,7 @@ public class FederationDatacenterProfile
 		prof.data.put(DatacenterParams.COST_PER_SEC, "0.0");
 		prof.data.put(DatacenterParams.COST_PER_MEM, "0.0");
 		prof.data.put(DatacenterParams.COST_PER_STORAGE, "0.0");
-		prof.data.put(DatacenterParams.COST_PER_BW, "0.0");
+		prof.data.put(DatacenterParams.COST_PER_BW, "0.12");
 		prof.data.put(DatacenterParams.COST_PER_VM_SMALL, "0.240");
 		prof.data.put(DatacenterParams.COST_PER_VM_MEDIUM,"0.240");
 		prof.data.put(DatacenterParams.COST_PER_VM_LARGE,"0.240");
@@ -101,9 +101,9 @@ public class FederationDatacenterProfile
 	{
 		FederationDatacenterProfile prof = new FederationDatacenterProfile();
 		prof.data.put(DatacenterParams.COST_PER_SEC, "0.026");
-		prof.data.put(DatacenterParams.COST_PER_MEM, "0.005");//0.004 euro per GB
-		prof.data.put(DatacenterParams.COST_PER_STORAGE, "0.00039");//0.003 euro per 10 GB
-		prof.data.put(DatacenterParams.COST_PER_BW, "0.0");
+		prof.data.put(DatacenterParams.COST_PER_MEM, "0.005");//0.005 euro per GB per hour
+		prof.data.put(DatacenterParams.COST_PER_STORAGE, "0.00039");//0.003 euro per 10 GB per hour
+		prof.data.put(DatacenterParams.COST_PER_BW, "0.12");
 		prof.data.put(DatacenterParams.COST_PER_VM_SMALL, "NaN");
 		prof.data.put(DatacenterParams.COST_PER_VM_MEDIUM,"NaN");
 		prof.data.put(DatacenterParams.COST_PER_VM_LARGE,"NaN");

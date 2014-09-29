@@ -79,6 +79,7 @@ public class FederationDatacenter extends Datacenter implements Comparable<Feder
 			}
 		}
 		result += "@@@@@@@@@@@@@@ Datacenter " + this.getId() + " @@@@@@@@@@@ " + hostlist.size() + " host\n";
+		result += "Location: " + ((DatacenterCharacteristicsMS) super.getCharacteristics()).getCountry() + "\n";
 		result += "VMs: ";
 		if (l != null)
 			for (Vm vm : l)

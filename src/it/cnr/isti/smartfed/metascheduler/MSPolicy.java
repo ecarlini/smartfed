@@ -20,6 +20,11 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.metascheduler;
 
+import java.util.List;
+
+import org.jgap.Gene;
+import org.jgap.IChromosome;
+
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
@@ -44,10 +49,38 @@ public abstract class MSPolicy  {
 		this.type = type;
 		this.group = group;
 	}
-
-	public abstract double evaluateGlobalPolicy(IMSApplication app, IMSProvider prov);
 	
-	public abstract double evaluateLocalPolicy(MSApplicationNode node, IMSProvider prov);
+	public MSPolicy(double weight, char type){
+		this(weight, type, MSPolicy.LOCAL_CONSTRAINT);
+	}
+
+	// It is currently buggy
+	/*
+	public double evaluatePolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov){
+		double res;
+		
+		switch (this.group){
+		case MSPolicy.GLOBAL_CONSTRAINT: 
+			res = evaluateGlobalPolicy(gene_index, chromos, app, prov);
+			break;
+		case MSPolicy.LOCAL_CONSTRAINT:
+			res = evaluateLocalPolicy(chromos.getGene(gene_index), app.getNodes().get(gene_index), prov);
+			break;
+		default:
+			res = evaluateLocalPolicy(chromos.getGene(gene_index), app.getNodes().get(gene_index), prov);
+		}
+		return res;
+	}
+	*/
+	
+	protected double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov){
+		List<MSApplicationNode> nodes = app.getNodes();
+		MSApplicationNode node = nodes.get(gene_index);
+		return evaluateLocalPolicy(chromos.getGene(gene_index), node, prov);
+	}
+	
+	
+	protected abstract double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov);
 	
 	public char getType(){
 		return type;
@@ -97,4 +130,5 @@ public abstract class MSPolicy  {
 			return 0;
 		}
 	}
+
 }

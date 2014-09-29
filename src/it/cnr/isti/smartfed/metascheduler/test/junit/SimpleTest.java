@@ -58,6 +58,7 @@ public class SimpleTest {
 	protected static Properties dc_prop;
 	protected static Properties app_prop;
 	protected Application app = null;
+	final static int best = 5;
 
 	private PowerHostUtilizationHistory createHost(Properties prop, int ram){
 		List<Pe> peList = new ArrayList<Pe>();
@@ -142,8 +143,7 @@ public class SimpleTest {
 
 	private void testMaxValues(){
 		assertTrue(PolicyContainer.highRamValue == 4740);
-		assertEquals(PolicyContainer.highCostValueRam, 3.0, 0.0001);
-		// assertTrue(PolicyContainer.highCostValueRam == 3.0);
+		assertEquals(PolicyContainer.highCostValueRam, 3.0, 0.0001); // è valido solo utilizzando la policy default
 		assertTrue(PolicyContainer.highStorageValue == 10485760);
 	}
 	
@@ -160,7 +160,7 @@ public class SimpleTest {
 		System.out.println("fitness del migliore è " + c.getFitnessValue());
 		System.out.println("geni del miglior chromosoma hanno valore (alleli) " + Monitor.chromosomeToString(c));
 		
-		List<?> l = JGAPMapping.population.getFittestChromosomes(JGAPMapping.POP_SIZE);
+		List<?> l = JGAPMapping.population.getFittestChromosomes(best);
 		Iterator<?> i = l.iterator();
 		while (i.hasNext()){
 			IChromosome cc = (IChromosome) i.next();

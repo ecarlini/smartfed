@@ -20,6 +20,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.metascheduler.resources;
 
+import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 
 import java.util.ArrayList;
@@ -36,9 +37,14 @@ public class MSApplication implements IMSApplication, Cloneable {
 	private double budget;
 
 	private List<MSApplicationNode> nodes;
-
-	// testing
-	private HashMap<String, Object> characteristic;
+	
+	/* for simplicity using the same edges of smartfed applications.
+	 * If you want to remove this dependency (includes dependency to jgrapht)
+	 * use an adapter to MSApplicationNetwork and/or include an adjacency list
+	 * for graph vertices (ApplicationEdge also embeds info about source and target vertices)
+	 */
+	private Set<ApplicationEdge> edges;
+	private int firstVmIndex;
 
 	public MSApplication() {
 		new MSApplication(-1, null, 0, null);
@@ -97,6 +103,14 @@ public class MSApplication implements IMSApplication, Cloneable {
 	public List<MSApplicationNode> getNodes() {
 		return nodes;
 	}
+	
+	public void setEdges(Set<ApplicationEdge> edges) {
+		this.edges = edges;
+	}
+
+	public Set<ApplicationEdge> getEdges() {
+		return this.edges;
+	}
 
 	@Override
 	public void setID(int id) {
@@ -106,13 +120,6 @@ public class MSApplication implements IMSApplication, Cloneable {
 	public String toString(){
 		String s = new String();
 		s+= "MSApplication] id=" + ID;
-		if (characteristic != null){
-			Set<String> set = characteristic.keySet();
-
-			for (String st: set){
-				s+= characteristic.get(st).toString();
-			}
-		}
 		return s;
 	}
 
@@ -123,22 +130,13 @@ public class MSApplication implements IMSApplication, Cloneable {
 	public void setBudget(double budget) {
 		this.budget = budget;
 	}
-	
-	/*disabled
-	 @Override
-	public void setPlace(String place) {
-		// TODO Auto-generated method stub
-		if (place != null && place.length() > 0)
-			this.place = place;
 
+	public int getFirstVmIndex() {
+		return firstVmIndex;
 	}
 
-	
-	@Override
-	public String getPlace() {
-		// TODO Auto-generated method stub
-		return place;
+	public void setFirstVmIndex(int firstVmIndex) {
+		this.firstVmIndex = firstVmIndex;
 	}
-	 */
 
 }

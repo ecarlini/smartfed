@@ -129,6 +129,7 @@ public class MSApplicationUtility {
 		
 		List<MSApplicationNode> nodeList = new ArrayList<MSApplicationNode>();
 		for(int i=0; i<vmList.size(); i++){
+			newApp.setFirstVmIndex(vmList.get(i).getId());
 			vertex = app.getVertexForVm(vmList.get(i));
 			MSApplicationNode node = vmToMSApplicationNode(vmList.get(i), app.edgesOf(vertex), vertex.getCountry(), vertex.getBudget(), vertex.getVmTypeChar());
 			
@@ -144,7 +145,7 @@ public class MSApplicationUtility {
 		}
 
 		newApp.setNodes(nodeList);
-//		newApp.setCharacteristic(appCharacteristic);
+		newApp.setEdges(app.getEdges());
 		return newApp;
 	}
 

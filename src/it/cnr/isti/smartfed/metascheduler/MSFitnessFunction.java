@@ -62,15 +62,18 @@ public class MSFitnessFunction extends FitnessFunction {
 		policy = policyList;
 	}
 	
-	private double evaluateGene(Gene gene, int index){
+	private double evaluateGene(int gene_index, IChromosome chromos){
 		double fitness = -1;
 		double [] weightedDistance = new double[policy.size()];
-		Integer providerID = (Integer) gene.getAllele();
+		Gene[] genes = chromos.getGenes();
+		
+		Integer providerID = (Integer) genes[gene_index].getAllele();
 		IMSProvider provider = MSProviderAdapter.findProviderById(providerList, providerID);
-		List<MSApplicationNode> nodes = application.getNodes();
-		MSApplicationNode node = nodes.get(index);
+		// List<MSApplicationNode> nodes = application.getNodes();
+		// MSApplicationNode node = nodes.get(gene_index);
 		for (int i = 0; i < policy.size(); i++) {
-			weightedDistance[i] = policy.get(i).evaluateLocalPolicy(node,provider);
+			// weightedDistance[i] = policy.get(i).evaluateLocalPolicy(node,provider);
+			weightedDistance[i] = policy.get(i).evaluateGlobalPolicy(gene_index, chromos, application, provider);
 		}
 		
 		for (int i=0; i<weightedDistance.length; i++){
@@ -108,18 +111,19 @@ public class MSFitnessFunction extends FitnessFunction {
 		double g_fit = 0;
 		
 		for (int i = 0; i < genes.length; i++) {
-			g_fit = evaluateGene(genes[i], i) * AWARD;		//awarding those with highest number of good genes
+			g_fit = evaluateGene(i, chromos) * AWARD;		//awarding those with highest number of good genes
 			((CIntegerGene) genes[i]).setLocalFitness(g_fit);
 			fitness += g_fit;
 		}
 		
 		if (MSPolicy.DEBUG)
-			printGenes(genes, chromos, fitness);
+			printGenes(chromos, fitness);
 		
 		return fitness;
 	}
 	
-	void printGenes(Gene[] genes, IChromosome chromos, double fitness){
+	void printGenes(IChromosome chromos, double fitness){
+		Gene[] genes = chromos.getGenes();
 		System.out.print("Fitness of each gene: ");
 		for (int i = 0; i < genes.length; i++) {
 			System.out.print(((CIntegerGene) genes[i]).getLocalFitness() + " | ");

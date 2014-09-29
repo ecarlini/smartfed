@@ -20,8 +20,18 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.metascheduler.constraints;
 
+import java.util.List;
+import java.util.Set;
+
+import org.jgap.Gene;
+import org.jgap.IChromosome;
+
+import it.cnr.isti.smartfed.federation.CostComputer;
+import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.metascheduler.Constant;
 import it.cnr.isti.smartfed.metascheduler.MSPolicy;
+import it.cnr.isti.smartfed.metascheduler.CIntegerGene;
+import it.cnr.isti.smartfed.metascheduler.resources.MSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
@@ -31,8 +41,8 @@ public class BudgetConstraint extends MSPolicy {
 	private double highRamCost;
 	private double highStorageCost;
 	
-	public BudgetConstraint(double weight, double highestValue) {
-		super(weight, MSPolicy.DESCENDENT_TYPE, MSPolicy.LOCAL_CONSTRAINT);
+	public BudgetConstraint(double weight, double highestValue, char c) {
+		super(weight, MSPolicy.DESCENDENT_TYPE, c);
 		highRamCost = highestValue;
 	}
 	
@@ -47,12 +57,6 @@ public class BudgetConstraint extends MSPolicy {
 		highStorageCost = highestValues[1];
 	}
 	
-
-	@Override
-	public double evaluateGlobalPolicy(IMSApplication app, IMSProvider prov) {
-		return 0;
-	}
-
 	private static double storageCost(MSApplicationNode node, IMSProvider prov){
 		double costPerStorage = (Double) prov.getStorage().getCharacteristic().get(Constant.COST_STORAGE);
 		long storage = (long) node.getStorage().getCharacteristic().get(Constant.STORE);
@@ -74,6 +78,38 @@ public class BudgetConstraint extends MSPolicy {
 		return cost;
 	}
 	
+	private static double netCost(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov){
+		Double costPerNet = (Double) prov.getNetwork().getCharacteristic().get(Constant.COST_BW);
+		
+		Gene[] genes = chromos.getGenes();
+		int current_prov = (int) genes[gene_index].getAllele();
+		MSApplicationNode curr_node = app.getNodes().get(gene_index); // this is safe
+		int geneVmId = curr_node.getID();
+		MSApplication am = (MSApplication) app;
+		double cost = 0;
+		Set<ApplicationEdge> set = am.getEdges();
+		for (ApplicationEdge e: set){
+			if (e.getSourceVmId() == geneVmId){
+				int target_index = getChromosIndexFromNodeId(e.getTargetVmId(), genes, app);
+				
+				int tProvId = (int) genes[target_index].getAllele();
+				cost += CostComputer.computeLinkCost(e, geneVmId, current_prov, tProvId, costPerNet);
+			}
+		}
+		return cost;
+	}
+	
+	private static int getChromosIndexFromNodeId(int vmId, Gene[] genes, IMSApplication app){
+		int target_index = 0;
+		boolean trovato = false;
+		for (int i=0; i<genes.length && !trovato; i++){
+			if (app.getNodes().get(i).getID() == vmId)
+				target_index = i;
+		}
+		return target_index;
+	}
+	
+	
 	public static Double calculateCost(MSApplicationNode node, IMSProvider prov){
 		Double cpu_cost = cpuCost(node, prov);
 		Double r_cost = ramCost(node, prov);
@@ -82,18 +118,34 @@ public class BudgetConstraint extends MSPolicy {
 		return r_cost + s_cost + cpu_cost;
 	}
 	
+	private static Double calculateCost_Network(int i, IChromosome chromos, IMSApplication app, IMSProvider prov){
+		MSApplicationNode node = app.getNodes().get(i);
+		Double cpu_cost = cpuCost(node, prov);
+		Double r_cost = ramCost(node, prov);
+		Double s_cost = storageCost(node, prov);
+		Double net_cost = netCost(i, chromos, app, prov);
+		// System.out.println(r_cost + " + " + s_cost);
+		return r_cost + s_cost + cpu_cost + net_cost;
+	}
+	
 	@Override
-	public double evaluateLocalPolicy(MSApplicationNode node, IMSProvider prov) {
+	public double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov){
+		List<MSApplicationNode> nodes = app.getNodes();
+		MSApplicationNode node = nodes.get(gene_index);
 		Double budget = (Double) node.getCharacteristic().get(Constant.BUDGET);
-		Double s_maxCost = (highStorageCost * StorageConstraint.getHighStorageValue());
-		Double r_maxCost = (highRamCost * RamConstraint.getHighRamValue());
+		Double cost = calculateCost_Network(gene_index, chromos, app, prov);
 		
-		Double cost = ramCost(node, prov) + storageCost(node, prov);
-		Double maxCost = r_maxCost + s_maxCost;
+		((CIntegerGene) chromos.getGene(gene_index)).setAllocationCost(cost);
+		
+		Double maxCost = budget;
+		double distance = calcDistanceErrHandling(cost, budget, maxCost);
+		
+		return distance * getWeight();
+	}
+	
+	private double calcDistanceErrHandling(Double cost, Double budget, Double maxCost){
 		double distance;
 		try {
-			// maxCost = (budget > maxCost) ? budget : maxCost; // the max value could be the budget
-			maxCost = (budget );
 			distance = evaluateDistance(cost, budget, maxCost);
 		} catch (Exception e) {
 			distance = RUNTIME_ERROR; // a positive value in order to not consider this constraint
@@ -101,7 +153,24 @@ public class BudgetConstraint extends MSPolicy {
 			e.printStackTrace();
 		}
 		if (DEBUG)
-			System.out.println("\tEval on cost_per_ram " + cost + "-" + budget + "/" + maxCost + "=" + distance);
+			System.out.println("\tEval on budget " + cost + "-" + budget + "/" + maxCost + "=" + distance);
+		return distance;
+	}
+	
+	@Override
+	public double evaluateLocalPolicy(Gene gene, MSApplicationNode node, IMSProvider prov) {
+		Double budget = (Double) node.getCharacteristic().get(Constant.BUDGET);
+		Double s_maxCost = (highStorageCost * StorageConstraint.getHighStorageValue());
+		Double r_maxCost = (highRamCost * RamConstraint.getHighRamValue());
+		
+		Double cost = ramCost(node, prov) + storageCost(node, prov);
+		((CIntegerGene) gene).setAllocationCost(cost);
+		
+		Double maxCost = r_maxCost + s_maxCost;
+		// maxCost = (budget > maxCost) ? budget : maxCost; // the max value could be the budget
+		maxCost = (budget);
+					
+		double distance = calcDistanceErrHandling(cost, budget, maxCost);
 		return distance * getWeight();
 	}
 

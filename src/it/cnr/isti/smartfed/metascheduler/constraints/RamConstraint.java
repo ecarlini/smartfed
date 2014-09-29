@@ -20,6 +20,8 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.metascheduler.constraints;
 
+import org.jgap.Gene;
+
 import it.cnr.isti.smartfed.metascheduler.Constant;
 import it.cnr.isti.smartfed.metascheduler.MSPolicy;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
@@ -39,11 +41,11 @@ public class RamConstraint extends MSPolicy {
 	}
 
 	public RamConstraint(double weight, double highestValue) {
-		super(weight, MSPolicy.ASCENDENT_TYPE,MSPolicy.LOCAL_CONSTRAINT);
+		super(weight, MSPolicy.ASCENDENT_TYPE);
 		highRamValue = highestValue;
 	}
 
-	public double evaluateLocalPolicy(MSApplicationNode node, IMSProvider prov) {
+	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov) {
 		if (DEBUG)
 			System.out.println("Eval before applying weights for " + "NodeID " + node.getID() + " - ProvID " + prov.getID());
 		Integer nodeRam = (Integer) node.getComputing().getCharacteristic().get(Constant.RAM); //what I want

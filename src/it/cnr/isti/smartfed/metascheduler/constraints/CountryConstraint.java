@@ -20,6 +20,8 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.metascheduler.constraints;
 
+import org.jgap.Gene;
+
 import it.cnr.isti.smartfed.metascheduler.Constant;
 import it.cnr.isti.smartfed.metascheduler.MSPolicy;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
@@ -30,11 +32,11 @@ public class CountryConstraint extends MSPolicy{
 
 	
 	public CountryConstraint(double weight) {
-		super(weight, MSPolicy.EQUAL_TYPE, MSPolicy.LOCAL_CONSTRAINT);
+		super(weight, MSPolicy.EQUAL_TYPE);
 	}
 
 	@Override
-	public double evaluateLocalPolicy(MSApplicationNode node, IMSProvider prov) {
+	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov) {
 		String nodePlace = (String) node.getCharacteristic().get(Constant.PLACE); //what I want
 		String provPlace = (String)prov.getCharacteristic().get(Constant.PLACE); //what I have
 		
@@ -71,9 +73,4 @@ public class CountryConstraint extends MSPolicy{
 		return distance;
 	}
 	
-	@Override
-	public double evaluateGlobalPolicy(IMSApplication app, IMSProvider prov) {
-		return 0;
-	}
-
 }

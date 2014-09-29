@@ -31,6 +31,8 @@ public class CIntegerGene extends IntegerGene{
 	private static final long serialVersionUID = 1L;
 	
 	double localFitness = 0;
+	double allocationCost = 0;
+	
 	
 	public CIntegerGene(Configuration a_config, int min, int max) throws InvalidConfigurationException {
 		super(a_config, min, max);
@@ -41,9 +43,16 @@ public class CIntegerGene extends IntegerGene{
 		localFitness = fit;
 	}
 	
+	public CIntegerGene(Configuration a_config, int min, int max, double fit, double aCost) throws InvalidConfigurationException {
+		super(a_config, min, max);
+		localFitness = fit;
+		allocationCost = aCost;
+	}
+	
 	public Gene newGene() {
 		try{
-			Gene ret = new CIntegerGene(getConfiguration(), this.getLowerBounds(), this.getUpperBounds(), this.getLocalFitness());
+			Gene ret = new CIntegerGene(getConfiguration(), this.getLowerBounds(), this.getUpperBounds(), 
+					this.getLocalFitness(), this.getAllocationCost());
 			return ret;
 		}catch (InvalidConfigurationException ex) {
 	        throw new IllegalStateException(ex.getMessage());
@@ -62,6 +71,7 @@ public class CIntegerGene extends IntegerGene{
 		super.applyMutation(a_index, a_percentage);
 		// System.out.println("new value is " + this.getAllele());
 	}
+	
 	/**
 	 * @return The fitness of each gene
 	 */
@@ -72,6 +82,15 @@ public class CIntegerGene extends IntegerGene{
 	public void setLocalFitness(double localFitness) {
 		this.localFitness = localFitness;
 	}
+	
+	public double getAllocationCost() {
+		return allocationCost;
+	}
+
+	public void setAllocationCost(double allocationCost) {
+		this.allocationCost = allocationCost;
+	}
+
 
 	public String toString(){
 		return super.toString() + " - " + this.getLocalFitness();

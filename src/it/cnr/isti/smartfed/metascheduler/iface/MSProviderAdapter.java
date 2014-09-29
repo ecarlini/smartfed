@@ -101,7 +101,7 @@ public class MSProviderAdapter {
 		HashMap<String, Object> storageCharacteristic = new HashMap<String, Object>();
 
 		List<Host> hostList = datacenter.getHostList();
-		DatacenterCharacteristicsMS dcCharacterisitc = datacenter.getMSCharacteristics();
+		DatacenterCharacteristicsMS dcCharacter = datacenter.getMSCharacteristics();
 		//aggregazione della lista degli host
 		HashMap<String, Object> aggregateHost = new HashMap<String, Object>(); //aggregateHostInfo(hostList);
 		aggregateHost.put(Constant.STORE, hostList.get(0).getStorage());
@@ -123,14 +123,14 @@ public class MSProviderAdapter {
 		storageCharacteristic.put(Constant.COST_STORAGE, CostComputer.getCostPerStorage(datacenter));
 
 		//provider
-		providerCharacteristic.put(Constant.ID, dcCharacterisitc.getId() );
-		providerCharacteristic.put(Constant.COST_SEC, dcCharacterisitc.getCostPerSecond());
+		providerCharacteristic.put(Constant.ID, dcCharacter.getId() );
+		providerCharacteristic.put(Constant.COST_SEC, dcCharacter.getCostPerSecond());
 		providerCharacteristic.put(Constant.COST_MEM, CostComputer.getCostPerMem(datacenter));
-		providerCharacteristic.put(Constant.PLACE, dcCharacterisitc.getCountry());
+		providerCharacteristic.put(Constant.PLACE, dcCharacter.getCountry());
 		providerCharacteristic.put(Constant.VM_INSTANCES, hostList.size());
-		providerCharacteristic.put(Constant.COST_VM, dcCharacterisitc.getCostVmTypes());
+		providerCharacteristic.put(Constant.COST_VM, dcCharacter.getCostVmTypes());
 
-		provider.setID(dcCharacterisitc.getId());
+		provider.setID(dcCharacter.getId());
 		provider.setCharacteristic(providerCharacteristic);
 		provider.setComputing(new MSProviderComputing());
 		provider.setNetwork(new MSProviderNetwork());

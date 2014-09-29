@@ -125,7 +125,8 @@ public class JGAPMapping {
 					Gene[] mygenes = array[i].getGenes();
 					sol[i] = new Solution(array[i], nodes);
 					sol[i].chromosome.setGenes(mygenes);
-					sol[i].setCostAmount(calculateCostSolution(nodes, providerList, mygenes));
+					// sol[i].setCostAmount(calculateCostSolution(nodes, providerList, array[i]));
+					sol[i].setCostAmount(calculateCostSolution(array[i]));
 				}
 			}
 			
@@ -157,11 +158,14 @@ public class JGAPMapping {
 		return accept;
 	}
 	
-	private static double calculateCostSolution(List<MSApplicationNode> nodes,  List<IMSProvider> providerList, Gene[] mygenes){
+	// private static double calculateCostSolution(List<MSApplicationNode> nodes,  List<IMSProvider> providerList, IChromosome c){
+	 private static double calculateCostSolution(IChromosome c){
+		Gene [] genes = c.getGenes();
 		double tmp = 0;
-		for (int j=0; j<nodes.size(); j++){
-			IMSProvider provider = MSProviderAdapter.findProviderById(providerList, (int) mygenes[j].getAllele());
-			tmp += CostPerVmConstraint.vmCost(nodes.get(j), provider);
+		for (int j=0; j<genes.length; j++){
+			// IMSProvider provider = MSProviderAdapter.findProviderById(providerList, (int) genes[j].getAllele());
+			tmp += ((CIntegerGene) genes[j]).getAllocationCost();
+			// tmp += CostPerVmConstraint.vmCost(nodes.get(j), provider, c);
 		}
 		return tmp;
 	}

@@ -20,8 +20,11 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.metascheduler.constraints;
 
+import org.jgap.Gene;
+
 import it.cnr.isti.smartfed.metascheduler.Constant;
 import it.cnr.isti.smartfed.metascheduler.MSPolicy;
+import it.cnr.isti.smartfed.metascheduler.CIntegerGene;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
@@ -31,16 +34,13 @@ public class CostPerVmConstraint extends MSPolicy {
 	private double highestVmCost;
 	
 	public CostPerVmConstraint(double weight, double highestValue) {
-		super(weight, MSPolicy.DESCENDENT_TYPE, MSPolicy.LOCAL_CONSTRAINT);
+		super(weight, MSPolicy.DESCENDENT_TYPE);
 		highestVmCost = highestValue;
 	}
 
-	@Override
-	public double evaluateGlobalPolicy(IMSApplication app, IMSProvider prov) {
-		return 0;
-	}
 	
-	public static double vmCost(MSApplicationNode node, IMSProvider prov){
+	
+	private static double vmCost(MSApplicationNode node, IMSProvider prov){
 		double cost;
 		double[] costPerVm = (double[]) prov.getCharacteristic().get(Constant.COST_VM);
 		char vmtype = (char) node.getComputing().getCharacteristic().get(Constant.VM_TYPE);
@@ -75,7 +75,7 @@ public class CostPerVmConstraint extends MSPolicy {
 	}
 	
 	@Override
-	public double evaluateLocalPolicy(MSApplicationNode node, IMSProvider prov) {
+	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov) {
 		Double budget = (Double) node.getCharacteristic().get(Constant.BUDGET);
 		Double r_cost = vmCost(node, prov);
 		Double r_maxCost = (highestVmCost); // * RamConstraint.getHighRamValue());
@@ -83,6 +83,8 @@ public class CostPerVmConstraint extends MSPolicy {
 		Double cost = r_cost;
 		Double maxCost = r_maxCost;
 		double distance;
+		
+		((CIntegerGene) g).setAllocationCost(cost);
 		try {
 			maxCost = (budget > maxCost) ? budget : maxCost; // the max value could be the budget
 			distance = evaluateDistance(cost, budget, maxCost);

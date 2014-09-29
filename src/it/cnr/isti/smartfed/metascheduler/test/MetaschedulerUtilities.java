@@ -43,7 +43,8 @@ public class MetaschedulerUtilities {
 		DEFAULT_COST_NET,
 		COST_PER_VM,
 		LOCATION,
-		LOCATION_NET;
+		LOCATION_NET, 
+		DEFAULT_COST_EQUAL_RIGHTS;
 	}
 
 	public static PolicyContainer createPolicy(List<FederationDatacenter> dcList, PolicyType type){
@@ -51,6 +52,9 @@ public class MetaschedulerUtilities {
 		switch (type){
 		case DEFAULT_COST: 
 			policy = MetaschedulerUtilities.createPoliciesDefault(dcList);
+			break;
+		case DEFAULT_COST_EQUAL_RIGHTS: 
+			policy = MetaschedulerUtilities.createPoliciesDefault(dcList, new double[]{5,5,95,95});
 			break;
 		case DEFAULT_COST_NET: 
 			policy = MetaschedulerUtilities.createPoliciesDefaultNet(dcList);
@@ -108,7 +112,7 @@ public class MetaschedulerUtilities {
 		return constraint;
 	}
 	
-	public static PolicyContainer createPoliciesDefault(List<FederationDatacenter> dcList ){
+	public static PolicyContainer createPoliciesDefault(List<FederationDatacenter> dcList, double[] weights){
 		System.out.println("*** Creating default policy ***");
 		// finding the datacenter with the highest cost per ram (default criteria in the compare method)
 		Collections.sort(dcList);
@@ -123,13 +127,17 @@ public class MetaschedulerUtilities {
 		PolicyContainer.highStorageValue = (long) highStorage_dc;
 		PolicyContainer.highCostValueStorage = findDatacenterMaxStorage(dcList).getMSCharacteristics().getCostPerStorage();
 
-		PolicyContainer constraint = new PolicyContainer(new double[]{1, 1, 1, 197});
-		constraint.add(constraint.ramConstraint(1));
-		constraint.add(constraint.storageConstraint(1));
-		constraint.add(constraint.locationConstraint(1));
-		constraint.add(constraint.costRamStorageConstraint(197));
+		PolicyContainer constraint = new PolicyContainer(weights);
+		constraint.add(constraint.ramConstraint(weights[0]));
+		constraint.add(constraint.storageConstraint(weights[1]));
+		constraint.add(constraint.locationConstraint(weights[2]));
+		constraint.add(constraint.costRamStorageConstraint(weights[3]));
 		System.out.println(constraint);
 		return constraint;
+	}
+	
+	public static PolicyContainer createPoliciesDefault(List<FederationDatacenter> dcList){
+		return createPoliciesDefault(dcList, new double[]{1, 1, 1, 197});
 	}
 
 	public static PolicyContainer createPoliciesCostPerVm(List<FederationDatacenter> dcList){

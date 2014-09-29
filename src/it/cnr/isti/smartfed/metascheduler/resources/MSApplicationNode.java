@@ -107,6 +107,5 @@ public class MSApplicationNode implements Cloneable{
 	public HashMap<String, Object> getCharacteristic(){
 		return characteristic;
 	}
-
 	
 }

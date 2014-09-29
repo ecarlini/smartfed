@@ -20,6 +20,8 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.metascheduler.constraints;
 
+import org.jgap.Gene;
+
 import it.cnr.isti.smartfed.metascheduler.Constant;
 import it.cnr.isti.smartfed.metascheduler.MSPolicy;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
@@ -39,11 +41,11 @@ public class StorageConstraint extends MSPolicy {
 	}
 
 	public StorageConstraint(double weight, double highestValue) {
-		super(weight, MSPolicy.ASCENDENT_TYPE, MSPolicy.LOCAL_CONSTRAINT);
+		super(weight, MSPolicy.ASCENDENT_TYPE);
 		highStorageValue = highestValue;
 	}
 
-	public double evaluateLocalPolicy(MSApplicationNode node, IMSProvider prov) {
+	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov) {
 		long nodeStore =  (Long) node.getStorage().getCharacteristic().get(Constant.STORE); // what I want
 		long provStore =  (Long) prov.getStorage().getCharacteristic().get(Constant.STORE); // what I have
 		double distance;

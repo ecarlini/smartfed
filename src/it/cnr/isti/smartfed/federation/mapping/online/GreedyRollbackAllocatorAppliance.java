@@ -66,7 +66,7 @@ public class GreedyRollbackAllocatorAppliance extends AbstractAllocator
 		Hashtable<ApplicationVertex, FederationDatacenter> solution = new Hashtable<ApplicationVertex, FederationDatacenter>();
 		
 		// Initialize the netestimator session
-		Long netSession = netEstimator.createSession();
+		// Long netSession = netEstimator.createSession();
 		
 		// reset the visited providers for the vertex
 		List<FederationDatacenter> visitedDatacenter = new ArrayList< FederationDatacenter>(monitoring.getView().size()); 
@@ -94,7 +94,7 @@ public class GreedyRollbackAllocatorAppliance extends AbstractAllocator
 				}
 							
 				// check the datacenter and the connection using the netestimator	
-				boolean ok_net = this.checkNetwork(av, fd, solution, application, netSession);
+				boolean ok_net = true; //this.checkNetwork(av, fd, solution, application, netSession);
 			
 				System.out.println("Checking net "+av+" to "+fd+" : "+ok_dc);
 			
@@ -129,8 +129,7 @@ public class GreedyRollbackAllocatorAppliance extends AbstractAllocator
 						if ((application.edgeBetween(removed, other) != null)
 								&& solution.contains(other))
 						{
-							netEstimator.deallocateLink(fdRemoved, solution.get(other), 
-									application.edgeBetween(removed, other), application);
+							// netEstimator.deallocateLink(fdRemoved, solution.get(other), application.edgeBetween(removed, other), application);
 						}
 					}
 					
@@ -158,7 +157,7 @@ public class GreedyRollbackAllocatorAppliance extends AbstractAllocator
 			
 		}
 	
-		netEstimator.consolidateAllocationSession(netSession);
+		// netEstimator.consolidateAllocationSession(netSession);
 		
 		
 		for (ApplicationVertex vertex: solution.keySet())
@@ -226,7 +225,11 @@ public class GreedyRollbackAllocatorAppliance extends AbstractAllocator
 				else
 				{
 					ApplicationEdge edge = application.edgeBetween(sourceVertex, av);
-					boolean result = netEstimator.allocateLink(netSession, sourceFd, solution.get(av), edge, application);
+					
+					// TODO: netestimator should not contain any information about current allocation; 
+					// define an external fucntion that maps a current application on top of an internet estimator
+					// boolean result = netEstimator.allocateLink(netSession, sourceFd, solution.get(av), edge, application);
+					boolean result = true;
 					if (result == false)
 						return result;
 				}

@@ -20,143 +20,64 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.networking;
 
-import it.cnr.isti.smartfed.federation.application.Application;
-import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 
+import org.jgrapht.graph.Multigraph;
+
+/**
+ * This class encloses methods for the generation of a "provider networks" that
+ * would model the state and the nature of the links among different federation
+ * providers. 
+ * The information contained by this class are static, in the sense that the
+ * class is not supposed to track what applications are currently running on 
+ * providers. For example, if the bandwidth available among two provides is
+ * 100KB and then an application requiring 10KB is deployed, this class would 
+ * still return 100KB as link capacity.
+ * 
+ * @author carlini
+ *
+ */
 
 public class InternetEstimator
 {
-	private InternetLink[][] links = null;
-	private HashMap<Long, InternetLink[][]> sessions = null;
-	private HashMap<Integer, Integer> datacenterIdTranslation = null;
+	private Multigraph<FederationDatacenter, InternetLink> graph;
 	
-	private long sessionId = 0;
-	private int datacenterTraslationId = -1;
-	
-	
-	public InternetEstimator(int datacenters)
+	public InternetEstimator(List<FederationDatacenter> list)
 	{
-		links = new InternetLink[datacenters][datacenters];
-		sessions = new HashMap<Long, InternetLink[][]>();
-		datacenterIdTranslation = new HashMap<Integer, Integer>();
+		graph = new Multigraph<FederationDatacenter, InternetLink>(InternetLink.class);
 		
-	}
-	
-	public void defineDirectLink(FederationDatacenter source, FederationDatacenter dest, 
-			long bandwidth, int latency, SecuritySupport security)
-	{
-		
-		int sourceDc = translate(source);
-		int destDc = translate(dest);
-		
-		links[sourceDc][destDc] = new InternetLink(bandwidth, latency, security);
-	}
-	
-	public void defineUndirectLink(FederationDatacenter source, FederationDatacenter dest, 
-			long bandwidth, int latency, SecuritySupport security)
-	{
-		
-		int sourceDc = translate(source);
-		int destDc = translate(dest);
-		
-		links[sourceDc][destDc] = new InternetLink(bandwidth, latency, security);
-		links[destDc][sourceDc] = new InternetLink(bandwidth, latency, security);
-	}
-	
-	public long createSession()
-	{	
-		sessionId++;
-		
-		InternetLink[][] session = this.cloneLinks();		
-		sessions.put(sessionId, session);
-		
-		return sessionId;
-	}
-	
-	public void disposeAllocationSession(long id) throws NullPointerException 
-	{
-		Object[] retValue = sessions.remove(id);
-		if(retValue == null) 
-			throw new NullPointerException("No Such session with given ID");
-	}
-
-	
-	public boolean allocateLink (long sessionId, FederationDatacenter source, FederationDatacenter dest, 
-			ApplicationEdge edge, Application application)
-	{	
-		InternetLink[][] session =  sessions.get(sessionId);
-		
-		int sourceDc = translate(source);
-		int destDc = translate(dest);
-		
-		return session[sourceDc][destDc].mapEdge(application, edge);
-	}
-	
-	public boolean allocateLink (FederationDatacenter source, FederationDatacenter dest, ApplicationEdge edge,
-			Application application)
-	{
-		
-		int sourceDc = translate(source);
-		int destDc = translate(dest);
-		
-		return links[sourceDc][destDc].mapEdge(application, edge);
-		
-	}
-
-	public void deallocateLink (long sessionId, FederationDatacenter source, FederationDatacenter dest, 
-			ApplicationEdge edge, Application application)
-	{
-	
-		InternetLink[][] session =  sessions.get(sessionId);
-		
-		int sourceDc = translate(source);
-		int destDc = translate(dest);
-		
-		session[sourceDc][destDc].unmapEdge(application, edge);
-	}
-	
-	public void deallocateLink (FederationDatacenter source, FederationDatacenter dest, ApplicationEdge edge,
-			Application application)
-	{
-		
-		int sourceDc = translate(source);
-		int destDc = translate(dest);
-		
-		links[sourceDc][destDc].unmapEdge(application, edge);	
-	}
-	
-	/** Current Assumption: the original bandwidth matrix does not changes during the allocation procedure */
-	public void consolidateAllocationSession(long id)
-	{
-		InternetLink[][] session =  sessions.get(sessionId);
-		links = session;
-	}
-	
-	private InternetLink[][] cloneLinks()
-	{
-		InternetLink[][] clone = new InternetLink[links.length][];
-			
-		for (int i=0; i<links.length; i++)
+		// populate the vertexes
+		for (FederationDatacenter d: list)
 		{
-			clone[i] = Arrays.copyOf(links[i], links[i].length);
+			graph.addVertex(d);
 		}
 		
-		return clone;
-	}
-	
-	private int translate(FederationDatacenter source)
-	{	
-		if(datacenterIdTranslation.containsKey(source.getId())) 
-			return datacenterIdTranslation.get(source.getId());
-		else{
-			datacenterTraslationId++;
-			datacenterIdTranslation.put(source.getId(), datacenterTraslationId);
-			return datacenterTraslationId;
+		// populate the edges
+		for (FederationDatacenter outer: list)
+		{
+			for (FederationDatacenter inner: list)
+			{
+				// a self edges will exits, even if probably will be never used
+				if (outer.getId() == inner.getId())
+				{
+					// DO NOTHING!
+					// InternetLink il = new InternetLink(Long.MAX_VALUE, 0, SecuritySupport.ADVANCED);
+					// graph.addEdge(outer, inner, il);
+				}
+				else // regular edge
+				{
+					InternetLink il = new InternetLink(1024*1024*10, 100, SecuritySupport.ADVANCED);
+					graph.addEdge(outer, inner, il);
+				}
+			}
 		}
 	}
-
+	
+	
+	public InternetLink getInternetLink(FederationDatacenter a, FederationDatacenter b)
+	{
+		return graph.getEdge(a, b);
+	}
 }

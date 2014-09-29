@@ -3,7 +3,6 @@ package it.cnr.isti.smartfed.test;
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
-import it.cnr.isti.smartfed.networking.SecuritySupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +49,7 @@ public abstract class DataSet implements InterfaceDataSet
 	}
 	
 	public static InternetEstimator createDefaultInternetEstimator(List<FederationDatacenter> datacenters){
-		InternetEstimator inetEst = new InternetEstimator(datacenters.size());
-		for (FederationDatacenter top: datacenters){
-			for (FederationDatacenter bot: datacenters){
-				inetEst.defineDirectLink(top, bot, 1024*1024*10, 100, SecuritySupport.ADVANCED);
-			}
-		}
+		InternetEstimator inetEst = new InternetEstimator(datacenters);
 		return inetEst;
 	}
 }

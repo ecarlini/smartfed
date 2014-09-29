@@ -28,7 +28,6 @@ import it.cnr.isti.smartfed.federation.mapping.MappingSolution;
 import it.cnr.isti.smartfed.federation.mapping.RandomAllocator;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
-import it.cnr.isti.smartfed.networking.SecuritySupport;
 import it.cnr.isti.smartfed.papers.qbrokage.ApplicationGenerator;
 import it.cnr.isti.smartfed.papers.qbrokage.DatacenterGenerator;
 
@@ -78,12 +77,7 @@ public class AllocatorRepeatability
 	}
 	
 	private InternetEstimator createInternetEstimator(List<FederationDatacenter> datacenters){
-		InternetEstimator inetEst = new InternetEstimator(datacenters.size());
-		for (FederationDatacenter top: datacenters){
-			for (FederationDatacenter bot: datacenters){
-				inetEst.defineDirectLink(top, bot, 1024*1024*10, 100, SecuritySupport.ADVANCED);
-			}
-		}
+		InternetEstimator inetEst = new InternetEstimator(datacenters);
 		return inetEst;
 	}
 	

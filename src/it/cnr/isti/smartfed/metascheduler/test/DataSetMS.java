@@ -230,12 +230,7 @@ public class DataSetMS implements InterfaceDataSet
 
 	@Override
 	public InternetEstimator createInternetEstimator(List<FederationDatacenter> list) {
-		InternetEstimator inetEst = new InternetEstimator(list.size());
-		for (FederationDatacenter top: list){
-			for (FederationDatacenter bot: list){
-				inetEst.defineDirectLink(top, bot, 1024*1024*10, 100, SecuritySupport.ADVANCED);
-			}
-		}
+		InternetEstimator inetEst = new InternetEstimator(list);
 		return inetEst;
 	}
 }

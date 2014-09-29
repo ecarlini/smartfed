@@ -35,7 +35,7 @@ import com.rits.cloning.Cloner;
  * @author carlini
  * This class manages the monitoring abstraction for the federation.
  * The task of the monitoring hub is to get allocation and other data from the 
- * providers of the federation.This implementation works as follows.
+ * providers of the federation. This implementation works as follows.
  * Upon reception of the MONITOR_UPDATE event, this class updates its internal view
  * by cloning the datacenter state. At the same time, it exposes as public the view
  * taken at the previous step.

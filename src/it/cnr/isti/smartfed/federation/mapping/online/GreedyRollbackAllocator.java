@@ -65,7 +65,7 @@ public class GreedyRollbackAllocator extends AbstractAllocator
 		Map<Cloudlet, Set<FederationDatacenter>> visited = new HashMap<Cloudlet, Set<FederationDatacenter>>();
 			
 		// Initialize the netestimator session
-		Long netSession = netEstimator.createSession();
+		// Long netSession = netEstimator.createSession();
 		
 		
 		// main loop: until all the cloudlet are assigned
@@ -93,7 +93,7 @@ public class GreedyRollbackAllocator extends AbstractAllocator
 				
 				// check the datacenter and the connection using the netestimator
 				boolean ok_vm = fd.getVmAllocationPolicy().allocateHostForVm(vm);
-				boolean ok_net = this.checkNetwork(cloudlet, fd, solution, application, netSession);
+				boolean ok_net = true; //this.checkNetwork(cloudlet, fd, solution, application, netSession);
 				
 				boolean suitable = ok_vm && ok_net;
 								
@@ -134,7 +134,7 @@ public class GreedyRollbackAllocator extends AbstractAllocator
 							{
 								ApplicationVertex source = application.getVertexForCloudlet(removed);
 								ApplicationVertex dest = application.getVertexForCloudlet(other);
-								netEstimator.deallocateLink(fdRemoved, otherFD, application.edgeBetween(source, dest), application);
+								// netEstimator.deallocateLink(fdRemoved, otherFD, application.edgeBetween(source, dest), application);
 							}
 						}
 					}
@@ -162,7 +162,7 @@ public class GreedyRollbackAllocator extends AbstractAllocator
 			
 		}
 	
-		netEstimator.consolidateAllocationSession(netSession);
+		// netEstimator.consolidateAllocationSession(netSession);
 		return new MappingSolution[]{solution};
 	}
 	
@@ -232,8 +232,9 @@ public class GreedyRollbackAllocator extends AbstractAllocator
 				}
 				else
 				{
-					// check whether the link between the two datacenters respect the connection in the application					
-					boolean result = netEstimator.allocateLink(netSession, sourceFd, destinationFd, edge, application);
+					// TODO check whether the link between the two datacenters respect the connection in the application					
+					// boolean result = netEstimator.allocateLink(netSession, sourceFd, destinationFd, edge, application);
+					boolean result = true;
 					if (result == false)
 						return result;
 				}

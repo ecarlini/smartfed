@@ -204,12 +204,7 @@ class EdgeTestDataset implements InterfaceDataSet
 
 	@Override
 	public InternetEstimator createInternetEstimator(List<FederationDatacenter> datacenters){
-		InternetEstimator inetEst = new InternetEstimator(datacenters.size());
-		for (FederationDatacenter top: datacenters){
-			for (FederationDatacenter bot: datacenters){
-				inetEst.defineDirectLink(top, bot, 1024*1024*10, 100, SecuritySupport.ADVANCED);
-			}
-		}
+		InternetEstimator inetEst = new InternetEstimator(datacenters);
 		return inetEst;
 	}
 }

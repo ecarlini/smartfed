@@ -53,7 +53,6 @@ import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.junit.Assert;
 import org.junit.Before;
@@ -187,12 +186,7 @@ class ThreeTierDataset implements InterfaceDataSet
 
 	@Override
 	public InternetEstimator createInternetEstimator(List<FederationDatacenter> datacenters){
-		InternetEstimator inetEst = new InternetEstimator(datacenters.size());
-		for (FederationDatacenter top: datacenters){
-			for (FederationDatacenter bot: datacenters){
-				inetEst.defineDirectLink(top, bot, 1024*1024*10, 100, SecuritySupport.ADVANCED);
-			}
-		}
+		InternetEstimator inetEst = new InternetEstimator(datacenters);
 		return inetEst;
 	}
 

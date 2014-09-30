@@ -21,7 +21,6 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 package it.cnr.isti.smartfed.junit;
 
 import it.cnr.isti.smartfed.federation.application.Application;
-import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.application.CloudletProfile;
 import it.cnr.isti.smartfed.federation.application.CloudletProvider;
@@ -39,9 +38,8 @@ import it.cnr.isti.smartfed.federation.resources.HostProfile.HostParams;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
 import it.cnr.isti.smartfed.federation.resources.VmFactory.VmType;
 import it.cnr.isti.smartfed.metascheduler.JGAPMapping;
-import it.cnr.isti.smartfed.metascheduler.test.MetaschedulerUtilities.PolicyType;
+import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
-import it.cnr.isti.smartfed.networking.SecuritySupport;
 import it.cnr.isti.smartfed.test.Experiment;
 import it.cnr.isti.smartfed.test.InterfaceDataSet;
 import it.cnr.isti.smartfed.test.TestResult;

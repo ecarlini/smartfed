@@ -37,7 +37,7 @@ import it.cnr.isti.smartfed.federation.resources.HostProfile;
 import it.cnr.isti.smartfed.federation.resources.HostProfile.HostParams;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
 import it.cnr.isti.smartfed.metascheduler.Solution;
-import it.cnr.isti.smartfed.metascheduler.test.MetaschedulerUtilities.PolicyType;
+import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
 import it.cnr.isti.smartfed.networking.SecuritySupport;
 import it.cnr.isti.smartfed.test.Experiment;
@@ -115,7 +115,7 @@ public class ApplicationEdgeTest
 	public void testGenetic()
 	{
 		GeneticAllocator allocator = new GeneticAllocator();
-		allocator.setPolicyType(PolicyType.DEFAULT_COST_EQUAL_RIGHTS);
+		allocator.setPolicyType(PolicyType.DEFAULT_COST_NET);
 		Experiment e = new Experiment(allocator, data);
 		e.run();		
 		Solution[] s = allocator.getMSSolutions();

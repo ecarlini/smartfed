@@ -38,11 +38,12 @@ public abstract class MSPolicy  {
 	public static final char LOCAL_CONSTRAINT = 'L';
 	
 	protected final static int RUNTIME_ERROR = 1000;
-	protected static final boolean DEBUG = false;
+	protected static final boolean DEBUG = true;
 	
 	private double weight;
 	private char type;
 	private char group;
+	protected String constraintName = "Generic";
 	
 	public MSPolicy(double weight, char type, char group){
 		this.weight = weight;
@@ -54,8 +55,6 @@ public abstract class MSPolicy  {
 		this(weight, type, MSPolicy.LOCAL_CONSTRAINT);
 	}
 
-	// It is currently buggy
-	/*
 	public double evaluatePolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov){
 		double res;
 		
@@ -71,7 +70,7 @@ public abstract class MSPolicy  {
 		}
 		return res;
 	}
-	*/
+	
 	
 	protected double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov){
 		List<MSApplicationNode> nodes = app.getNodes();
@@ -129,6 +128,21 @@ public abstract class MSPolicy  {
 		default:
 			return 0;
 		}
+	}
+	
+	protected double calculateDistance_ErrHandling(Double cost, Double budget, Double maxCost){
+		String name = this.constraintName;
+		double distance;
+		try {
+			distance = evaluateDistance(cost, budget, maxCost);
+		} catch (Exception e) {
+			distance = RUNTIME_ERROR; // a positive value in order to not consider this constraint
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		if (DEBUG)
+			System.out.println("\tEval on " + name + " " + cost + "-" + budget + "/" + maxCost + "=" + distance);
+		return distance;
 	}
 
 }

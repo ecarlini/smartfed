@@ -35,6 +35,7 @@ public class CostPerVmConstraint extends MSPolicy {
 	
 	public CostPerVmConstraint(double weight, double highestValue) {
 		super(weight, MSPolicy.DESCENDENT_TYPE);
+		this.constraintName = "Cost_per_vm";
 		highestVmCost = highestValue;
 	}
 
@@ -82,19 +83,11 @@ public class CostPerVmConstraint extends MSPolicy {
 		
 		Double cost = r_cost;
 		Double maxCost = r_maxCost;
-		double distance;
 		
 		((CIntegerGene) g).setAllocationCost(cost);
-		try {
-			maxCost = (budget > maxCost) ? budget : maxCost; // the max value could be the budget
-			distance = evaluateDistance(cost, budget, maxCost);
-		} catch (Exception e) {
-			distance = RUNTIME_ERROR; // a positive value in order to not consider this constraint
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
-		if (DEBUG)
-			System.out.println("\tEval on cost_per_vm " + cost + "-" + budget + "/" + maxCost + "=" + distance);
+		maxCost = (budget > maxCost) ? budget : maxCost; // the max value could be the budget
+		double distance = this.calculateDistance_ErrHandling(cost, budget, maxCost);
+		
 		return distance * getWeight();
 	}
 

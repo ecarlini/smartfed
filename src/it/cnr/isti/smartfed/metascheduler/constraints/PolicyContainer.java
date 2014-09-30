@@ -96,11 +96,18 @@ public class PolicyContainer {
 	}
 	
 	
-	public MSPolicy costRamStorageConstraint(double weight){
+	public MSPolicy costPerResourceConstraint_Local(double weight){
 		double normWeight = calculateNormWeight(weight);
-		log.info("Norm weight into costRamStorageConstraint " + normWeight);
+		log.info("Norm weight into costPerResourceConstraint " + normWeight);
 		double [] highCostValue = {highCostValueRam, highCostValueStorage};
-		return new BudgetConstraint(normWeight, highCostValue);
+		return new BudgetConstraint(normWeight, highCostValue, MSPolicy.LOCAL_CONSTRAINT);
+	}
+	
+	public MSPolicy costPerResourceConstraint_Global(double weight){
+		double normWeight = calculateNormWeight(weight);
+		log.info("Norm weight into costPerResourceConstraint " + normWeight);
+		double [] highCostValue = {highCostValueRam, highCostValueStorage};
+		return new BudgetConstraint(normWeight, highCostValue, MSPolicy.GLOBAL_CONSTRAINT);
 	}
 	
 	public MSPolicy storageConstraint(double weight){

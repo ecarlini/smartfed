@@ -73,7 +73,7 @@ public class MSFitnessFunction extends FitnessFunction {
 		// MSApplicationNode node = nodes.get(gene_index);
 		for (int i = 0; i < policy.size(); i++) {
 			// weightedDistance[i] = policy.get(i).evaluateLocalPolicy(node,provider);
-			weightedDistance[i] = policy.get(i).evaluateGlobalPolicy(gene_index, chromos, application, provider);
+			weightedDistance[i] = policy.get(i).evaluatePolicy(gene_index, chromos, application, provider);
 		}
 		
 		for (int i=0; i<weightedDistance.length; i++){

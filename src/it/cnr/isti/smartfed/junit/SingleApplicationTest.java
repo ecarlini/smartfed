@@ -35,6 +35,7 @@ import it.cnr.isti.smartfed.federation.resources.HostProfile;
 import it.cnr.isti.smartfed.federation.resources.HostProfile.HostParams;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
 import it.cnr.isti.smartfed.metascheduler.Solution;
+import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
 import it.cnr.isti.smartfed.networking.SecuritySupport;
 import it.cnr.isti.smartfed.test.Experiment;
@@ -73,6 +74,8 @@ public class SingleApplicationTest
 	@BeforeClass
 	public static void testSetup() 
 	{
+		System.out.println("----------------------------");
+		System.out.println("SingleApplicationTest");
 		data = new TestDataset();
 		expectedResult = (new Double(vmMem) * Double.parseDouble(costPerMem) / 1024) +
 				(new Double(vmDisk) * Double.parseDouble(costPerStorage) / 1024)
@@ -109,6 +112,7 @@ public class SingleApplicationTest
 	public void testGenetic()
 	{
 		GeneticAllocator allocator = new GeneticAllocator();
+		allocator.setPolicyType(PolicyType.DEFAULT_COST);
 		Experiment e = new Experiment(allocator, data);
 		e.run();		
 		Solution[] s = allocator.getMSSolutions();

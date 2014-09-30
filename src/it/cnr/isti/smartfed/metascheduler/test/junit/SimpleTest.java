@@ -137,7 +137,7 @@ public class SimpleTest {
 		System.out.println(apps.get(0).allVMsString());
 		
 		// PolicyContainer constraint = MetaschedulerUtilities.createPoliciesCostPerVm(dcList);
-		PolicyContainer constraint = MetaschedulerUtilities.createPoliciesDefault(dcList);
+		PolicyContainer constraint = MSPolicyFactory.createPoliciesDefault(dcList);
 		Solution[] sol = Metascheduler.getMapping(apps.get(0),constraint.getList(), dcList, 1);
 	}
 

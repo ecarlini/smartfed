@@ -24,11 +24,11 @@ import it.cnr.isti.smartfed.federation.MonitoringHub;
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
+import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory;
 import it.cnr.isti.smartfed.metascheduler.Solution;
+import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
 import it.cnr.isti.smartfed.metascheduler.constraints.PolicyContainer;
 import it.cnr.isti.smartfed.metascheduler.iface.Metascheduler;
-import it.cnr.isti.smartfed.metascheduler.test.MetaschedulerUtilities;
-import it.cnr.isti.smartfed.metascheduler.test.MetaschedulerUtilities.PolicyType;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 import java.util.Collections;
@@ -171,7 +171,7 @@ public class GeneticAllocator extends AbstractAllocator {
 	public void setPolicyType(PolicyType t) {
 		this.type = t;
 		if (this.getDcs() != null){
-			this.setConstraint(MetaschedulerUtilities.createPolicy(dcs, type));
+			this.setConstraint(MSPolicyFactory.createPolicy(dcs, type));
 		}
 	}
 
@@ -181,7 +181,7 @@ public class GeneticAllocator extends AbstractAllocator {
 		this.monitoring = monitoring;
 		this.setDcs(monitoring.getView());
 		if (constraint == null){
-			this.setConstraint(MetaschedulerUtilities.createPolicy(dcs, type));
+			this.setConstraint(MSPolicyFactory.createPolicy(dcs, type));
 		}
 	}
 }

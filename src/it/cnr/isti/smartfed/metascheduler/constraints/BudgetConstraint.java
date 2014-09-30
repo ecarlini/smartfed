@@ -43,6 +43,7 @@ public class BudgetConstraint extends MSPolicy {
 	
 	public BudgetConstraint(double weight, double highestValue, char c) {
 		super(weight, MSPolicy.DESCENDENT_TYPE, c);
+		this.constraintName = "Budget";
 		highRamCost = highestValue;
 	}
 	
@@ -51,8 +52,9 @@ public class BudgetConstraint extends MSPolicy {
 	 * @param weight
 	 * @param highestValues
 	 */
-	public BudgetConstraint(double weight, double[] highestValues) {
-		super(weight, MSPolicy.DESCENDENT_TYPE, MSPolicy.LOCAL_CONSTRAINT);
+	public BudgetConstraint(double weight, double[] highestValues, char c) {
+		super(weight, MSPolicy.DESCENDENT_TYPE, c);
+		this.constraintName = "Budget";
 		highRamCost = highestValues[0];
 		highStorageCost = highestValues[1];
 	}
@@ -138,24 +140,12 @@ public class BudgetConstraint extends MSPolicy {
 		((CIntegerGene) chromos.getGene(gene_index)).setAllocationCost(cost);
 		
 		Double maxCost = budget;
-		double distance = calcDistanceErrHandling(cost, budget, maxCost);
+		double distance = calculateDistance_ErrHandling(cost, budget, maxCost);
 		
 		return distance * getWeight();
 	}
 	
-	private double calcDistanceErrHandling(Double cost, Double budget, Double maxCost){
-		double distance;
-		try {
-			distance = evaluateDistance(cost, budget, maxCost);
-		} catch (Exception e) {
-			distance = RUNTIME_ERROR; // a positive value in order to not consider this constraint
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
-		if (DEBUG)
-			System.out.println("\tEval on budget " + cost + "-" + budget + "/" + maxCost + "=" + distance);
-		return distance;
-	}
+	
 	
 	@Override
 	public double evaluateLocalPolicy(Gene gene, MSApplicationNode node, IMSProvider prov) {
@@ -163,14 +153,14 @@ public class BudgetConstraint extends MSPolicy {
 		Double s_maxCost = (highStorageCost * StorageConstraint.getHighStorageValue());
 		Double r_maxCost = (highRamCost * RamConstraint.getHighRamValue());
 		
-		Double cost = ramCost(node, prov) + storageCost(node, prov);
+		Double cost = calculateCost(node, prov);
 		((CIntegerGene) gene).setAllocationCost(cost);
 		
 		Double maxCost = r_maxCost + s_maxCost;
 		// maxCost = (budget > maxCost) ? budget : maxCost; // the max value could be the budget
 		maxCost = (budget);
 					
-		double distance = calcDistanceErrHandling(cost, budget, maxCost);
+		double distance = calculateDistance_ErrHandling(cost, budget, maxCost);
 		return distance * getWeight();
 	}
 

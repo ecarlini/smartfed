@@ -24,6 +24,7 @@ import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 
 import java.util.List;
 
+import org.cloudbus.cloudsim.core.CloudSim;
 import org.jgrapht.graph.Multigraph;
 
 /**
@@ -75,9 +76,29 @@ public class InternetEstimator
 		}
 	}
 	
-	
+	/**
+	 * Return the InternetLink between two datacenters. 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	public InternetLink getInternetLink(FederationDatacenter a, FederationDatacenter b)
 	{
 		return graph.getEdge(a, b);
+	}
+	
+	/**
+	 * Return the InternetLink between the two datacenters
+	 * with the parameter ids.
+	 * @param id_a
+	 * @param id_b
+	 * @return
+	 */
+	public InternetLink getInternetLink(Integer id_a, Integer id_b)
+	{
+		FederationDatacenter a = (FederationDatacenter) CloudSim.getEntity(id_a);
+		FederationDatacenter b = (FederationDatacenter) CloudSim.getEntity(id_b);
+		
+		return this.getInternetLink(a, b);
 	}
 }

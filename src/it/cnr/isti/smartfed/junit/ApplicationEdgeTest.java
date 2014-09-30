@@ -177,7 +177,7 @@ class EdgeTestDataset implements InterfaceDataSet
 	{
 		Vm type1 = VmFactory.getCustomVm(userId, 1000d, 1, ApplicationEdgeTest.vmMem, 100, ApplicationEdgeTest.vmDisk);
 		
-		Application app = new SimpleApplication(userId, ApplicationEdgeTest.vnumber , type1);
+		Application app = new SimpleApplication(userId, ApplicationEdgeTest.vnumber, type1);
 		Iterator<ApplicationVertex> i = app.vertexSet().iterator();
 		ApplicationVertex av1 = i.next();
 		av1.setCountry("Italy");

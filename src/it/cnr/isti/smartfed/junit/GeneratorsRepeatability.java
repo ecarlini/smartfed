@@ -71,6 +71,7 @@ public class GeneratorsRepeatability
 	@Test
 	public void testApplicationGenerator()
 	{		
+		ResourceCounter.reset();
 		ApplicationGenerator ag = new ApplicationGenerator(43);
 		Application app1 = ag.getApplication(1, 2, 5);
 

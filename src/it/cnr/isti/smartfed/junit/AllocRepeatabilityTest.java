@@ -41,7 +41,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class AllocatorRepeatability 
+public class AllocRepeatabilityTest 
 {
 	private List<FederationDatacenter> datacenters;
 	private Application application;

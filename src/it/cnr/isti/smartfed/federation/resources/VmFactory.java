@@ -133,7 +133,7 @@ public class VmFactory
 
 	public static Vm getCustomVm(int userId, double mips, int cores, int ramMB, long bandMB, long diskMB)
 	{		
-		VmTyped vmt = new VmTyped(ResourceCounter.nextVmID(), 
+		VmTyped vmt = new VmTyped(-1, 
 				userId, 
 				mips, 
 				cores, 

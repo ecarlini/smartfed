@@ -18,13 +18,13 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package it.cnr.isti.smartfed.junit;
+package it.src.isti.smartfed.federation.utils;
 
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
-import it.cnr.isti.smartfed.papers.qbrokage.ApplicationGenerator;
-import it.cnr.isti.smartfed.papers.qbrokage.DatacenterGenerator;
+import it.cnr.isti.smartfed.federation.utils.ApplicationGenerator;
+import it.cnr.isti.smartfed.federation.utils.DatacenterGenerator;
 
 import java.util.Calendar;
 import java.util.List;

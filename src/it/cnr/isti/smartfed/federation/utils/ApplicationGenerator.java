@@ -18,13 +18,12 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package it.cnr.isti.smartfed.papers.qbrokage;
+package it.cnr.isti.smartfed.federation.utils;
 
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.application.CloudletProvider;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
-import it.cnr.isti.smartfed.federation.utils.DistributionAssignment;
 
 import java.util.ArrayList;
 

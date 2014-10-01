@@ -27,6 +27,8 @@ import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
 import it.cnr.isti.smartfed.federation.mapping.RandomAllocator;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
+import it.cnr.isti.smartfed.federation.utils.ApplicationGenerator;
+import it.cnr.isti.smartfed.federation.utils.DatacenterGenerator;
 import it.cnr.isti.smartfed.test.DataSet;
 import it.cnr.isti.smartfed.test.Experiment;
 import it.cnr.isti.smartfed.test.TestResult;

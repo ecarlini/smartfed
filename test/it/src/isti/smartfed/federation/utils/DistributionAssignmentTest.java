@@ -1,4 +1,4 @@
-package it.cnr.isti.smartfed.junit;
+package it.src.isti.smartfed.federation.utils;
 
 import junit.framework.Assert;
 

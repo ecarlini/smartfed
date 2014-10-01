@@ -30,13 +30,14 @@ import it.cnr.isti.smartfed.federation.mapping.RandomAllocator;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterProfile;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
-import it.cnr.isti.smartfed.junit.SingleApplicationTest;
+import it.cnr.isti.smartfed.federation.utils.DatacenterGenerator;
 import it.cnr.isti.smartfed.metascheduler.JGAPMapping;
 import it.cnr.isti.smartfed.test.DataSet;
 import it.cnr.isti.smartfed.test.DatacenterFacilities;
 import it.cnr.isti.smartfed.test.Experiment;
 import it.cnr.isti.smartfed.test.SimpleApplication;
 import it.cnr.isti.smartfed.test.TestResult;
+import it.src.isti.smartfed.federation.mapping.SingleApplicationTest;
 
 import java.io.File;
 import java.io.FileWriter;

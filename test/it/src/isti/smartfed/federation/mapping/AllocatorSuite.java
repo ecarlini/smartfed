@@ -1,5 +1,7 @@
-package it.cnr.isti.smartfed.junit;
+package it.src.isti.smartfed.federation.mapping;
 
+
+import it.src.isti.smartfed.federation.utils.GeneratorsRepeatability;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

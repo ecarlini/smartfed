@@ -18,7 +18,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package it.cnr.isti.smartfed.junit;
+package it.src.isti.smartfed.federation.mapping;
 
 import it.cnr.isti.smartfed.federation.MonitoringHub;
 import it.cnr.isti.smartfed.federation.application.Application;
@@ -27,9 +27,10 @@ import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
 import it.cnr.isti.smartfed.federation.mapping.MappingSolution;
 import it.cnr.isti.smartfed.federation.mapping.RandomAllocator;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
+import it.cnr.isti.smartfed.federation.utils.ApplicationGenerator;
+import it.cnr.isti.smartfed.federation.utils.DatacenterGenerator;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
-import it.cnr.isti.smartfed.papers.qbrokage.ApplicationGenerator;
-import it.cnr.isti.smartfed.papers.qbrokage.DatacenterGenerator;
+import it.cnr.isti.smartfed.networking.SecuritySupport;
 
 import java.util.Calendar;
 import java.util.List;
@@ -41,7 +42,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class AllocRepeatabilityTest 
+public class AllocatorRepeatability 
 {
 	private List<FederationDatacenter> datacenters;
 	private Application application;

@@ -65,7 +65,7 @@ public class DatacenterGenerator
 		costPerMem = new UniformRealDistribution(0.01, 0.10);
 		costPerSto = new UniformRealDistribution(0.0002, 0.0020);
 		costPerSec = new UniformRealDistribution(0.10, 0.80); //not used, see below
-		costPerBw = new UniformRealDistribution(0.001, 0.05);
+		costPerBw = new UniformRealDistribution(0.05, 0.15); //former (0.001, 0.05)
 		
 		ramAmount = new UniformIntegerDistribution(512, 1024*16);
 		bwAmount = new UniformIntegerDistribution(10*1024, 10*1024*1024);

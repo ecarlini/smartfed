@@ -36,14 +36,14 @@ import org.cloudbus.cloudsim.Vm;
 
 public class ApplicationGenerator 
 {	
-	private static final double BUDGET = 50;
-	private AbstractIntegerDistribution coreAmount;
-	private AbstractIntegerDistribution mipsAmount;
-	private AbstractIntegerDistribution ramAmount;
-	private AbstractIntegerDistribution bwAmount;
-	private AbstractIntegerDistribution diskAmount;
+	protected static final double BUDGET = 50;
+	protected AbstractIntegerDistribution coreAmount;
+	protected AbstractIntegerDistribution mipsAmount;
+	protected AbstractIntegerDistribution ramAmount;
+	protected AbstractIntegerDistribution bwAmount;
+	protected AbstractIntegerDistribution diskAmount;
 	
-	private long seed;
+	protected long seed;
 	
 	public ApplicationGenerator()
 	{
@@ -81,11 +81,17 @@ public class ApplicationGenerator
 	public Application getApplication(int userId, int numVertex, int numCloudlet, AbstractRealDistribution distribution)
 	{
 		if (numCloudlet < numVertex)
-			throw new Error("Cannot create an application with more cloudlets ("+numCloudlet+") than vertexes ("+numVertex+")");
+			throw new Error("Cannot create an application with more vertexes ("+numVertex+") than cloudlets ("+numCloudlet+")");
 		
 		int[] assignment = DistributionAssignment.getAssignmentArray(numVertex, numCloudlet, distribution);
-				
+		
+		return getApplication(userId, assignment);
+	}
+	
+	protected Application getApplication(int userId, int[] assignment){
+		
 		Application application = new Application();
+		int numVertex = assignment.length;
 		
 		for (int i=0; i<numVertex; i++)
 		{
@@ -112,4 +118,5 @@ public class ApplicationGenerator
 		
 		return application;
 	}
+		
 }

@@ -171,7 +171,10 @@ public class Federation extends SimEntity
 		DatacenterCharacteristics characteristics = (DatacenterCharacteristics) ev.getData();
 		datacenterCharacteristicsList.put(characteristics.getId(), characteristics);
 		
-		FederationLog.timeLogDebug("Received monitoring response from datacenter#"+characteristics.getId());
+		FederationLog.timeLogDebug("Received monitoring response from datacenter #"+characteristics.getId());
+		if (this.emptyQueue)
+			mappingModule.getMonitoringHub().shutdownEntity();
+			
 	}
 
 	// Manage the application submit
@@ -225,7 +228,7 @@ public class Federation extends SimEntity
 			FederationLog.timeLog("WARNING: FAILED mapping of "+app);
 			
 			// FIXME: not sure it can be here.
-			 // mappingModule.getMonitoringHub().shutdownEntity();
+			// mappingModule.getMonitoringHub().shutdownEntity();
 			TestResult.getFailures().addValue(1);
 			return;
 		}

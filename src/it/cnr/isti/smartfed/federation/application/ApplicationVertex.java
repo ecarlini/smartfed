@@ -56,6 +56,8 @@ public class ApplicationVertex
 	private Map<Cloudlet, Vm> cloudletMap;
 	private Map<Vm, Cloudlet> vmMap;
 	private String name;
+	private int id;
+	private static int counter = 0;
 	private String country = "";
 	private double budget = 1.0;
 	private VmType vm_type;
@@ -76,6 +78,7 @@ public class ApplicationVertex
 
 	private void construct (int userId, List<Cloudlet> cloudlets, VmType vmtype)
 	{
+		this.id = counter++;
 		this.cloudlets = cloudlets;
 		this.cloudletMap = new HashMap<Cloudlet, Vm>();
 		this.vmMap = new HashMap<Vm, Cloudlet>();
@@ -111,6 +114,7 @@ public class ApplicationVertex
 	
 	public ApplicationVertex(int userId, List<Cloudlet> cloudlets, Vm sample)
 	{
+		this.id = counter++;
 		this.vm_type = VmType.CUSTOM;
 		this.cloudlets = cloudlets;
 		this.cloudletMap = new HashMap<Cloudlet, Vm>();
@@ -167,6 +171,10 @@ public class ApplicationVertex
 	public Cloudlet getAssociatedCloudlet(Vm vm) {
 		return vmMap.get(vm);
 	}
+	
+	public int getId() {
+		return id;
+	}
 
 	@Override
 	public String toString() {
@@ -182,7 +190,7 @@ public class ApplicationVertex
 		}
 		res.append("");
 		
-		return name + res.toString();
+		return name + "[id_" + id + "] " + res.toString();
 	}
 	
 	public String toCompleteString() 

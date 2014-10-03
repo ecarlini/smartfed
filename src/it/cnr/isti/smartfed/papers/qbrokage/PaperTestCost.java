@@ -134,8 +134,8 @@ public class PaperTestCost
 
 class PaperDataset extends DataSet
 {	
-	private int numVertex;
-	private long seed;
+	protected int numVertex;
+	protected long seed;
 	
 	public PaperDataset(int numVertex, int numberOfCloudlets, int numOfDatacenter, int numHost)
 	{

@@ -57,6 +57,7 @@ public class MSPolicyFactory {
 	}
 
 	public static PolicyContainer createPoliciesDefaultNet(List<FederationDatacenter> dcList ){
+		double[] weights = new double[]{ 1, 1, 1, 196};
 		System.out.println("*** Creating default policy with net***");
 		// finding the datacenter with the highest cost per ram (default criteria in the compare method)
 		Collections.sort(dcList);
@@ -73,12 +74,12 @@ public class MSPolicyFactory {
 		PolicyContainer.highStorageValue = (long) highStorage_dc;
 		PolicyContainer.highCostValueStorage = findDatacenterMaxStorage(dcList).getMSCharacteristics().getCostPerStorage();
 
-		PolicyContainer constraint = new PolicyContainer(new double[]{1, 1, 1, 1, 1});
-		constraint.add(constraint.networkConstraint(1));
-		constraint.add(constraint.ramConstraint(1));
-		constraint.add(constraint.storageConstraint(1));
-		constraint.add(constraint.locationConstraint(1));
-		constraint.add(constraint.costPerResourceConstraint_Global(1));
+		PolicyContainer constraint = new PolicyContainer(weights);
+		// constraint.add(constraint.networkConstraint(weights[0]));
+		constraint.add(constraint.ramConstraint(weights[0]));
+		constraint.add(constraint.storageConstraint(weights[1]));
+		constraint.add(constraint.locationConstraint(weights[2]));
+		constraint.add(constraint.costPerResourceConstraint_Global(weights[3]));
 		System.out.println(constraint);
 		return constraint;
 	}

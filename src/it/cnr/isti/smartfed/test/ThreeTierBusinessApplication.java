@@ -41,6 +41,10 @@ import org.cloudbus.cloudsim.Cloudlet;
  */
 public class ThreeTierBusinessApplication extends Application
 {
+	 // 20KB/req and 1000req/h
+	public static final double DEFAULT_MRATE = 20;
+	public static final double DEFAULT_MSIZE = 0.27;
+
 	static private int DEFAULT_CLOUDLET_NUMBER = 1;
 	
 	// cloudlet profiles definition
@@ -115,8 +119,8 @@ public class ThreeTierBusinessApplication extends Application
 		this.addVertex(vertexDatabase);
 
 		// Network
-		ApplicationEdge frontToBack = new ApplicationEdge(1024, SecuritySupport.BASE, 1000);
-		ApplicationEdge backToDB = new ApplicationEdge(512, SecuritySupport.BASE, 1000);
+		ApplicationEdge frontToBack = new ApplicationEdge(DEFAULT_MSIZE, DEFAULT_MRATE);
+		ApplicationEdge backToDB = new ApplicationEdge(DEFAULT_MSIZE, DEFAULT_MRATE);
 
 		this.addEdge(frontToBack, vertexFrontend, vertexBackend);
 		this.addEdge(backToDB, vertexBackend, vertexDatabase);

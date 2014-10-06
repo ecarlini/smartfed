@@ -40,7 +40,11 @@ public class ExtBrokageDataset extends PaperDataset {
 		for (Vm customVm: vms){
 				List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();
 				cloudletList.add(CloudletProvider.getDefault());
-				newApp.addVertex(new ApplicationVertex(userId, cloudletList, customVm));
+				
+				ApplicationVertex v = new ApplicationVertex(userId, cloudletList, customVm);
+				v.setBudget(app.getVertexForVm(customVm).getBudget());
+				v.setCountry(app.getVertexForVm(customVm).getCountry());
+				newApp.addVertex(v);
 		}
 		for (ApplicationVertex v: newApp.vertexSet()){
 			Set<ApplicationVertex> set = newApp.vertexSet();

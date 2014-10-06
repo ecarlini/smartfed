@@ -85,7 +85,7 @@ public class MonitoringHub extends SimEntity
 	@Override
 	public void shutdownEntity() 
 	{
-		System.out.println(this.getName() +" is shutting down...");
+		FederationLog.timeLogDebug(this.getName() +" is shutting down...");
 		this.isShutdown = true;	
 	}
 

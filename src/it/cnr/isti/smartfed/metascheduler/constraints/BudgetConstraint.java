@@ -92,7 +92,7 @@ public class BudgetConstraint extends MSPolicy {
 		Set<ApplicationEdge> set = am.getEdges();
 		for (ApplicationEdge e: set){
 			if (e.getSourceVmId() == geneVmId){
-				int target_index = getChromosIndexFromNodeId(e.getTargetVmId(), genes, app);
+				int target_index = MSPolicy.getGeneIndexFromNodeId(e.getTargetVmId(), genes, app);
 				
 				int tProvId = (int) genes[target_index].getAllele();
 				cost += CostComputer.computeLinkCost(e, geneVmId, current_prov, tProvId, costPerNet);
@@ -100,17 +100,6 @@ public class BudgetConstraint extends MSPolicy {
 		}
 		return cost;
 	}
-	
-	private static int getChromosIndexFromNodeId(int vmId, Gene[] genes, IMSApplication app){
-		int target_index = 0;
-		boolean trovato = false;
-		for (int i=0; i<genes.length && !trovato; i++){
-			if (app.getNodes().get(i).getID() == vmId)
-				target_index = i;
-		}
-		return target_index;
-	}
-	
 	
 	public static Double calculateCost(MSApplicationNode node, IMSProvider prov){
 		Double cpu_cost = cpuCost(node, prov);

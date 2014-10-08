@@ -56,9 +56,9 @@ public class MSFitnessFunction extends FitnessFunction {
 
 	private HashMap<Integer, Integer> association;
 	
-	public MSFitnessFunction(IMSApplication app, List<IMSProvider> plist, List<MSPolicy> policyList){
-		application = app;
-		providerList = plist;
+	public MSFitnessFunction(MSExternalState state, List<MSPolicy> policyList){
+		application = state.getApplication();
+		providerList = state.getProviders();
 		policy = policyList;
 	}
 	

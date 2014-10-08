@@ -110,7 +110,7 @@ public class SimpleTest {
 		FileWriter out = new FileWriter("metascheduler.txt");
 
 		// Datacenter
-		DataSetMS dataSet= new DataSetMS(dc_prop, app_prop);
+		DataSetMS dataSet= new DataSetMS(dc_prop, app_prop); // TODO: never used, is this really needed?
 		FederationDatacenter dc1 = createDatacenter(0,dc_prop,"italia", "1.0", 2740);
 		FederationDatacenter dc2 = createDatacenter(1,dc_prop,"italia", "3.0", 4740);
 		List<FederationDatacenter> dcList = new ArrayList<FederationDatacenter>();
@@ -138,7 +138,7 @@ public class SimpleTest {
 		
 		// PolicyContainer constraint = MetaschedulerUtilities.createPoliciesCostPerVm(dcList);
 		PolicyContainer constraint = MSPolicyFactory.createPoliciesDefault(dcList);
-		Solution[] sol = Metascheduler.getMapping(apps.get(0),constraint.getList(), dcList, 1);
+		Solution[] sol = Metascheduler.getMapping(apps.get(0),constraint.getList(), dcList, dataSet.createInternetEstimator(dcList), 1);
 	}
 
 	private void testMaxValues(){

@@ -55,14 +55,16 @@ public class JGAPMapping {
 	public static Genotype population = null;
 	static Configuration conf = null;
 	
-	public static Solution[] execute(IMSApplication application, List<IMSProvider> providerList, List<MSPolicy> policy, long randomSeed)
+	public static Solution[] execute(MSExternalState state, List<MSPolicy> policy, long randomSeed)
 	{
+		List<IMSProvider> providerList = state.getProviders();
+		
 		Solution sol[] = new Solution[SOLUTION_NUMBER];
 		try {
 			Configuration conf = new InternalDefaultConfiguration();
 			// making gene
 			int providerNumber = providerList.size();
-			List<MSApplicationNode> nodes = application.getNodes();
+			List<MSApplicationNode> nodes = state.getApplication().getNodes();
 			Gene[] genes = new Gene[nodes.size()];
 			for (int i = 0; i < nodes.size(); i++){
 				// precondition: providerList is ordered
@@ -79,7 +81,7 @@ public class JGAPMapping {
 			conf.setRandomGenerator(new CRandGenerator(providerNumber, randomSeed));
 			//conf.setRandomGenerator(new CRandGenerator(providerNumber));
 			
-			MSFitnessFunction fitness = new MSFitnessFunction(application, providerList, policy);
+			MSFitnessFunction fitness = new MSFitnessFunction(state, policy);
 			conf.setFitnessFunction(fitness);
 
 			Genotype.setStaticConfiguration(conf);

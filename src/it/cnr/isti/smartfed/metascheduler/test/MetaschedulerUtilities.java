@@ -23,15 +23,14 @@ package it.cnr.isti.smartfed.metascheduler.test;
 
 import it.cnr.isti.smartfed.federation.Federation;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
-import it.cnr.isti.smartfed.metascheduler.constraints.PolicyContainer;
-
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Collections;
-import java.util.Comparator;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,6 +58,24 @@ public class MetaschedulerUtilities {
 			oos.close();
 		}catch(IOException e){
 			e.printStackTrace();
+		}
+	}
+	
+	public static void saveFederationToTxtFile(String path, List<FederationDatacenter> fed ){
+		PrintWriter pw = null;
+		File DC = null;
+		try{
+			DC = new File(path);
+			pw = new PrintWriter(new FileWriter(DC));
+			for (FederationDatacenter f: fed){
+				// pw.println(f.getDatacenterRepresentation());
+				pw.println(f.getDatacenterCharacteristicString());
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		finally{
+			pw.close();
 		}
 	}
 

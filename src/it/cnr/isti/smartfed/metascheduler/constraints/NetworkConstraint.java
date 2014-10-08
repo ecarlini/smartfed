@@ -33,6 +33,7 @@ import it.cnr.isti.smartfed.metascheduler.resources.MSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
+import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 public class NetworkConstraint extends MSPolicy {
 
@@ -51,7 +52,7 @@ public class NetworkConstraint extends MSPolicy {
 		highNetworkValue = highestValue;
 	}
 
-	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov) {
+	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov, InternetEstimator internet) {
 		// System.out.println(prov.getNetwork().getCharacteristic().get(Constant.BW));
 		long nodeStore =  (Long) node.getNetwork().getCharacteristic().get(Constant.BW); // what I want
 		long provStore =  (Long) prov.getNetwork().getCharacteristic().get(Constant.BW); // what I have
@@ -77,7 +78,7 @@ public class NetworkConstraint extends MSPolicy {
 	}
 	
 	@Override
-	public double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov){
+	public double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov, InternetEstimator internet){
 		// NON SENSE CODE, SAFELY REMOVE IT
 		Gene[] genes = chromos.getGenes();
 		int current_prov = (int) genes[gene_index].getAllele();

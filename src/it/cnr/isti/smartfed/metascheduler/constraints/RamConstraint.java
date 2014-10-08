@@ -27,6 +27,7 @@ import it.cnr.isti.smartfed.metascheduler.MSPolicy;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
+import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 public class RamConstraint extends MSPolicy {
 
@@ -45,7 +46,7 @@ public class RamConstraint extends MSPolicy {
 		highRamValue = highestValue;
 	}
 
-	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov) {
+	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov, InternetEstimator internet) {
 		if (DEBUG)
 			System.out.println("Eval before applying weights for " + "NodeID " + node.getID() + " - ProvID " + prov.getID());
 		Integer nodeRam = (Integer) node.getComputing().getCharacteristic().get(Constant.RAM); //what I want

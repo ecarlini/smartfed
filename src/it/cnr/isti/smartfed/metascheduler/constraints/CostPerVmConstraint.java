@@ -28,6 +28,7 @@ import it.cnr.isti.smartfed.metascheduler.CIntegerGene;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
+import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 public class CostPerVmConstraint extends MSPolicy {
 
@@ -76,7 +77,7 @@ public class CostPerVmConstraint extends MSPolicy {
 	}
 	
 	@Override
-	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov) {
+	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov, InternetEstimator internet) {
 		Double budget = (Double) node.getCharacteristic().get(Constant.BUDGET);
 		Double r_cost = vmCost(node, prov);
 		Double r_maxCost = (highestVmCost); // * RamConstraint.getHighRamValue());

@@ -12,6 +12,7 @@ import it.cnr.isti.smartfed.metascheduler.resources.MSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
+import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 import org.jgap.Gene;
 import org.jgap.IChromosome;
@@ -24,12 +25,12 @@ public class LatencyConstraint extends MSPolicy
 	}
 
 	@Override
-	protected double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov) 
+	protected double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov, InternetEstimator internet) 
 	{
 		throw new Error("Local evaluation not supported");
 	}
 	
-	protected double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov)
+	protected double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov, InternetEstimator internet)
 	{
 		// get the vm id of the gene
 		MSApplicationNode curr_node = app.getNodes().get(gene_index); 

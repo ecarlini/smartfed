@@ -50,15 +50,13 @@ public class MSFitnessFunction extends FitnessFunction {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	static private IMSApplication application;
-	static private List<IMSProvider> providerList;
+	static private MSExternalState _state;
 	static private List<MSPolicy> policy;
 
 	private HashMap<Integer, Integer> association;
 	
 	public MSFitnessFunction(MSExternalState state, List<MSPolicy> policyList){
-		application = state.getApplication();
-		providerList = state.getProviders();
+		_state = state;
 		policy = policyList;
 	}
 	
@@ -68,12 +66,12 @@ public class MSFitnessFunction extends FitnessFunction {
 		Gene[] genes = chromos.getGenes();
 		
 		Integer providerID = (Integer) genes[gene_index].getAllele();
-		IMSProvider provider = MSProviderAdapter.findProviderById(providerList, providerID);
+		IMSProvider provider = MSProviderAdapter.findProviderById(_state.getProviders(), providerID);
 		// List<MSApplicationNode> nodes = application.getNodes();
 		// MSApplicationNode node = nodes.get(gene_index);
 		for (int i = 0; i < policy.size(); i++) {
 			// weightedDistance[i] = policy.get(i).evaluateLocalPolicy(node,provider);
-			weightedDistance[i] = policy.get(i).evaluatePolicy(gene_index, chromos, application, provider);
+			weightedDistance[i] = policy.get(i).evaluatePolicy(gene_index, chromos, _state.getApplication(), provider, _state.getInternet());
 		}
 		
 		for (int i=0; i<weightedDistance.length; i++){

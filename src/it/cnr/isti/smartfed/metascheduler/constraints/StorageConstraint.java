@@ -27,6 +27,7 @@ import it.cnr.isti.smartfed.metascheduler.MSPolicy;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
+import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 public class StorageConstraint extends MSPolicy {
 
@@ -45,7 +46,7 @@ public class StorageConstraint extends MSPolicy {
 		highStorageValue = highestValue;
 	}
 
-	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov) {
+	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov, InternetEstimator internet) {
 		long nodeStore =  (Long) node.getStorage().getCharacteristic().get(Constant.STORE); // what I want
 		long provStore =  (Long) prov.getStorage().getCharacteristic().get(Constant.STORE); // what I have
 		double distance;

@@ -28,6 +28,7 @@ import org.jgap.IChromosome;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
+import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 public abstract class MSPolicy  {
 	
@@ -55,31 +56,31 @@ public abstract class MSPolicy  {
 		this(weight, type, MSPolicy.LOCAL_CONSTRAINT);
 	}
 
-	public double evaluatePolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov){
+	public double evaluatePolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov, InternetEstimator internet){
 		double res;
 		
 		switch (this.group){
 		case MSPolicy.GLOBAL_CONSTRAINT: 
-			res = evaluateGlobalPolicy(gene_index, chromos, app, prov);
+			res = evaluateGlobalPolicy(gene_index, chromos, app, prov, internet);
 			break;
 		case MSPolicy.LOCAL_CONSTRAINT:
-			res = evaluateLocalPolicy(chromos.getGene(gene_index), app.getNodes().get(gene_index), prov);
+			res = evaluateLocalPolicy(chromos.getGene(gene_index), app.getNodes().get(gene_index), prov, internet);
 			break;
 		default:
-			res = evaluateLocalPolicy(chromos.getGene(gene_index), app.getNodes().get(gene_index), prov);
+			res = evaluateLocalPolicy(chromos.getGene(gene_index), app.getNodes().get(gene_index), prov, internet);
 		}
 		return res;
 	}
 	
 	
-	protected double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov){
+	protected double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov, InternetEstimator internet){
 		List<MSApplicationNode> nodes = app.getNodes();
 		MSApplicationNode node = nodes.get(gene_index);
-		return evaluateLocalPolicy(chromos.getGene(gene_index), node, prov);
+		return evaluateLocalPolicy(chromos.getGene(gene_index), node, prov, null);
 	}
 	
 	
-	protected abstract double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov);
+	protected abstract double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov, InternetEstimator internet);
 	
 	public char getType(){
 		return type;

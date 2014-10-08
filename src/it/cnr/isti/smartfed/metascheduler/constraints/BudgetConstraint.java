@@ -35,6 +35,7 @@ import it.cnr.isti.smartfed.metascheduler.resources.MSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
+import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 public class BudgetConstraint extends MSPolicy {
 
@@ -120,7 +121,7 @@ public class BudgetConstraint extends MSPolicy {
 	}
 	
 	@Override
-	public double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov){
+	public double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov, InternetEstimator internet){
 		List<MSApplicationNode> nodes = app.getNodes();
 		MSApplicationNode node = nodes.get(gene_index);
 		Double budget = (Double) node.getCharacteristic().get(Constant.BUDGET);
@@ -137,7 +138,7 @@ public class BudgetConstraint extends MSPolicy {
 	
 	
 	@Override
-	public double evaluateLocalPolicy(Gene gene, MSApplicationNode node, IMSProvider prov) {
+	public double evaluateLocalPolicy(Gene gene, MSApplicationNode node, IMSProvider prov, InternetEstimator internet) {
 		Double budget = (Double) node.getCharacteristic().get(Constant.BUDGET);
 		Double s_maxCost = (highStorageCost * StorageConstraint.getHighStorageValue());
 		Double r_maxCost = (highRamCost * RamConstraint.getHighRamValue());

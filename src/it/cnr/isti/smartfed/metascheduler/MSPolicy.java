@@ -145,4 +145,14 @@ public abstract class MSPolicy  {
 		return distance;
 	}
 
+	protected static int getGeneIndexFromNodeId(int vmId, Gene[] genes, IMSApplication app){
+		int target_index = 0;
+		boolean trovato = false;
+		for (int i=0; i<genes.length && !trovato; i++){
+			if (app.getNodes().get(i).getID() == vmId)
+				target_index = i;
+		}
+		return target_index;
+	}
+
 }

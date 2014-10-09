@@ -36,6 +36,10 @@ public class LatencyConstraint extends MSPolicy
 		MSApplication am = (MSApplication) app;
 		Set<ApplicationEdge> set = am.getEdges();
 		
+		double maxLatency = internet.getHighestLatency();
+		double sumofdifference = 0;
+		double numofdifference = 0;
+	
 		// find all target providers
 		for (ApplicationEdge e: set)
 		{
@@ -45,18 +49,26 @@ public class LatencyConstraint extends MSPolicy
 				int targetProvider = (int) chromos.getGenes()[target_index].getAllele();
 				
 				// check this edge's latency requirement against internet estimator
-				int internet_latency = internet.getInternetLink(prov.getID(), targetProvider).getLatency();
-				int application_latency = (int) e.getLatency();
+				double internet_latency = internet.getInternetLink(prov.getID(), targetProvider).getLatency();
+				double  application_latency = e.getLatency();
 				
-				// TODO: evaluate the distance?
-				// calculateDistance_ErrHandling(internet_latency, application_latency, 10000); //TODO
-				// faccio la media
+				// evaluate the distance
+				double res = calculateDistance_ErrHandling(internet_latency, application_latency, maxLatency);
+				sumofdifference += res;
+				numofdifference ++;
 			}
 		}
+		
+		if (numofdifference == 0)
+		{
+			// This should mean no links for the application?
+			return -1;
+		}
+		else
+		{
+			return sumofdifference / numofdifference;
+		}
 
-		
-		
-		return 0;
 	}
 	
 }

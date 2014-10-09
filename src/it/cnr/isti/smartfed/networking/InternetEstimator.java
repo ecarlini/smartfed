@@ -101,4 +101,20 @@ public class InternetEstimator
 		
 		return this.getInternetLink(a, b);
 	}
+	
+	/**
+	 * Return the highest value for latency among all the links 
+	 * @return
+	 */
+	public double getHighestLatency()
+	{
+		double max = 0;
+		for (InternetLink link: graph.edgeSet())
+		{
+			if (link.getLatency() > max)
+				max = link.getLatency();
+		}
+		
+		return max;
+	}
 }

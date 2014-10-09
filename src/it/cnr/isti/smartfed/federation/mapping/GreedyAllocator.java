@@ -1,6 +1,7 @@
 package it.cnr.isti.smartfed.federation.mapping;
 
 import it.cnr.isti.smartfed.federation.CostComputer;
+import it.cnr.isti.smartfed.federation.FederationLog;
 import it.cnr.isti.smartfed.federation.MonitoringHub;
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
@@ -79,7 +80,7 @@ public class GreedyAllocator extends AbstractAllocator
 				
 				FederationDatacenter datacenter = entry.getDc();
 				
-				System.out.println("GreedyAllocator -> Trying "+datacenter.getName()+" for VM: #" + vm.getId());
+				FederationLog.debugLog("GreedyAllocator -> Trying "+datacenter.getName()+" for VM: #" + vm.getId());
 				
 				/* Check whether the DC can support the VM
 				 ******************** IMPORTANT 
@@ -92,21 +93,29 @@ public class GreedyAllocator extends AbstractAllocator
 				
 				if (host.getRam() < vm.getRam())
 				{
-					System.out.println("GreedyAllocator -> VM: #" + vm.getId() + " cannot be mapped for RAM "+tentative+": "+vm.getRam()+ " vs "+host.getRam()+" on "+datacenter.getName());
+					FederationLog.debugLog("GreedyAllocator -> VM: #" + vm.getId() + " cannot be mapped for RAM "+tentative+": "+vm.getRam()+ " vs "+host.getRam()+" on "+datacenter.getName());
 					continue;
 				}
 				
 				if (host.getStorage() < vm.getSize())
 				{
-					System.out.println("GreedyAllocator -> VM: #" + vm.getId() + "  cannot be mapped for STORAGE "+tentative+": "+vm.getSize()+ " vs "+host.getStorage()+" on "+datacenter.getName());
+					FederationLog.debugLog("GreedyAllocator -> VM: #" + vm.getId() + "  cannot be mapped for STORAGE "+tentative+": "+vm.getSize()+ " vs "+host.getStorage()+" on "+datacenter.getName());
 					continue;
 				}
+				
+				/*
+				if (host.getNumberOfPes() < vm.getNumberOfPes())
+				{
+					FederationLog.debugLog("GreedyAllocator -> VM: #" + vm.getId() + "  cannot be mapped for PES "+tentative+": "+vm.getSize()+ " vs "+host.getStorage()+" on "+datacenter.getName());
+					continue;
+				}
+				*/
 				
 				ApplicationVertex vertex = application.getVertexForVm(vm);
 				if ((vertex.getCountry() != "") && 
 					(datacenter.getMSCharacteristics().getCountry().equalsIgnoreCase(vertex.getCountry()) == false))
 				{
-					System.out.println("GreedyAllocator -> VM: "+vm+" cannot be mapped for LOCATION "+tentative+": "+vertex.getCountry()+ " vs "+datacenter.getMSCharacteristics().getCountry()+" on "+datacenter.getName());
+					FederationLog.debugLog("GreedyAllocator -> VM: "+vm+" cannot be mapped for LOCATION "+tentative+": "+vertex.getCountry()+ " vs "+datacenter.getMSCharacteristics().getCountry()+" on "+datacenter.getName());
 					continue;
 				}
 				

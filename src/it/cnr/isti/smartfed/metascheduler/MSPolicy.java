@@ -39,7 +39,7 @@ public abstract class MSPolicy  {
 	public static final char LOCAL_CONSTRAINT = 'L';
 	
 	protected final static int RUNTIME_ERROR = 1000;
-	protected static final boolean DEBUG = true;
+	protected static final boolean DEBUG = false;
 	
 	private double weight;
 	private char type;

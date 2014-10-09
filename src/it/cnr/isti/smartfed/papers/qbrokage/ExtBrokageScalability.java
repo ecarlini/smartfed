@@ -27,6 +27,7 @@ import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
 import it.cnr.isti.smartfed.metascheduler.JGAPMapping;
 import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
 import it.cnr.isti.smartfed.test.Experiment;
+import it.cnr.isti.smartfed.test.ExperimentDistance;
 import it.cnr.isti.smartfed.test.TestResult;
 
 import java.io.File;
@@ -34,12 +35,104 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
 
-public class ExtBrokageScalability {	
+public class ExtBrokageScalability extends BrokageScalability{	
+	
 	static final int[] numCloudlets = {12};
 	static final int[] numDatacenters = {5, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
 	
 
-	public static String executeSingleSetCost(AbstractAllocator allocator, int seed, int numOfCloudlets, int numOfDatacenter){
+	private static String executeSingleSetCost(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter){
+		int numOfVertex = 3;
+		int repetitions = 20;
+
+		String str = "";
+		int numHost = 100  * numOfDatacenter;
+		ExperimentDistance e = new ExperimentDistance(allocator);
+
+		long seed = 0;
+		for (int i=0; i<repetitions; i++) {
+			double optimum = 0;
+			PaperDataset dataset = null;
+			long j = seed;
+			while (optimum == 0){
+				dataset = new ExtBrokageDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, j);
+				// AbstractAllocator optimumAlloc = new GreedyAllocator();
+				AbstractAllocator optimumAlloc = new GeneticAllocator();
+				((GeneticAllocator) optimumAlloc).setPolicyType(PolicyType.DEFAULT_COST);
+				optimum = computeOptimum(optimumAlloc, dataset, j);
+				seed = j++;
+			}
+			e.setDataset(dataset);
+			e.setOptimum(optimum);
+			e.setRandomSeed(seed);
+			e.run();	
+			seed++;
+		}
+
+		double result = TestResult.getCostDistance().getMean(); 
+		double resultSTD = TestResult.getCostDistance().getStandardDeviation();
+		double time = TestResult.getMappingTime().getMean();
+		double timeSTD = TestResult.getMappingTime().getStandardDeviation();
+		double lockin = TestResult.getLockDegree().getMean();
+		double berger = TestResult.getBerger().getMean();
+		str += String.format(Locale.ENGLISH, "%.5f", result) + "\t";
+		str += String.format(Locale.ENGLISH, "%.2f", time) + "\t"; 
+		str += String.format(Locale.ENGLISH, "%.2f", lockin) + "\t"; 
+		str += String.format(Locale.ENGLISH, "%.2f", resultSTD) + "\t"; 
+		str += String.format(Locale.ENGLISH, "%.2f", timeSTD) + "\t"; 
+		str += String.format(Locale.ENGLISH, "%.2f", berger) + "\t"; 
+		TestResult.reset();
+		return str;
+	}
+	
+	
+	
+	public static String executeConfrontation(AbstractAllocator allocator, int[] numOfCloudlets, int[] numOfDatacenter) throws IOException{
+		String str = "";
+		for (int z=0; z<numOfCloudlets.length; z++){
+			for (int k=0; k<numOfDatacenter.length; k++){
+				str += numOfDatacenter[k] + "\t";
+				str += executeSingleSetCost(allocator, numOfCloudlets[z], numOfDatacenter[k]);
+				str += "\n";
+				try {
+					Thread.sleep(100);
+				}
+				catch (Exception e) {}
+			}
+		}
+		return str;
+	}
+	
+
+	public static void main (String[] args) throws IOException{
+		FederationLog.disable();
+		String initial = "#dc,cost,time,lockin,costSTD,timeSTD,berger" + dcToString() + "\n";
+		String str = initial;
+		
+		JGAPMapping.MUTATION = 10;
+		JGAPMapping.POP_SIZE = 50;
+		JGAPMapping.CROSSOVER = 0.35;
+		JGAPMapping.EVOLUTION_STEP = 120; 
+		
+		/*
+		GeneticAllocator gen_allocator = new GeneticAllocator();
+		gen_allocator.setPolicyType(PolicyType.DEFAULT_COST);
+		str += ExtBrokageScalability.execute(gen_allocator, numCloudlets, numDatacenters);
+		str += "\n";
+		write(str, new File("plots/cost-dc" + dcToString() +"cross0.35-mut10"+".dat"));
+		*/
+		
+		GeneticAllocator gen_allocator = new GeneticAllocator();
+		str = initial;
+		gen_allocator = new GeneticAllocator();
+		gen_allocator.setPolicyType(PolicyType.DEFAULT_COST_NET);
+		str += ExtBrokageScalability.executeConfrontation(gen_allocator, numCloudlets, numDatacenters);
+		str += "\n";
+		write(str, new File("plots/cost-dc" + dcToString() +"cross0.35-mut10-costNet"+".dat"));
+		
+	}
+
+	public static String executeSingleSetCost_lessVariability(AbstractAllocator allocator, int seed, int numOfCloudlets, int numOfDatacenter){
 		int numOfVertex = 3;
 		int repetitions = 20;
 
@@ -56,11 +149,11 @@ public class ExtBrokageScalability {
 		double resultSTD = TestResult.getCost().getStandardDeviation();
 		double time = TestResult.getMappingTime().getMean();
 		double timeSTD = TestResult.getMappingTime().getStandardDeviation();
-		double failure = TestResult.getFailures().getN();
+		double lockin = TestResult.getNetCost().getMean();
 		double berger = TestResult.getBerger().getMean();
 		str += String.format(Locale.ENGLISH, "%.2f", result) + "\t";
 		str += String.format(Locale.ENGLISH, "%.2f", time) + "\t"; 
-		str += String.format(Locale.ENGLISH, "%.2f", failure) + "\t"; 
+		str += String.format(Locale.ENGLISH, "%.2f", lockin) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", resultSTD) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", timeSTD) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", berger) + "\t"; 
@@ -68,56 +161,4 @@ public class ExtBrokageScalability {
 		return str;
 	}
 	
-	public static String execute(AbstractAllocator allocator, int step, int[] numOfCloudlets, int[] numOfDatacenter) throws IOException{
-		String str = "";
-		for (int z=0; z<numOfCloudlets.length; z++){
-			for (int k=0; k<numOfDatacenter.length; k++){
-				str += numOfDatacenter[k] + "\t";
-				str += executeSingleSetCost(allocator, k, numOfCloudlets[z], numOfDatacenter[k]);
-				str += "\n";
-			}
-		}
-		return str;
-	}
-
-	public static void main (String[] args) throws IOException{
-		FederationLog.disable();
-		String initial = "#dc,cost,time,failure, costSTD, timeSTD, berger" + BrokageScalability.dcToString() + "\n";
-		String str = initial;
-		AbstractAllocator allocator = new GreedyAllocator();
-		int seed = 5;
-		str += ExtBrokageScalability.execute(allocator, seed, numCloudlets, numDatacenters);
-		str += "\n";
-		write(str, new File("plots/greedy-dc"+ BrokageScalability.dcToString() + ".dat"));
-
-
-		JGAPMapping.MUTATION = 10;
-		JGAPMapping.POP_SIZE = 50;
-		JGAPMapping.CROSSOVER = 0.35;
-		JGAPMapping.EVOLUTION_STEP = 120; 
-		
-		allocator = new GeneticAllocator();
-		str = initial;
-		// BrokageTuning.execute(allocator, 5, numCloudlets, numDatacenters);// just for warm-up
-		GeneticAllocator gen_allocator = new GeneticAllocator();
-		gen_allocator.setPolicyType(PolicyType.DEFAULT_COST);
-		str += ExtBrokageScalability.execute(gen_allocator, seed, numCloudlets, numDatacenters);
-		str += "\n";
-		write(str, new File("plots/cost-dc" + BrokageScalability.dcToString() +"cross0.35-mut10"+".dat"));
-		
-		str = initial;
-		gen_allocator = new GeneticAllocator();
-		gen_allocator.setPolicyType(PolicyType.DEFAULT_COST_NET);
-		str += ExtBrokageScalability.execute(gen_allocator, seed, numCloudlets, numDatacenters);
-		str += "\n";
-		write(str, new File("plots/cost-dc" + BrokageScalability.dcToString() +"cross0.35-mut10-costNet"+".dat"));
-		
-	}
-
-	static void write(String toWrite, File f) throws IOException{
-		FileWriter fw3 = new FileWriter(f);
-		fw3.write(toWrite);
-		fw3.flush();
-		fw3.close();
-	}
 }

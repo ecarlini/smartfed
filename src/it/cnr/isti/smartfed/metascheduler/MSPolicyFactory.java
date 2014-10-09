@@ -57,7 +57,7 @@ public class MSPolicyFactory {
 	}
 
 	public static PolicyContainer createPoliciesDefaultNet(List<FederationDatacenter> dcList ){
-		double[] weights = new double[]{ 1, 1, 1, 196};
+		double[] weights = new double[]{ 1, 1, 1, 197};
 		System.out.println("*** Creating default policy with net***");
 		// finding the datacenter with the highest cost per ram (default criteria in the compare method)
 		Collections.sort(dcList);

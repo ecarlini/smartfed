@@ -92,10 +92,31 @@ public class CostComputer
 							cost = calculateCostCustomVm(datacenter, vertex.getDesiredVm());
 					}
 					amount += cost;
-					System.out.println("Net cost is for vm " + vm.getId() + " is " + computeNetCosts(vm, edges, allocation, datacenter));
+					//System.out.println("Net cost is for vm " + vm.getId() + " is " + computeNetCosts(vm, edges, allocation, datacenter));
 					amount += computeNetCosts(vm, edges, allocation, datacenter);
 			}
 			// System.out.println("Partial Amount is " + cost);
+		}
+		return amount;
+	}
+	
+	/**
+	 * It calculates only the net costs (used by Experiment)
+	 * @param allocation
+	 * @return
+	 */
+	public static double actualNetCost(Allocation allocation){
+		double amount = 0d;
+		
+		for (Vm vm: allocation.getApplication().getAllVms())
+		{
+			FederationDatacenter datacenter = allocation.getAllocatedDatacenter(vm);
+			ApplicationVertex vertex = allocation.getApplication().getVertexForVm(vm);
+			Set<ApplicationEdge> edges = allocation.getApplication().edgesOf(vertex);
+			
+			if (datacenter != null){	
+					amount += computeNetCosts(vm, edges, allocation, datacenter);
+			}
 		}
 		return amount;
 	}

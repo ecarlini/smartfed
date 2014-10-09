@@ -61,7 +61,7 @@ public class BrokageScalability {
 		return str;
 	}
 
-	private static<T> String executeSingleSetCost(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter){
+	private static String executeSingleSetCost(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter){
 		int numOfVertex = 3;
 		int repetitions = 20;
 

@@ -57,13 +57,15 @@ public class DatacenterCharacteristicsMS extends DatacenterCharacteristics {
 	
 	public String toString(){
 		String str = new String();
-		str += " Located in " + country + " ";
+		str += " Loc: " + country ;
 		str += " Cost " + "(mem: " + super.getCostPerMem();
+		str += " and sto: " + super.getCostPerStorage();
+		str += " and bw: " + super.getCostPerBw();
 		str += ") ";
 		str += "Hosts: " + super.getHostList().size();
-		str += " with Ram " + super.getHostList().get(0).getRam();
-		str += " with Total Mips " + super.getHostList().get(0).getTotalMips();
-		str += " with Storage " + super.getHostList().get(0).getStorage();
+		str += " and Ram " + super.getHostList().get(0).getRam();
+		str += " and Mips " + super.getHostList().get(0).getTotalMips();
+		str += " and Storage " + super.getHostList().get(0).getStorage();
 		if (costVmTypes != null){
 			str += " with costPerVms:" ;
 			for (double c: costVmTypes)

@@ -31,6 +31,8 @@ public class TestResult
 	private static SummaryStatistics failures;
 	private static SummaryStatistics vmDifference;
 	private static SummaryStatistics lockDegree;
+	private static SummaryStatistics netCost;
+	private static SummaryStatistics costDistance;
 	
 	static
 	{
@@ -45,9 +47,19 @@ public class TestResult
 		cost = new SummaryStatistics();	
 		failures = new SummaryStatistics();
 		vmDifference = new SummaryStatistics();
-		lockDegree= new SummaryStatistics();
+		lockDegree = new SummaryStatistics();
+		netCost = new SummaryStatistics();
+		costDistance = new SummaryStatistics();
 	}
 		
+	public static SummaryStatistics getNetCost() {
+		return netCost;
+	}
+	
+	public static SummaryStatistics getCostDistance() {
+		return costDistance;
+	}
+	
 	public static SummaryStatistics getLockDegree() {
 		return lockDegree;
 	}

@@ -21,8 +21,6 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 package it.cnr.isti.smartfed.metascheduler;
 
 import it.cnr.isti.smartfed.metascheduler.iface.MSProviderAdapter;
-import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
-import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
 
 import java.util.HashMap;

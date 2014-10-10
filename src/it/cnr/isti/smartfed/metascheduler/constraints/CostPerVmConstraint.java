@@ -20,15 +20,14 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.metascheduler.constraints;
 
-import org.jgap.Gene;
-
+import it.cnr.isti.smartfed.metascheduler.CIntegerGene;
 import it.cnr.isti.smartfed.metascheduler.Constant;
 import it.cnr.isti.smartfed.metascheduler.MSPolicy;
-import it.cnr.isti.smartfed.metascheduler.CIntegerGene;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
-import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
+
+import org.jgap.Gene;
 
 public class CostPerVmConstraint extends MSPolicy {
 

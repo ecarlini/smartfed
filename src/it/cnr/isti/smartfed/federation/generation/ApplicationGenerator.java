@@ -32,7 +32,7 @@ import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Vm;
 
-public class ApplicationGenerator 
+public class ApplicationGenerator extends AbstractGenerator
 {	
 	protected static final double BUDGET = 50;
 	
@@ -42,26 +42,15 @@ public class ApplicationGenerator
 	protected Range bwAmount;
 	protected Range diskAmount;
 	
-	protected AbstractRealDistribution distribution;
-	protected long seed;
-	
-	
+
 	public ApplicationGenerator(long seed)
 	{
+		super(seed);
 		ramAmount = new Range(512, 1024*16);
 		bwAmount = new Range(10*1024, 10*1024*1024);
 		diskAmount = new Range(4096, 10*1024*1024); // 10TB max
 		coreAmount = new Range(1, 8);
 		mipsAmount = new Range(1000, 25000);
-		
-		distribution = new UniformRealDistribution();
-		this.resetSeed(seed);
-	}
-	
-	public void resetSeed(long seed)
-	{
-		this.seed = seed;
-		distribution.reseedRandomGenerator(seed);
 	}
 	
 	/**
@@ -106,11 +95,28 @@ public class ApplicationGenerator
 		{
 			if (assignment[i] > 0)
 			{
-				int mips = (int) mipsAmount.denormalize(distribution.sample());
-				int cores = (int) coreAmount.denormalize(distribution.sample());
-				int ramMB = (int) ramAmount.denormalize(distribution.sample());
-				int bandMB = (int) bwAmount.denormalize(distribution.sample());
-				int diskMB = (int) diskAmount.denormalize(distribution.sample());
+				int mips, cores, ramMB, bandMB, diskMB;
+				
+				if (type == GenerationType.UNIFORM)
+				{
+					double value = distribution.sample();
+					mips = (int) mipsAmount.denormalize(value);
+					cores = (int) coreAmount.denormalize(value);
+					ramMB = (int) ramAmount.denormalize(value);
+					bandMB = (int) bwAmount.denormalize(value);
+					diskMB = (int) diskAmount.denormalize(value);
+				}
+				else
+				{
+					mips = (int) mipsAmount.denormalize(distribution.sample());
+					cores = (int) coreAmount.denormalize(distribution.sample());
+					ramMB = (int) ramAmount.denormalize(distribution.sample());
+					bandMB = (int) bwAmount.denormalize(distribution.sample());
+					diskMB = (int) diskAmount.denormalize(distribution.sample());
+				}
+				
+				
+
 				
 				Vm sample = VmFactory.getCustomVm(userId, mips, cores, ramMB, bandMB, diskMB);
 				

@@ -44,6 +44,7 @@ public class RamConstraint extends MSPolicy {
 	public RamConstraint(double weight, double highestValue) {
 		super(weight, MSPolicy.ASCENDENT_TYPE);
 		highRamValue = highestValue;
+		this.constraintName = "Ram";
 	}
 
 	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov, InternetEstimator internet) {
@@ -51,21 +52,7 @@ public class RamConstraint extends MSPolicy {
 			System.out.println("Eval before applying weights for " + "NodeID " + node.getID() + " - ProvID " + prov.getID());
 		Integer nodeRam = (Integer) node.getComputing().getCharacteristic().get(Constant.RAM); //what I want
 		Integer provRam = (Integer) prov.getComputing().getCharacteristic().get(Constant.RAM); //what I have
-		double distance;
-		try {
-			distance = evaluateDistance(provRam, nodeRam,highRamValue);
-		} catch (Exception e) {
-			distance = RUNTIME_ERROR; // a positive value in order to not consider this constraint
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
-		if (DEBUG)
-			System.out.println("\tEvaluation on ram: " + nodeRam + "-" + provRam + "/" + highRamValue + "=" + distance);
+		double distance = super.calculateDistance_ErrHandling(provRam, nodeRam, highRamValue);
 		return distance * getWeight();
 	}
-	
-	public double evaluateGlobalPolicy(IMSApplication app, IMSProvider prov) {
-		return 0;
-	}
-
 }

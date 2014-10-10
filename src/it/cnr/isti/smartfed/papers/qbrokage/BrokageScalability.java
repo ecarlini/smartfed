@@ -34,6 +34,7 @@ import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
 import it.cnr.isti.smartfed.metascheduler.JGAPMapping;
+import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
 import it.cnr.isti.smartfed.test.ExperimentDistance;
 import it.cnr.isti.smartfed.test.InterfaceDataSet;
@@ -61,13 +62,14 @@ public class BrokageScalability {
 		return str;
 	}
 
+	static int counter = 0;
 	private static String executeSingleSetCost(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter){
 		int numOfVertex = 3;
 		int repetitions = 20;
 
 		String str = "";
 		int numHost = 100  * numOfDatacenter;
-		ExperimentDistance e = new ExperimentDistance(allocator);
+		ExperimentDistance e = new ExperimentDistance();
 
 		long seed = 0;
 		for (int i=0; i<repetitions; i++) {
@@ -77,12 +79,16 @@ public class BrokageScalability {
 			while (optimum == 0){
 				dataset = new PaperDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, j);
 				optimum = computeOptimum(new GreedyAllocator(), dataset, j);
+				if (optimum == 0) {
+					counter++;
+				}
 				seed = j++;
 			}
 			e.setDataset(dataset);
 			e.setOptimum(optimum);
 			e.setRandomSeed(seed);
-			e.run();	
+			((GeneticAllocator) allocator).resetConstraints();
+			e.run(allocator);	
 			seed++;
 		}
 
@@ -129,6 +135,7 @@ public class BrokageScalability {
 		str += "\n";
 
 		ExtBrokageScalability.write(str, new File("plots/cost-dc" + dcToString() +"cross0.35-mut10"+".dat"));
+		System.out.println(counter);
 	}
 	
 	protected static double computeOptimum(AbstractAllocator allocator, PaperDataset da, long seed){

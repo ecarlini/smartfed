@@ -20,6 +20,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.federation.mapping;
 
+import it.cnr.isti.smartfed.federation.FederationLog;
 import it.cnr.isti.smartfed.federation.MonitoringHub;
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
@@ -101,7 +102,7 @@ public class GeneticAllocator extends AbstractAllocator {
 	private MappingSolution convert(Solution s, Application application, List<FederationDatacenter> dcs) {
 		if (s == null) return null;
 
-		System.out.println(s);
+		FederationLog.print(s);
 
 		// ascending sort by datacenter id
 		Collections.sort(dcs, new Comparator<FederationDatacenter>() {
@@ -162,6 +163,14 @@ public class GeneticAllocator extends AbstractAllocator {
 
 	private void setConstraint(PolicyContainer constraint) {
 		this.constraint = constraint;
+	}
+	
+	/**
+	 * Old constraints are removed. This force to recreate it 
+	 * when calling setMonitoring() method. 
+	 */
+	public void resetConstraints() {
+		this.constraint = null;
 	}
 	
 	/**

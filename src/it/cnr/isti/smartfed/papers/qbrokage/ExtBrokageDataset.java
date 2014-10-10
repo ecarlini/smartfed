@@ -4,17 +4,13 @@ import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.application.CloudletProvider;
-import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
-import it.cnr.isti.smartfed.federation.utils.ApplicationGenerator;
-import it.cnr.isti.smartfed.federation.utils.DatacenterGenerator;
-import it.cnr.isti.smartfed.test.DataSet;
+import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Vm;
 
@@ -36,6 +32,7 @@ public class ExtBrokageDataset extends PaperDataset {
 		List<Vm> vms = app.getAllVms();
 		assert vms.size() == numVertex;
 
+		ResourceCounter.reset();
 		Application newApp = new Application();
 		for (Vm customVm: vms){
 				List<Cloudlet> cloudletList = new ArrayList<Cloudlet>();

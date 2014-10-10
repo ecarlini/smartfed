@@ -28,8 +28,8 @@ import org.cloudbus.cloudsim.core.CloudSim;
 
 public class ExperimentDistance extends Experiment
 {
-	public ExperimentDistance(AbstractAllocator allocator) {
-		super(allocator, null);
+	public ExperimentDistance() {
+		super(null, null);
 	}
 
 
@@ -47,8 +47,7 @@ public class ExperimentDistance extends Experiment
 		dataset = d;
 	}
 
-	public void run()
-	{
+	public void run (AbstractAllocator allocator) {
 		// init the cloudsim simulator
 		Log.enable();
 		int num_user = 1;   // users

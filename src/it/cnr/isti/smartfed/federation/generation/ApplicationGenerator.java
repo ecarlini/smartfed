@@ -115,9 +115,6 @@ public class ApplicationGenerator extends AbstractGenerator
 					diskMB = (int) diskAmount.denormalize(distribution.sample());
 				}
 				
-				
-
-				
 				Vm sample = VmFactory.getCustomVm(userId, mips, cores, ramMB, bandMB, diskMB);
 				
 				ArrayList<Cloudlet> cloudletList = new ArrayList<Cloudlet>();

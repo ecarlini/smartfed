@@ -1,4 +1,4 @@
-package it.src.isti.smartfed.federation.utils;
+package it.src.isti.smartfed.federation.generation;
 
 import junit.framework.Assert;
 

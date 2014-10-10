@@ -1,7 +1,7 @@
 package it.src.isti.smartfed.federation.mapping;
 
 
-import it.src.isti.smartfed.federation.utils.GeneratorsRepeatability;
+import it.src.isti.smartfed.federation.generation.GeneratorsRepeatability;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

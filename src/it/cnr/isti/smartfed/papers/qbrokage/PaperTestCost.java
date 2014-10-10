@@ -155,8 +155,7 @@ class PaperDataset extends DataSet
 	@Override
 	public List<FederationDatacenter> createDatacenters() 
 	{
-		DatacenterGenerator dg = new DatacenterGenerator();
-		dg.resetSeed(this.seed * 15);
+		DatacenterGenerator dg = new DatacenterGenerator(this.seed * 15);
 		return dg.getDatacenters(numOfDatacenters, numHost);
 	}
 	

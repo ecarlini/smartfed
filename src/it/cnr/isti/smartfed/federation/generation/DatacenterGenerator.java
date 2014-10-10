@@ -18,7 +18,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package it.cnr.isti.smartfed.federation.utils;
+package it.cnr.isti.smartfed.federation.generation;
 
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterFactory;

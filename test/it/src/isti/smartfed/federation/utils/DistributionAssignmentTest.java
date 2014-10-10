@@ -5,7 +5,7 @@ import junit.framework.Assert;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.junit.Test;
 
-import it.cnr.isti.smartfed.federation.utils.DistributionAssignment;
+import it.cnr.isti.smartfed.federation.generation.DistributionAssignment;
 
 public class DistributionAssignmentTest 
 {

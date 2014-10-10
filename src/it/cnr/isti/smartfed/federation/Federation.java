@@ -24,7 +24,6 @@ import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.MappingSolution;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
-import it.cnr.isti.smartfed.federation.utils.UtilityPrint;
 import it.cnr.isti.smartfed.test.TestResult;
 
 import java.util.ArrayList;

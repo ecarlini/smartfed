@@ -18,7 +18,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package it.cnr.isti.smartfed.federation.utils;
+package it.cnr.isti.smartfed.federation.generation;
 
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
@@ -45,7 +45,8 @@ public class ApplicationGenerator
 	protected AbstractRealDistribution distribution;
 	protected long seed;
 	
-	public ApplicationGenerator()
+	
+	public ApplicationGenerator(long seed)
 	{
 		ramAmount = new Range(512, 1024*16);
 		bwAmount = new Range(10*1024, 10*1024*1024);
@@ -54,11 +55,6 @@ public class ApplicationGenerator
 		mipsAmount = new Range(1000, 25000);
 		
 		distribution = new UniformRealDistribution();
-	}
-	
-	public ApplicationGenerator(long seed)
-	{
-		this();
 		this.resetSeed(seed);
 	}
 	

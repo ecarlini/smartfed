@@ -21,10 +21,10 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 package it.src.isti.smartfed.federation.utils;
 
 import it.cnr.isti.smartfed.federation.application.Application;
+import it.cnr.isti.smartfed.federation.generation.ApplicationGenerator;
+import it.cnr.isti.smartfed.federation.generation.DatacenterGenerator;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
-import it.cnr.isti.smartfed.federation.utils.ApplicationGenerator;
-import it.cnr.isti.smartfed.federation.utils.DatacenterGenerator;
 
 import java.util.Calendar;
 import java.util.List;

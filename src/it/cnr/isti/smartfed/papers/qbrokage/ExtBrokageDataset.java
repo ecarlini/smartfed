@@ -4,9 +4,9 @@ import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.application.CloudletProvider;
+import it.cnr.isti.smartfed.federation.generation.ApplicationGenerator;
+import it.cnr.isti.smartfed.federation.generation.DatacenterGenerator;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
-import it.cnr.isti.smartfed.federation.utils.ApplicationGenerator;
-import it.cnr.isti.smartfed.federation.utils.DatacenterGenerator;
 import it.cnr.isti.smartfed.test.DataSet;
 
 import java.util.ArrayList;

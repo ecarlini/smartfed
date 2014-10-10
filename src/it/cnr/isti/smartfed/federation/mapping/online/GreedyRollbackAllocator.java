@@ -21,13 +21,13 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 package it.cnr.isti.smartfed.federation.mapping.online;
 
 import it.cnr.isti.smartfed.federation.MonitoringHub;
+import it.cnr.isti.smartfed.federation.UtilityPrint;
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.MappingSolution;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
-import it.cnr.isti.smartfed.federation.utils.UtilityPrint;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 import java.util.ArrayList;

@@ -83,6 +83,7 @@ public class GeneticAllocator extends AbstractAllocator {
 		for (int i=0; i < sols.length; i++)
 			sols[i] = convert(solutions[i], application, dcs);
 		
+		
 		this.setSolution(sols[0]);
 		return sols;
 	}
@@ -125,12 +126,15 @@ public class GeneticAllocator extends AbstractAllocator {
 		List<Vm> v_list = application.getAllVms();
 		if (v_list.size() != hm.keySet().size())
 			System.out.println("************ Big error ********************");
-
-		for (Integer vmId: hm.keySet()){
+		
+		for (Integer vmId: hm.keySet())
+		{
 			Vm vm = findForId(v_list, vmId);
 			ApplicationVertex vertex = application.getVertexForVm(vm);
 			Cloudlet cl = vertex.getAssociatedCloudlet(vm);
-			FederationDatacenter dc = dcs.get(hm.get(vmId)-3); // hm.get(vmId) is the datacenter position, with -3 we have ids for metascheduler
+			
+			// FederationDatacenter dc = dcs.get(hm.get(vmId)-3); // hm.get(vmId) is the datacenter position, with -3 we have ids for metascheduler
+			FederationDatacenter dc = dcs.get(hm.get(vmId));
 			map.set(cl, dc);
 		}
 		return map;

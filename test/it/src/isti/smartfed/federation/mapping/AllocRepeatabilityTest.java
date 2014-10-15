@@ -133,7 +133,7 @@ public class AllocRepeatabilityTest
 		g2.setRandomSeed(42);
 		
 		
-		MappingSolution[] ss1 = g1.findAllocation(application);
+		MappingSolution[] ss1 = g1.findAllocation(application);		
 		MappingSolution[] ss2 = g2.findAllocation(application);
 		
 		Assert.assertTrue(ss1[0].isSameSolution(ss2[0]));

@@ -58,6 +58,7 @@ public class MSExternalState
 		for (FederationDatacenter fd: providers)
 			this._providers.add(MSProviderAdapter.datacenterToMSProvider(fd));
 		
+		
 		// ascending sort by datacenter id
 		Collections.sort(this._providers, new Comparator<IMSProvider>() {
 			@Override
@@ -69,9 +70,6 @@ public class MSExternalState
 				return 0; // equal
 			}
 		});
-		
-		
-		
 	}
 
 	public IMSApplication getApplication() {

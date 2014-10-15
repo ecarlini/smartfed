@@ -40,6 +40,8 @@ public class LatencyConstraint extends MSPolicy
 		double sumofdifference = 0;
 		double numofdifference = 0;
 	
+		double distance = 0;
+		
 		// find all target providers
 		for (ApplicationEdge e: set)
 		{
@@ -62,13 +64,14 @@ public class LatencyConstraint extends MSPolicy
 		if (numofdifference == 0)
 		{
 			// This should mean no links for the application?
-			return -1;
+			distance = -1;
 		}
 		else
 		{
-			return sumofdifference / numofdifference;
+			distance = sumofdifference / numofdifference;
 		}
 
+		return distance * getWeight();
 	}
 	
 }

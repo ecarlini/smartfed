@@ -6,9 +6,12 @@ import it.cnr.isti.smartfed.metascheduler.constraints.PolicyContainer;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class MSPolicyFactory {
 
+	private final static Logger log = Logger.getLogger(PolicyContainer.class.getSimpleName());
+	
 	public enum PolicyType{	
 		DEFAULT_COST,
 		DEFAULT_COST_NET,
@@ -80,6 +83,7 @@ public class MSPolicyFactory {
 		constraint.add(constraint.storageConstraint(weights[1]));
 		constraint.add(constraint.locationConstraint(weights[2]));
 		constraint.add(constraint.costPerResourceConstraint_Global(weights[3]));
+		// constraint.add(constraint.cpuNumberConstraint((weights[4]));
 		System.out.println(constraint);
 		return constraint;
 	}
@@ -91,11 +95,12 @@ public class MSPolicyFactory {
 		double highCostRam_dc = dcList.get(dcList.size()-1).getMSCharacteristics().getCostPerMem();
 		PolicyContainer.highCostValueRam = highCostRam_dc;
 
-
 		double highRam_dc = findMaxRamAllDatacenters(dcList);
 		PolicyContainer.highRamValue = (int) highRam_dc;
 
 		double highStorage_dc = findMaxStorageAllDatacenters(dcList);
+		if (highStorage_dc > 10*1024*1024) 
+			log.severe("Inconsistency in storage values");
 		PolicyContainer.highStorageValue = (long) highStorage_dc;
 		PolicyContainer.highCostValueStorage = findDatacenterMaxStorage(dcList).getMSCharacteristics().getCostPerStorage();
 
@@ -104,7 +109,7 @@ public class MSPolicyFactory {
 		constraint.add(constraint.storageConstraint(weights[1]));
 		constraint.add(constraint.locationConstraint(weights[2]));
 		constraint.add(constraint.costPerResourceConstraint_Local(weights[3]));
-		System.out.println(constraint);
+		log.fine(constraint.toString());
 		return constraint;
 	}
 	

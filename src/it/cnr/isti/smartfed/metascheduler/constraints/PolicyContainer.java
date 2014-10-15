@@ -25,6 +25,7 @@ import it.cnr.isti.smartfed.metascheduler.MSPolicy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PolicyContainer {
@@ -34,6 +35,7 @@ public class PolicyContainer {
 	public static double highCostValueRam = 0; 
 	public static double highCostValueStorage = 0;
 	public static double highCostValueVm = 0; 
+	public static double highCpuNumberValue = 0;
 	
 	private double weightSum = 0;
 	private double weightNumber = 0;
@@ -54,6 +56,7 @@ public class PolicyContainer {
 		weightNumber = weightVector.length;
 		list = new ArrayList<MSPolicy>(weightVector.length);
 		this.calculateWeightSum(weightVector);
+		log.setLevel(Level.WARNING);
 	}
 	
 	private void calculateWeightSum(double[] weightVector){
@@ -74,6 +77,13 @@ public class PolicyContainer {
 	private double calculateNormWeight(double weight){
 		double normWeight = (weightSum==0) ? weight : (weight / weightSum);
 		return normWeight;
+	}
+	
+	public MSPolicy cpuNumberConstraint(double weight){
+		double normWeight = calculateNormWeight(weight);
+		MSPolicy p = new CpuNumberConstraint(normWeight, highCpuNumberValue);
+		log.info("Norm weight into " + p.getName() + " " + normWeight);
+		return p;
 	}
 	
 	public MSPolicy ramConstraint(double weight){

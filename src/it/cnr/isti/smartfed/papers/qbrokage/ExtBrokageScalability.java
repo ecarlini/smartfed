@@ -38,16 +38,18 @@ import java.util.Locale;
 public class ExtBrokageScalability extends BrokageScalability{	
 	
 	static final int[] numCloudlets = {12};
-	static final int[] numDatacenters = {5, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
+	static final int[] numDatacenters = {5};//, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
 	
-
+	static int counter = 0;
 	private static String executeSingleSetCost(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter){
+		
+		
 		int numOfVertex = 3;
 		int repetitions = 20;
 
 		String str = "";
 		int numHost = 100  * numOfDatacenter;
-		ExperimentDistance e = new ExperimentDistance(allocator);
+		ExperimentDistance e = new ExperimentDistance();
 
 		long seed = 0;
 		for (int i=0; i<repetitions; i++) {
@@ -58,17 +60,21 @@ public class ExtBrokageScalability extends BrokageScalability{
 				dataset = new ExtBrokageDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, j);
 				// AbstractAllocator optimumAlloc = new GreedyAllocator();
 				AbstractAllocator optimumAlloc = new GeneticAllocator();
-				((GeneticAllocator) optimumAlloc).setPolicyType(PolicyType.DEFAULT_COST);
+				((GeneticAllocator) optimumAlloc).resetConstraints();
 				optimum = computeOptimum(optimumAlloc, dataset, j);
+				if (optimum == 0) 
+					counter++;
 				seed = j++;
 			}
+			((GeneticAllocator) allocator).resetConstraints();
 			e.setDataset(dataset);
 			e.setOptimum(optimum);
 			e.setRandomSeed(seed);
-			e.run();	
+			e.run(allocator);	
 			seed++;
+			
 		}
-
+		
 		double result = TestResult.getCostDistance().getMean(); 
 		double resultSTD = TestResult.getCostDistance().getStandardDeviation();
 		double time = TestResult.getMappingTime().getMean();
@@ -95,9 +101,10 @@ public class ExtBrokageScalability extends BrokageScalability{
 				str += executeSingleSetCost(allocator, numOfCloudlets[z], numOfDatacenter[k]);
 				str += "\n";
 				try {
-					Thread.sleep(100);
+					Thread.sleep(50);
 				}
 				catch (Exception e) {}
+				System.out.println("############################################# Ending " + numOfDatacenter[k] + " dcs");
 			}
 		}
 		return str;
@@ -105,7 +112,7 @@ public class ExtBrokageScalability extends BrokageScalability{
 	
 
 	public static void main (String[] args) throws IOException{
-		FederationLog.disable();
+		// FederationLog.disable();
 		String initial = "#dc,cost,time,lockin,costSTD,timeSTD,berger" + dcToString() + "\n";
 		String str = initial;
 		
@@ -126,9 +133,11 @@ public class ExtBrokageScalability extends BrokageScalability{
 		str = initial;
 		gen_allocator = new GeneticAllocator();
 		gen_allocator.setPolicyType(PolicyType.DEFAULT_COST_NET);
+		
 		str += ExtBrokageScalability.executeConfrontation(gen_allocator, numCloudlets, numDatacenters);
 		str += "\n";
 		write(str, new File("plots/cost-dc" + dcToString() +"cross0.35-mut10-costNet"+".dat"));
+		System.out.println("Fallito " + counter + " times");
 		
 	}
 

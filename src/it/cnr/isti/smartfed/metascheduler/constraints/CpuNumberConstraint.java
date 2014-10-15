@@ -29,37 +29,23 @@ import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
 
-public class StorageConstraint extends MSPolicy {
+public class CpuNumberConstraint extends MSPolicy {
 
-	private static double highStorageValue;
+	private static double highCpuValue;
 
-	public static double getHighStorageValue() {
-		return highStorageValue;
-	}
 
-	public void setHighStorageValue(double highStorValue) {
-		highStorageValue = highStorValue;
-	}
-
-	public StorageConstraint(double weight, double highestValue) {
+	public CpuNumberConstraint(double weight, double highestValue) {
 		super(weight, MSPolicy.ASCENDENT_TYPE);
-		highStorageValue = highestValue;
+		this.constraintName = "CpuNumber";
+		highCpuValue = highestValue;
 	}
 
 	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov, InternetEstimator internet) {
-		long nodeStore =  (Long) node.getStorage().getCharacteristic().get(Constant.STORE); // what I want
-		long provStore =  (Long) prov.getStorage().getCharacteristic().get(Constant.STORE); // what I have
-		double distance;
-		try {
-			distance = evaluateDistance(provStore, nodeStore, highStorageValue);
-		} catch (Exception e) {
-			distance = RUNTIME_ERROR; // a positive value in order to not consider this constraint
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
-		if (DEBUG)
-			System.out.println("\tEval on storage " + nodeStore + "-" + provStore + "/" + highStorageValue + "=" + distance);
+		double nodeCPU = (Integer) node.getComputing().getCharacteristic().get(Constant.CPU_NUMBER); //what I want
+		double provCPU = (Integer) prov.getComputing().getCharacteristic().get(Constant.CPU_NUMBER); //what I have
+		
+		double distance = calculateDistance_ErrHandling(provCPU, nodeCPU, highCpuValue);
 		return distance * getWeight();
 	}
-	
+
 }

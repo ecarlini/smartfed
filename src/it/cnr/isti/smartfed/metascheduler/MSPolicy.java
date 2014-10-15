@@ -145,6 +145,21 @@ public abstract class MSPolicy  {
 			System.out.println("\tEval on " + name + " " + cost + "-" + budget + "/" + maxCost + "=" + distance);
 		return distance;
 	}
+	
+	protected double calculateDistance_ErrHandling(Integer cost, Integer budget, Double max){
+		String name = this.constraintName;
+		double distance;
+		try {
+			distance = evaluateDistance(cost, budget, max);
+		} catch (Exception e) {
+			distance = RUNTIME_ERROR; // a positive value in order to not consider this constraint
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		if (DEBUG)
+			System.out.println("\tEval on " + name + " " + cost + "-" + budget + "/" + max + "=" + distance);
+		return distance;
+	}
 
 	protected static int getGeneIndexFromNodeId(int vmId, Gene[] genes, IMSApplication app){
 		int target_index = 0;
@@ -154,6 +169,10 @@ public abstract class MSPolicy  {
 				target_index = i;
 		}
 		return target_index;
+	}
+
+	public String getName() {
+		return this.constraintName;
 	}
 
 }

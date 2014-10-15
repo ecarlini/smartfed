@@ -56,7 +56,10 @@ public class MSExternalState
 		 */
 		this._providers = new ArrayList<IMSProvider>();
 		for (FederationDatacenter fd: providers)
-			this._providers.add(MSProviderAdapter.datacenterToMSProvider(fd));
+		{
+			IMSProvider newp = MSProviderAdapter.datacenterToMSProvider(fd);
+			this._providers.add(newp);
+		}
 		
 		
 		// ascending sort by datacenter id

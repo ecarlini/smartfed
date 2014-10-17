@@ -25,9 +25,8 @@ import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
-import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
-import it.cnr.isti.smartfed.federation.mapping.RandomAllocator;
 import it.cnr.isti.smartfed.federation.mapping.RoundRobinAllocator;
+import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterFactory;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterProfile;
@@ -36,21 +35,18 @@ import it.cnr.isti.smartfed.federation.resources.HostFactory;
 import it.cnr.isti.smartfed.federation.resources.HostProfile;
 import it.cnr.isti.smartfed.federation.resources.HostProfile.HostParams;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
-import it.cnr.isti.smartfed.metascheduler.Solution;
 import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
+import it.cnr.isti.smartfed.metascheduler.Solution;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
-import it.cnr.isti.smartfed.networking.SecuritySupport;
 import it.cnr.isti.smartfed.test.Experiment;
 import it.cnr.isti.smartfed.test.InterfaceDataSet;
 import it.cnr.isti.smartfed.test.SimpleApplication;
 import it.cnr.isti.smartfed.test.TestResult;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
@@ -106,7 +102,7 @@ public class ApplicationEdgeTest
 	{
 		AbstractAllocator allocator = new RoundRobinAllocator();	
 		Experiment e = new Experiment(allocator, data);
-		e.run();		
+		e.run();
 			
 		Assert.assertEquals(expectedResult, TestResult.getCost().getMean(), 0.0000000001d);
 	}
@@ -180,16 +176,16 @@ class EdgeTestDataset implements InterfaceDataSet
 		Application app = new SimpleApplication(userId, ApplicationEdgeTest.vnumber, type1);
 		Iterator<ApplicationVertex> i = app.vertexSet().iterator();
 		ApplicationVertex av1 = i.next();
-		av1.setCountry("Italy");
+		av1.setCountry(Country.Italy.toString());
 		av1.setBudget(Double.parseDouble("10.0"));
 		
 		
 		ApplicationVertex av2 = i.next();
-		av2.setCountry("France");
+		av2.setCountry(Country.France.toString());
 		av2.setBudget(Double.parseDouble("10.0"));
 		
 		ApplicationVertex av3 = i.next();
-		av3.setCountry("Italy");
+		av3.setCountry(Country.Italy.toString());
 		av3.setBudget(Double.parseDouble("10.0"));
 		
 		app.addEdge(ApplicationEdgeTest.edge, av1, av2);

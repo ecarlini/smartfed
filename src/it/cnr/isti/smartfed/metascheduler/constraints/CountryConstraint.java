@@ -37,8 +37,8 @@ public class CountryConstraint extends MSPolicy{
 
 	@Override
 	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov, InternetEstimator internet) {
-		String nodePlace = (String) node.getCharacteristic().get(Constant.PLACE); //what I want
-		String provPlace = (String)prov.getCharacteristic().get(Constant.PLACE); //what I have
+		String nodePlace = node.getCharacteristic().get(Constant.PLACE).toString(); //what I want
+		String provPlace = prov.getCharacteristic().get(Constant.PLACE).toString(); //what I have
 		
 		nodePlace = nodePlace.toLowerCase().trim();
 		provPlace = provPlace.toLowerCase().trim();

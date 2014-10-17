@@ -113,7 +113,7 @@ public class GreedyAllocator extends AbstractAllocator
 				
 				ApplicationVertex vertex = application.getVertexForVm(vm);
 				if ((vertex.getCountry() != "") && 
-					(datacenter.getMSCharacteristics().getCountry().equalsIgnoreCase(vertex.getCountry()) == false))
+					(datacenter.getMSCharacteristics().getCountry().toString().equalsIgnoreCase(vertex.getCountry()) == false))
 				{
 					FederationLog.debugLog("GreedyAllocator -> VM: "+vm+" cannot be mapped for LOCATION "+tentative+": "+vertex.getCountry()+ " vs "+datacenter.getMSCharacteristics().getCountry()+" on "+datacenter.getName());
 					continue;

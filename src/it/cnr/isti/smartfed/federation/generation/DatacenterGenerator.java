@@ -20,6 +20,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.federation.generation;
 
+import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterFactory;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterProfile;
@@ -29,6 +30,7 @@ import it.cnr.isti.smartfed.federation.resources.HostProfile;
 import it.cnr.isti.smartfed.federation.resources.HostProfile.HostParams;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
@@ -37,6 +39,8 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class DatacenterGenerator extends AbstractGenerator
 {
@@ -154,6 +158,13 @@ public class DatacenterGenerator extends AbstractGenerator
 			// profile.set(DatacenterParams.COST_PER_SEC, costPerSec.sample()+"");
 			profile.set(DatacenterParams.COST_PER_SEC, "0");
 			profile.set(DatacenterParams.COST_PER_MEM, costMem+"");
+			
+			// choose a random country
+			Range rangecountry = new Range(0, Country.values().length);
+			int index = (int) Math.floor(rangecountry.denormalize(distribution.sample()));
+			Country place = Country.values()[index];
+			profile.set(DatacenterParams.COUNTRY, place.toString());
+			
 			
 			// create the storage
 			List<Storage> storageList = new ArrayList<Storage>(); // if empty, no SAN attached

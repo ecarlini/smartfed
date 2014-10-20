@@ -1,5 +1,7 @@
 package it.cnr.isti.smartfed.federation.resources;
 
+import it.cnr.isti.smartfed.federation.FederationLog;
+
 import java.util.List;
 
 import org.cloudbus.cloudsim.Host;
@@ -28,8 +30,12 @@ public class SimpleHost extends Host{
 	 */
 	public boolean vmCreate(Vm vm) {
 		if (getStorage() < vm.getSize()) {
-			Log.printLine("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId()
-					+ " failed by storage ( " + ")");
+			
+			FederationLog.debugLog("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId()
+					+ " failed by storage ( " + vm.getSize() + "vs " + getStorage() + ")");
+			FederationDatacenter d = (FederationDatacenter) this.getDatacenter();
+			FederationLog.debugLog("Datacenter sholud have " + d.getMSCharacteristics().getHighestStorage() + " storage");
+			
 			return false;
 		}
 
@@ -61,3 +67,4 @@ public class SimpleHost extends Host{
 	}
 
 }
+

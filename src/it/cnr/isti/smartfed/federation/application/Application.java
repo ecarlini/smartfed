@@ -1,28 +1,27 @@
 /*
 Copyright 2013 ISTI-CNR
- 
+
 This file is part of SmartFed.
 
 SmartFed is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
- 
+
 SmartFed is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
- 
+
 You should have received a copy of the GNU General Public License
 along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 package it.cnr.isti.smartfed.federation.application;
 
 
 import it.cnr.isti.smartfed.federation.resources.VmTyped;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,6 +29,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Iterator;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Vm;
@@ -96,26 +96,26 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 	public Set<Cloudlet> getAllCloudletLinked(Cloudlet cloudlet)
 	{
 		Set<Cloudlet> set = new HashSet<Cloudlet>();
-		
+
 		// adds all the cloudlets in the same vertex
 		ApplicationVertex av = this.getVertexForCloudlet(cloudlet);
 		set.addAll(av.getCloudlets());
-		
+
 		// adds the cloudlets from the connected vertex
 		for (ApplicationEdge ae: graph.edgesOf(av))
 		{
 			ApplicationVertex source = graph.getEdgeSource(ae);
 			if (source.equals(av) == false)
 				set.addAll(source.getCloudlets());
-			
+
 			ApplicationVertex target = graph.getEdgeTarget(ae);
 			if (target.equals(av) == false)
 				set.addAll(source.getCloudlets());
 		}
-		
+
 		return set;
 	}
-	
+
 	/**
 	 * Returns all the ApplicationEdge of the vertex.
 	 * @param av1
@@ -125,7 +125,7 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 	{
 		return graph.edgesOf(av1); 
 	}
-	
+
 	/**
 	 * Returns all the ApplicationEdges of the application.
 	 * @return
@@ -134,7 +134,7 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 	{
 		return graph.edgeSet(); 
 	}
-	
+
 	/**
 	 * Returns the cloudlet with the given Id.
 	 * @param id
@@ -164,7 +164,7 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 	{
 		return graph.vertexSet();
 	}
-	
+
 	/**
 	 * Returns the list of all cloudlet associated
 	 * with the application
@@ -174,7 +174,7 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 	{
 		return cloudlets;
 	}
-	
+
 	/**
 	 * Returns the vertex that contains the given cloudlet.
 	 * @param cloudlet
@@ -184,7 +184,7 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 	{
 		return cloudletToVertex.get(cloudlet);
 	}
-	
+
 	/**
 	 * Returns the vertex that contains the given VM.
 	 * @param vm
@@ -248,16 +248,34 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 	public String toString()
 	{
 		StringBuilder res = new StringBuilder();
-		{
-			String prefix = "";
-			for (ApplicationVertex av: this.vertexSet())
-			{
-				res.append(prefix);
-				prefix = "\n";
-				res.append(av.toCompleteString());
-			}			
+		res.append("Application has " + this.vertexSet().size() + " vertices ");
+		res.append("and " + this.getEdges().size() + " edges\n");
+		Set<ApplicationVertex> set = null;
+		if (this.vertexSet().size() < 10){
+			set = this.vertexSet();
+		}
+		else {
+			set = new HashSet<>();
+			Iterator<ApplicationVertex> i = this.vertexSet().iterator();
+			set.add(i.next());
+			for (int j=0; j < this.vertexSet().size()-2 ; j++){
+				i.next();
+			}
+			set.add(i.next());
 		}
 		
+		String prefix = "";
+		for (ApplicationVertex av: set)
+		{
+			res.append(prefix);
+			if (this.vertexSet().size() < 10){
+				prefix = "\n";
+			}
+			else {
+				prefix = "\n...\n";
+			}
+			res.append(av.toCompleteString());
+		}			
 		res.append(edgesRepresentation());
 		return res.toString();
 	}

@@ -38,7 +38,7 @@ import java.util.Locale;
 public class ExtBrokageScalability extends BrokageScalability{	
 	
 	static final int[] numCloudlets = {12};
-	static final int[] numDatacenters = {5};//, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
+	static final int[] numDatacenters = {5, 50, 100};//, 150, 200, 250, 300, 350, 400, 450, 500};
 	
 	static int counter = 0;
 	private static String executeSingleSetCost(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter){
@@ -112,14 +112,10 @@ public class ExtBrokageScalability extends BrokageScalability{
 	
 
 	public static void main (String[] args) throws IOException{
+		ExtBrokageScalability ext = new ExtBrokageScalability();
 		// FederationLog.disable();
-		String initial = "#dc,cost,time,lockin,costSTD,timeSTD,berger" + dcToString() + "\n";
+		String initial = "#dc,cost,time,lockin,costSTD,timeSTD,berger" + ext.dcToString() + "\n";
 		String str = initial;
-		
-		JGAPMapping.MUTATION = 10;
-		JGAPMapping.POP_SIZE = 50;
-		JGAPMapping.CROSSOVER = 0.35;
-		JGAPMapping.EVOLUTION_STEP = 120; 
 		
 		/*
 		GeneticAllocator gen_allocator = new GeneticAllocator();
@@ -136,7 +132,7 @@ public class ExtBrokageScalability extends BrokageScalability{
 		
 		str += ExtBrokageScalability.executeConfrontation(gen_allocator, numCloudlets, numDatacenters);
 		str += "\n";
-		write(str, new File("plots/cost-dc" + dcToString() +"cross0.35-mut10-costNet"+".dat"));
+		write(str, new File("plots/cost-dc" + ext.dcToString() +"cross0.35-mut10-costNet"+".dat"));
 		System.out.println("Fallito " + counter + " times");
 		
 	}

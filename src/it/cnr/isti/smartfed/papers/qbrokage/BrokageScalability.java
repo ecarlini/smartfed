@@ -52,21 +52,26 @@ import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 public class BrokageScalability {	
-	private static final int[] numCloudlets = {12};
-	private static final int[] numDatacenters = {5, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
+	public final int[] numCloudlets = {12};
+	public int[] numDatacenters = {5, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
+	public int repetitions = 20;
 
-	protected static String dcToString(){
+	protected String dcToString(){
 		String str = "" + numDatacenters[0];
-		str += ":" + (numDatacenters[numDatacenters.length-1]-numDatacenters[numDatacenters.length-2]);
-		str += ":" + numDatacenters[numDatacenters.length-1];
+		if (numDatacenters.length > 1)
+			str += ":" + (numDatacenters[numDatacenters.length-1]-numDatacenters[numDatacenters.length-2]) + ":";
+		str += numDatacenters[numDatacenters.length-1];
 		return str;
 	}
 
+	PaperDataset createDataset(int numOfVertex, int numOfCloudlets, int numOfDatacenter, int numHost, long seed){
+		return new PaperDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, seed);
+	}
+	
 	static int counter = 0;
-	private static String executeSingleSetCost(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter){
+	private String executeSingleSetCost(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter){
 		int numOfVertex = 3;
-		int repetitions = 20;
-
+	
 		String str = "";
 		int numHost = 100  * numOfDatacenter;
 		ExperimentDistance e = new ExperimentDistance();
@@ -77,7 +82,7 @@ public class BrokageScalability {
 			PaperDataset dataset = null;
 			long j = seed;
 			while (optimum == 0){
-				dataset = new PaperDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, j);
+				dataset = this.createDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, j);
 				optimum = computeOptimum(new GreedyAllocator(), dataset, j);
 				if (optimum == 0) {
 					counter++;
@@ -109,32 +114,40 @@ public class BrokageScalability {
 		return str;
 	}
 
-	private static String executeAndWrite(AbstractAllocator allocator, int[] numOfCloudlets, int[] numOfDatacenter) throws IOException{
+	protected String execute(AbstractAllocator allocator) throws IOException{
 		String str = "";
-		for (int z=0; z<numOfCloudlets.length; z++){
-			for (int k=0; k<numOfDatacenter.length; k++){
-				str += numOfDatacenter[k] + "\t";
-				str += executeSingleSetCost(allocator, numOfCloudlets[z], numOfDatacenter[k]);
+		for (int z=0; z<numCloudlets.length; z++){
+			for (int k=0; k<numDatacenters.length; k++){
+				str += numDatacenters[k] + "\t";
+				str += executeSingleSetCost(allocator, numCloudlets[z], numDatacenters[k]);
 				str += "\n";
 			}
 		}
 		return str;
 	}
 
-	public static void main (String[] args) throws IOException{
-		String initial = "#dc,cost,time,lock,costSTD,timeSTD,berger" + dcToString() + "\n";
-		String str = initial;
-		
+	public BrokageScalability(){
+		setGeneticAllocatorConfiguration();
+	}
+	
+	private static void setGeneticAllocatorConfiguration(){
 		JGAPMapping.MUTATION = 10;
 		JGAPMapping.POP_SIZE = 50;
 		JGAPMapping.CROSSOVER = 0.35;
 		JGAPMapping.EVOLUTION_STEP = 120; 
+	}
+	
+	public static void main (String[] args) throws IOException{
+		BrokageScalability n = new BrokageScalability();
+		String initial = "#dc,cost,time,lock,costSTD,timeSTD,berger" + n.dcToString() + "\n";
+		String str = initial;
+		
 		AbstractAllocator allocator = new GeneticAllocator();
 		
-		str += executeAndWrite(allocator, numCloudlets, numDatacenters);
+		str += n.execute(allocator);
 		str += "\n";
 
-		ExtBrokageScalability.write(str, new File("plots/cost-dc" + dcToString() +"cross0.35-mut10"+".dat"));
+		write(str, new File("plots/cost-dc" + n.dcToString() +"cross0.35-mut10"+".dat"));
 		System.out.println(counter);
 	}
 	

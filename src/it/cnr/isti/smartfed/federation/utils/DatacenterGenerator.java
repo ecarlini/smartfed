@@ -147,6 +147,12 @@ public class DatacenterGenerator
 			// profile.set(DatacenterParams.COST_PER_SEC, costPerSec.sample()+"");
 			profile.set(DatacenterParams.COST_PER_SEC, "0");
 			profile.set(DatacenterParams.COST_PER_MEM, costPerMem.sample()+"");
+			/*
+			if ((i%2) == 0)
+				profile.set(DatacenterParams.COUNTRY, "italy");
+			else
+				profile.set(DatacenterParams.COUNTRY, "france");
+				*/
 			
 			// create the storage
 			List<Storage> storageList = new ArrayList<Storage>(); // if empty, no SAN attached

@@ -144,7 +144,7 @@ public class ExperimentDistance extends Experiment
 			else
 				System.out.println("Not completed");
 		}
-		
+		// UtilityPrint.printCloudletList(newList);
 	}
 	
 

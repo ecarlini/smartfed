@@ -32,7 +32,7 @@ public class FederationDatacenterProfile
 		OS("Linux"),
 		VMM("Xen"),
 		TIME_ZONE("1"), // CET (?)
-		COUNTRY("ITALY"),
+		COUNTRY(Country.Italy+""),
 		COST_PER_SEC("3.0"),
 		COST_PER_MEM("0.005"),
 		COST_PER_STORAGE("0.001"),

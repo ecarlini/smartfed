@@ -1,4 +1,4 @@
-package it.cnr.isti.smartfed.federation.utils;
+package it.cnr.isti.smartfed.federation.generation;
 
 import java.util.Arrays;
 

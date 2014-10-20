@@ -7,13 +7,13 @@ import it.cnr.isti.smartfed.federation.FederationQueue;
 import it.cnr.isti.smartfed.federation.FederationQueueProfile;
 import it.cnr.isti.smartfed.federation.FederationQueueProvider;
 import it.cnr.isti.smartfed.federation.MonitoringHub;
+import it.cnr.isti.smartfed.federation.UtilityPrint;
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.MappingSolution;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
-import it.cnr.isti.smartfed.federation.utils.UtilityPrint;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 import java.util.Calendar;

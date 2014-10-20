@@ -29,14 +29,14 @@ import org.cloudbus.cloudsim.Host;
 
 public class DatacenterCharacteristicsMS extends DatacenterCharacteristics {
 
-	private String country;
+	private Country country;
 	private double[] costVmTypes = null;
 		
 	public double[] getCostVmTypes() {
 		return costVmTypes;
 	}
 
-	public DatacenterCharacteristicsMS(String place,String architecture, String os,
+	public DatacenterCharacteristicsMS(Country place, String architecture, String os,
 			String vmm, List<? extends Host> hostList, double timeZone,
 			double costPerSec, double costPerMem, double costPerStorage,
 			double costPerBw) {
@@ -45,7 +45,7 @@ public class DatacenterCharacteristicsMS extends DatacenterCharacteristics {
 		this.country = place;	
 	}
 	
-	public DatacenterCharacteristicsMS(String place,String architecture, String os,
+	public DatacenterCharacteristicsMS(Country place,String architecture, String os,
 			String vmm, List<? extends Host> hostList, double timeZone,
 			double costPerSec, double costPerMem, double costPerStorage,
 			double costPerBw, double[] costPerVm) {
@@ -74,7 +74,7 @@ public class DatacenterCharacteristicsMS extends DatacenterCharacteristics {
 		return str;
 	}
 	
-	public String getCountry(){
+	public Country getCountry(){
 		return country;
 	}
 	

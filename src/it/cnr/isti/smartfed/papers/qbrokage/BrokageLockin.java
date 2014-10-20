@@ -23,11 +23,12 @@ package it.cnr.isti.smartfed.papers.qbrokage;
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.application.CloudletProvider;
+import it.cnr.isti.smartfed.federation.generation.DatacenterGenerator;
+import it.cnr.isti.smartfed.federation.generation.Range;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
-import it.cnr.isti.smartfed.federation.utils.DatacenterGenerator;
 import it.cnr.isti.smartfed.metascheduler.JGAPMapping;
 import it.cnr.isti.smartfed.test.DataSet;
 import it.cnr.isti.smartfed.test.Experiment;
@@ -40,8 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.math3.distribution.UniformIntegerDistribution;
-import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Vm;
 
@@ -173,17 +172,16 @@ class LockInDatset extends DataSet{
 class DatacenterGeneratorCost extends DatacenterGenerator{
 
 	public DatacenterGeneratorCost() {
-		costPerMem = new UniformRealDistribution(0.01, 0.10);
-		costPerSto = new UniformRealDistribution(0.0002, 0.0020);
-		costPerSec = new UniformRealDistribution(0.10, 0.80); //not used, see below
-		costPerBw = new UniformRealDistribution(0.001, 0.05);
+		super(1);
+		costPerMem = new Range(0.01, 0.10);
+		costPerSto = new Range(0.0002, 0.0020);
+		costPerSec = new Range(0.10, 0.80); //not used, see below
+		costPerBw = new Range(0.001, 0.05);
 		
-		ramAmount = new UniformIntegerDistribution(512, 1024*16);
-		bwAmount = new UniformIntegerDistribution(10*1024, 10*1024*1024);
-		stoAmount = new UniformIntegerDistribution(4096, 10*1024*1024); // 10TB max
-		coreAmount = new UniformIntegerDistribution(1, 8);
-		mipsAmount = new UniformIntegerDistribution(1000, 25000);
-
-		this.seed = 1;
+		ramAmount = new Range(512, 1024*16);
+		bwAmount = new Range(10*1024, 10*1024*1024);
+		stoAmount = new Range(4096, 10*1024*1024); // 10TB max
+		coreAmount = new Range(1, 8);
+		mipsAmount = new Range(1000, 25000);
 	}	
 }

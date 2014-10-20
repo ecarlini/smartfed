@@ -18,8 +18,9 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package it.cnr.isti.smartfed.federation.utils;
+package it.cnr.isti.smartfed.federation.generation;
 
+import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterFactory;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterProfile;
@@ -29,71 +30,50 @@ import it.cnr.isti.smartfed.federation.resources.HostProfile;
 import it.cnr.isti.smartfed.federation.resources.HostProfile.HostParams;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.math3.distribution.AbstractIntegerDistribution;
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
-import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 
-public class DatacenterGenerator 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
+public class DatacenterGenerator extends AbstractGenerator
 {
-	
 	// dc variables
-	protected AbstractRealDistribution costPerMem;
-	protected AbstractRealDistribution costPerSto;
-	protected AbstractRealDistribution costPerSec;
-	protected AbstractRealDistribution costPerBw;
+	protected Range costPerMem;
+	protected Range costPerSto;
+	protected Range costPerSec;
+	protected Range costPerBw;
 	
 	// host variables
-	protected AbstractIntegerDistribution ramAmount;
-	protected AbstractIntegerDistribution bwAmount;
-	protected AbstractIntegerDistribution stoAmount;
+	protected Range ramAmount;
+	protected Range bwAmount;
+	protected Range stoAmount;
 	
 	// pes variables
-	protected AbstractIntegerDistribution coreAmount;
-	protected AbstractIntegerDistribution mipsAmount;
+	protected Range coreAmount;
+	protected Range mipsAmount;
 	
-	protected long seed;
-	
-	public DatacenterGenerator()
-	{
-		costPerMem = new UniformRealDistribution(0.01, 0.10);
-		costPerSto = new UniformRealDistribution(0.0002, 0.0020);
-		costPerSec = new UniformRealDistribution(0.10, 0.80); //not used, see below
-		costPerBw = new UniformRealDistribution(0.05, 0.15); //former (0.001, 0.05)
-		
-		ramAmount = new UniformIntegerDistribution(512, 1024*16);
-		bwAmount = new UniformIntegerDistribution(10*1024, 10*1024*1024);
-		stoAmount = new UniformIntegerDistribution(4096, 10*1024*1024); // 10TB max
-		coreAmount = new UniformIntegerDistribution(1, 8);
-		mipsAmount = new UniformIntegerDistribution(1000, 25000);
-	}
 	
 	public DatacenterGenerator(long seed)
 	{
-		this();
-		resetSeed(seed);
-	}
-	
-	public void resetSeed(long seed)
-	{
-		costPerMem.reseedRandomGenerator(seed);
-		costPerSto.reseedRandomGenerator(seed);
-		costPerSec.reseedRandomGenerator(seed);
-		costPerBw.reseedRandomGenerator(seed);
+		super(seed);
 		
-		ramAmount.reseedRandomGenerator(seed);
-		bwAmount.reseedRandomGenerator(seed);
-		stoAmount.reseedRandomGenerator(seed);
-		coreAmount.reseedRandomGenerator(seed);
-		mipsAmount.reseedRandomGenerator(seed);
+		costPerMem = new Range(0.01, 0.10);
+		costPerSto = new Range(0.0002, 0.0020);
+		costPerSec = new Range(0.10, 0.80); //not used, see below
+		costPerBw = new Range(0.05, 0.15); //former (0.001, 0.05)
 		
-		this.seed = seed;
+		ramAmount = new Range(512, 1024*16);
+		bwAmount = new Range(10*1024, 10*1024*1024);
+		stoAmount = new Range(4096, 10*1024*1024); // 10TB max
+		coreAmount = new Range(1, 8);
+		mipsAmount = new Range(1000, 25000);
 	}
 
 	/**
@@ -135,24 +115,55 @@ public class DatacenterGenerator
 		// Here get the assignment vector
 		int[] assign = DistributionAssignment.getAssignmentArray(approxNumberDatacenters, numberTotalHost, distribution);
 		
+		
+		
 		for (int i=0; i<approxNumberDatacenters; i++)
 		{
 			if (assign[i] <= 0)
 				continue;
 			
+			int numCore, mips, ram, bw, sto;
+			double costBw, costSto, costMem;
+			if (type == GenerationType.UNIFORM)
+			{
+				double value = distribution.sample();
+				numCore = (int) coreAmount.denormalize(value);
+				mips = (int) mipsAmount.denormalize(value);
+				ram = (int) ramAmount.denormalize(value);
+				bw = (int) bwAmount.denormalize(value);
+				sto = (int) stoAmount.denormalize(value);
+				
+				costBw = costPerBw.denormalize(value);
+				costSto = costPerSto.denormalize(value);
+				costMem = costPerMem.denormalize(value);
+			}
+			else
+			{
+				numCore = (int) coreAmount.denormalize(distribution.sample());
+				mips = (int) mipsAmount.denormalize(distribution.sample());
+				ram = (int) ramAmount.denormalize(distribution.sample());
+				bw = (int) bwAmount.denormalize(distribution.sample());
+				sto = (int) stoAmount.denormalize(distribution.sample());
+				
+				costBw = costPerBw.denormalize(distribution.sample());
+				costSto = costPerSto.denormalize(distribution.sample());
+				costMem = costPerMem.denormalize(distribution.sample());
+			}
+			
+			
 			// create the datacenters
 			FederationDatacenterProfile profile = FederationDatacenterProfile.getDefault();
-			profile.set(DatacenterParams.COST_PER_BW, costPerBw.sample()+"");
-			profile.set(DatacenterParams.COST_PER_STORAGE, costPerSto.sample()+"");
+			profile.set(DatacenterParams.COST_PER_BW, costBw+"");
+			profile.set(DatacenterParams.COST_PER_STORAGE, costSto+"");
 			// profile.set(DatacenterParams.COST_PER_SEC, costPerSec.sample()+"");
 			profile.set(DatacenterParams.COST_PER_SEC, "0");
-			profile.set(DatacenterParams.COST_PER_MEM, costPerMem.sample()+"");
-			/*
-			if ((i%2) == 0)
-				profile.set(DatacenterParams.COUNTRY, "italy");
-			else
-				profile.set(DatacenterParams.COUNTRY, "france");
-				*/
+			profile.set(DatacenterParams.COST_PER_MEM, costMem+"");
+			
+			// choose a random country
+			Range rangecountry = new Range(0, Country.values().length);
+			int index = (int) Math.floor(rangecountry.denormalize(distribution.sample()));
+			Country place = Country.values()[index];
+			profile.set(DatacenterParams.COUNTRY, place.toString());
 			
 			// create the storage
 			List<Storage> storageList = new ArrayList<Storage>(); // if empty, no SAN attached
@@ -163,9 +174,7 @@ public class DatacenterGenerator
 
 			// create the virtual processor (PE)
 			List<Pe> peList = new ArrayList<Pe>();
-			int numCore = coreAmount.sample();
-			int mips = mipsAmount.sample();
-
+			
 			for (int j=0; j<numCore; j++)
 			{
 				peList.add(new Pe(j, new PeProvisionerSimple(mips)));
@@ -174,9 +183,9 @@ public class DatacenterGenerator
 			// create the hosts
 			HostProfile prof = HostProfile.getDefault();
 			
-			prof.set(HostParams.RAM_AMOUNT_MB, ramAmount.sample()+"");
-			prof.set(HostParams.BW_AMOUNT, bwAmount.sample()+"");
-			prof.set(HostParams.STORAGE_MB, stoAmount.sample()+"");
+			prof.set(HostParams.RAM_AMOUNT_MB, ram+"");
+			prof.set(HostParams.BW_AMOUNT, bw+"");
+			prof.set(HostParams.STORAGE_MB, sto+"");
 					
 			
 			for (int k=0; k<assign[i]; k++)

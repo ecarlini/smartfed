@@ -22,8 +22,8 @@ package it.cnr.isti.smartfed.federation.resources;
 
 import it.cnr.isti.smartfed.federation.CostComputer;
 import it.cnr.isti.smartfed.federation.FederationLog;
+import it.cnr.isti.smartfed.federation.UtilityPrint;
 import it.cnr.isti.smartfed.federation.resources.VmFactory.VmType;
-import it.cnr.isti.smartfed.federation.utils.UtilityPrint;
 
 import java.text.DecimalFormat;
 import java.util.Iterator;

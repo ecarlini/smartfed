@@ -22,13 +22,13 @@ package it.src.isti.smartfed.federation.mapping;
 
 import it.cnr.isti.smartfed.federation.MonitoringHub;
 import it.cnr.isti.smartfed.federation.application.Application;
+import it.cnr.isti.smartfed.federation.generation.ApplicationGenerator;
+import it.cnr.isti.smartfed.federation.generation.DatacenterGenerator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
 import it.cnr.isti.smartfed.federation.mapping.MappingSolution;
 import it.cnr.isti.smartfed.federation.mapping.RandomAllocator;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
-import it.cnr.isti.smartfed.federation.utils.ApplicationGenerator;
-import it.cnr.isti.smartfed.federation.utils.DatacenterGenerator;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 import java.util.Calendar;
@@ -133,7 +133,7 @@ public class AllocRepeatabilityTest
 		g2.setRandomSeed(42);
 		
 		
-		MappingSolution[] ss1 = g1.findAllocation(application);
+		MappingSolution[] ss1 = g1.findAllocation(application);		
 		MappingSolution[] ss2 = g2.findAllocation(application);
 		
 		Assert.assertTrue(ss1[0].isSameSolution(ss2[0]));

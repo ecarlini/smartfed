@@ -22,13 +22,13 @@ package it.cnr.isti.smartfed.papers.qbrokage;
 
 import it.cnr.isti.smartfed.federation.FederationLog;
 import it.cnr.isti.smartfed.federation.application.Application;
+import it.cnr.isti.smartfed.federation.generation.ApplicationGenerator;
+import it.cnr.isti.smartfed.federation.generation.DatacenterGenerator;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
 import it.cnr.isti.smartfed.federation.mapping.RandomAllocator;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
-import it.cnr.isti.smartfed.federation.utils.ApplicationGenerator;
-import it.cnr.isti.smartfed.federation.utils.DatacenterGenerator;
 import it.cnr.isti.smartfed.test.DataSet;
 import it.cnr.isti.smartfed.test.Experiment;
 import it.cnr.isti.smartfed.test.TestResult;
@@ -155,16 +155,14 @@ class PaperDataset extends DataSet
 	@Override
 	public List<FederationDatacenter> createDatacenters() 
 	{
-		DatacenterGenerator dg = new DatacenterGenerator();
-		dg.resetSeed(this.seed * 15);
+		DatacenterGenerator dg = new DatacenterGenerator(this.seed * 15);
 		return dg.getDatacenters(numOfDatacenters, numHost);
 	}
 	
 	@Override
 	public List<Application> createApplications(int userId) 
 	{
-		ApplicationGenerator ag = new ApplicationGenerator();
-		ag.resetSeed(this.seed + 13);
+		ApplicationGenerator ag = new ApplicationGenerator(this.seed + 13);
 		Application app = ag.getApplication(userId, numVertex, this.numberOfCloudlets);
 		List<Application> list = new ArrayList<>(1);
 		list.add(app);

@@ -1,11 +1,10 @@
-package it.src.isti.smartfed.federation.utils;
-
-import junit.framework.Assert;
+package it.src.isti.smartfed.federation.generation;
 
 import org.apache.commons.math3.distribution.UniformRealDistribution;
+import org.junit.Assert;
 import org.junit.Test;
 
-import it.cnr.isti.smartfed.federation.utils.DistributionAssignment;
+import it.cnr.isti.smartfed.federation.generation.DistributionAssignment;
 
 public class DistributionAssignmentTest 
 {
@@ -27,6 +26,5 @@ public class DistributionAssignmentTest
 		
 		Assert.assertEquals(hs, sum);
 	}
-	
 
 }

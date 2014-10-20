@@ -40,7 +40,7 @@ public class FederationDatacenterFactory
 	private static FederationDatacenter createFederationDatacenter(String dcName, FederationDatacenterProfile profile, List<Host> hosts, List<Storage> storages) {
 		// create the datacenter characteristics
 		DatacenterCharacteristics dc = new DatacenterCharacteristicsMS(
-				profile.get(DatacenterParams.COUNTRY),
+				Country.valueOf(profile.get(DatacenterParams.COUNTRY)),
 				profile.get(DatacenterParams.ARCHITECTURE),
 				profile.get(DatacenterParams.OS),
 				profile.get(DatacenterParams.VMM),

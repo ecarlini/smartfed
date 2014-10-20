@@ -83,6 +83,7 @@ public class GeneticAllocator extends AbstractAllocator {
 		for (int i=0; i < sols.length; i++)
 			sols[i] = convert(solutions[i], application, dcs);
 		
+		
 		this.setSolution(sols[0]);
 		return sols;
 	}
@@ -99,7 +100,8 @@ public class GeneticAllocator extends AbstractAllocator {
 	 * @param dcs
 	 * @return
 	 */
-	private MappingSolution convert(Solution s, Application application, List<FederationDatacenter> dcs) {
+	private MappingSolution convert(Solution s, Application application, List<FederationDatacenter> dcs) 
+	{
 		if (s == null) return null;
 
 		FederationLog.print(s);
@@ -115,6 +117,14 @@ public class GeneticAllocator extends AbstractAllocator {
 				return 0; // equal
 			}
 		});
+		
+		/* DEBUG
+		for (int i=0; i<dcs.size(); i++)
+		{
+			FederationDatacenter fd = dcs.get(i);
+			System.out.println("Provider "+fd.getId()+ " position "+i);
+		}
+		*/
 
 		MappingSolution map = new MappingSolution(application);
 		map.setAllocatorName(this.getClass().getSimpleName());
@@ -125,12 +135,15 @@ public class GeneticAllocator extends AbstractAllocator {
 		List<Vm> v_list = application.getAllVms();
 		if (v_list.size() != hm.keySet().size())
 			System.out.println("************ Big error ********************");
-
-		for (Integer vmId: hm.keySet()){
+		
+		for (Integer vmId: hm.keySet())
+		{
 			Vm vm = findForId(v_list, vmId);
 			ApplicationVertex vertex = application.getVertexForVm(vm);
 			Cloudlet cl = vertex.getAssociatedCloudlet(vm);
-			FederationDatacenter dc = dcs.get(hm.get(vmId)-3); // hm.get(vmId) is the datacenter position, with -3 we have ids for metascheduler
+			
+			// FederationDatacenter dc = dcs.get(hm.get(vmId)-3); // hm.get(vmId) is the datacenter position, with -3 we have ids for metascheduler
+			FederationDatacenter dc = this.findDatacenter(dcs, hm.get(vmId));
 			map.set(cl, dc);
 		}
 		return map;
@@ -147,6 +160,16 @@ public class GeneticAllocator extends AbstractAllocator {
 			}
 		}
 		return vm;
+	}
+	
+	private FederationDatacenter findDatacenter(List<FederationDatacenter> list, Integer id)
+	{
+		for (FederationDatacenter fd: list)
+		{
+			if (fd.getId() == id)
+				return fd;
+		}
+		return null;
 	}
 
 	public List<FederationDatacenter> getDcs() {

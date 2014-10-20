@@ -18,7 +18,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-package it.cnr.isti.smartfed.federation.utils;
+package it.cnr.isti.smartfed.federation;
 
 import java.text.DecimalFormat;
 import java.util.List;

@@ -20,20 +20,19 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.metascheduler.constraints;
 
-import java.util.Set;
-
-import org.jgap.Gene;
-import org.jgap.IChromosome;
-
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.metascheduler.Constant;
 import it.cnr.isti.smartfed.metascheduler.MSPolicy;
-import it.cnr.isti.smartfed.metascheduler.Monitor;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
+
+import java.util.Set;
+
+import org.jgap.Gene;
+import org.jgap.IChromosome;
 
 public class NetworkConstraint extends MSPolicy {
 

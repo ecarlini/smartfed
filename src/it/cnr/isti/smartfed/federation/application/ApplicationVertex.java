@@ -20,10 +20,10 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.federation.application;
 
+import it.cnr.isti.smartfed.federation.UtilityPrint;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
 import it.cnr.isti.smartfed.federation.resources.VmFactory.VmType;
 import it.cnr.isti.smartfed.federation.resources.VmTyped;
-import it.cnr.isti.smartfed.federation.utils.UtilityPrint;
 
 import java.util.ArrayList;
 import java.util.HashMap;

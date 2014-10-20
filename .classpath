@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="lib/cloning-1.8.5.jar"/>
-	<classpathentry kind="lib" path="lib/cloudsim-3.0.2-sources.jar"/>
-	<classpathentry kind="lib" path="lib/cloudsim-3.0.2.jar" sourcepath="lib/cloudsim-3.0.2-sources.jar"/>
+	<classpathentry kind="lib" path="lib/cloudsim-3.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-math3-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/federation-core-0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/jdom-2.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/jgap-3.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/jgrapht-jdk1.6.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.11.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="lib/objenesis-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/ovf-parser-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/super-csv-2.1.0.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib/jdom-2.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/workflowsim-1.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-7-openjdk-amd64"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

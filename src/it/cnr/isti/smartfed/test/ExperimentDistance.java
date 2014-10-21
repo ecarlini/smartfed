@@ -32,7 +32,6 @@ public class ExperimentDistance extends Experiment
 		super(null, null);
 	}
 
-
 	private double optimum;
 	
 	public double getOptimum() {
@@ -87,7 +86,6 @@ public class ExperimentDistance extends Experiment
 		allocator.setNetEstimator(internetEstimator);
 		allocator.setRandomSeed(randomSeed);
 		
-		// create the queue (is that still needed)?
 		FederationQueueProfile queueProfile = FederationQueueProfile.getDefault();
 		FederationQueue queue = FederationQueueProvider.getFederationQueue(queueProfile, federation, applications);
 		CloudSim.addEntity(queue);

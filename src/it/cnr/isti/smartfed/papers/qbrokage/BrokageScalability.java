@@ -20,84 +20,30 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.papers.qbrokage;
 
-import it.cnr.isti.smartfed.federation.Allocation;
-import it.cnr.isti.smartfed.federation.CostComputer;
-import it.cnr.isti.smartfed.federation.Federation;
-import it.cnr.isti.smartfed.federation.FederationQueue;
-import it.cnr.isti.smartfed.federation.FederationQueueProfile;
-import it.cnr.isti.smartfed.federation.FederationQueueProvider;
-import it.cnr.isti.smartfed.federation.MonitoringHub;
-import it.cnr.isti.smartfed.federation.application.Application;
+import it.cnr.isti.smartfed.federation.FederationLog;
+import it.cnr.isti.smartfed.federation.generation.GenerationType;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
-import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
-import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
-import it.cnr.isti.smartfed.metascheduler.JGAPMapping;
-import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
-import it.cnr.isti.smartfed.networking.InternetEstimator;
-import it.cnr.isti.smartfed.test.ExperimentDistance;
-import it.cnr.isti.smartfed.test.InterfaceDataSet;
-import it.cnr.isti.smartfed.test.PreciseDataset;
 import it.cnr.isti.smartfed.test.TestResult;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.core.CloudSim;
+public class BrokageScalability extends AbstractBrokageScalability{	
+	
 
-public class BrokageScalability {	
-	public final int[] numCloudlets = {12};
-	public int[] numDatacenters = {5, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
-	public int repetitions = 20;
-
-	protected String dcToString(){
-		String str = "" + numDatacenters[0];
-		if (numDatacenters.length > 1)
-			str += ":" + (numDatacenters[numDatacenters.length-1]-numDatacenters[numDatacenters.length-2]) + ":";
-		str += numDatacenters[numDatacenters.length-1];
-		return str;
-	}
-
-	PaperDataset createDataset(int numOfVertex, int numOfCloudlets, int numOfDatacenter, int numHost, long seed){
-		return new PaperDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, seed);
+	public PaperDataset createDataset(int numOfVertex, int numOfCloudlets, int numOfDatacenter, int numHost, long seed, GenerationType t){
+		return new PaperDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, seed, t);
 	}
 	
-	static int counter = 0;
-	private String executeSingleSetCost(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter){
-		int numOfVertex = 3;
-	
+	public AbstractAllocator createOptimumAllocator() {
+		return new GreedyAllocator();
+	}
+
+	public String logResults(){
 		String str = "";
-		int numHost = 100  * numOfDatacenter;
-		ExperimentDistance e = new ExperimentDistance();
-
-		long seed = 0;
-		for (int i=0; i<repetitions; i++) {
-			double optimum = 0;
-			PaperDataset dataset = null;
-			long j = seed;
-			while (optimum == 0){
-				dataset = this.createDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, j);
-				optimum = computeOptimum(new GreedyAllocator(), dataset, j);
-				if (optimum == 0) {
-					counter++;
-				}
-				seed = j++;
-			}
-			e.setDataset(dataset);
-			e.setOptimum(optimum);
-			e.setRandomSeed(seed);
-			((GeneticAllocator) allocator).resetConstraints();
-			e.run(allocator);	
-			seed++;
-		}
-
-
 		double result = TestResult.getCostDistance().getMean(); 
 		double resultSTD = TestResult.getCostDistance().getStandardDeviation();
 		double time = TestResult.getMappingTime().getMean();
@@ -113,102 +59,45 @@ public class BrokageScalability {
 		TestResult.reset();
 		return str;
 	}
-
-	protected String execute(AbstractAllocator allocator) throws IOException{
-		String str = "";
-		for (int z=0; z<numCloudlets.length; z++){
-			for (int k=0; k<numDatacenters.length; k++){
-				str += numDatacenters[k] + "\t";
-				str += executeSingleSetCost(allocator, numCloudlets[z], numDatacenters[k]);
-				str += "\n";
-			}
-		}
-		return str;
-	}
-
-	public BrokageScalability(){
-		setGeneticAllocatorConfiguration();
+	
+	public BrokageScalability(GenerationType t){
+		super(t);
 	}
 	
-	private static void setGeneticAllocatorConfiguration(){
-		JGAPMapping.MUTATION = 10;
-		JGAPMapping.POP_SIZE = 50;
-		JGAPMapping.CROSSOVER = 0.35;
-		JGAPMapping.EVOLUTION_STEP = 120; 
+	public BrokageScalability(){
+		this(GenerationType.UNIFORM);
 	}
 	
 	public static void main (String[] args) throws IOException{
-		BrokageScalability n = new BrokageScalability();
-		String initial = "#dc,cost,time,lock,costSTD,timeSTD,berger" + n.dcToString() + "\n";
-		String str = initial;
-		
+		FederationLog.disable();
+		BrokageScalability n = new BrokageScalability(GenerationType.UNIFORM);
 		AbstractAllocator allocator = new GeneticAllocator();
+		String str = "";
+		str = n.execute(allocator);
+		write(str, new File("plots/cost-dc" + n.dcToString() +"cross0.35-mut10_" + n.gentype +".dat"));
+		System.out.println(counter);
 		
-		str += n.execute(allocator);
-		str += "\n";
-
-		write(str, new File("plots/cost-dc" + n.dcToString() +"cross0.35-mut10"+".dat"));
+		n = new BrokageScalability(GenerationType.NON_UNIFORM);
+		allocator = new GeneticAllocator();
+		str = n.execute(allocator);
+		write(str, new File("plots/cost-dc" + n.dcToString() +"cross0.35-mut10_" + n.gentype +".dat"));
+		System.out.println(counter);
+		
+		/* Uniform + less variability */
+		n = new BrokageScalability(GenerationType.UNIFORM);
+		allocator = new GeneticAllocator();
+		str = n.execute_lessVariability(allocator);
+		write(str, new File("plots/cost-dc" + n.dcToString() +"cross0.35-mut10_" + n.gentype + "LessVar" + ".dat"));
+		System.out.println(counter);
+		
+		/* Non_Uniform + less variability */
+		n = new BrokageScalability(GenerationType.NON_UNIFORM);
+		allocator = new GeneticAllocator();
+		str = n.execute_lessVariability(allocator);
+		write(str, new File("plots/cost-dc" + n.dcToString() +"cross0.35-mut10_" + n.gentype + "LessVar" +".dat"));
 		System.out.println(counter);
 	}
 	
-	protected static double computeOptimum(AbstractAllocator allocator, PaperDataset da, long seed){
-		InterfaceDataSet dataset = da;
-		Log.enable();
-		int num_user = 1;   // users
-		Calendar calendar = Calendar.getInstance();
-		boolean trace_flag = true;  // trace events
-		CloudSim.init(num_user, calendar, trace_flag);
-		Federation federation = new Federation(allocator, seed);
-		CloudSim.addEntity(federation);
-
-		// init the dataset
-		if (dataset instanceof PreciseDataset)
-			((PreciseDataset)dataset).init(federation.getId());
-
-		ResourceCounter.reset();
-		List<FederationDatacenter> datacenters = dataset.createDatacenters();
-		federation.setDatacenters(datacenters);
-		
-		InternetEstimator internetEstimator = dataset.createInternetEstimator(datacenters);
-		int schedulingInterval = 1; // probably simulation time
-		MonitoringHub monitor = new MonitoringHub(datacenters, schedulingInterval);
-		CloudSim.addEntity(monitor);
-		
-		List<Application> applications = dataset.createApplications(federation.getId());
-
-		// setup the allocator
-		allocator.setMonitoring(monitor);
-		allocator.setNetEstimator(internetEstimator);
-		allocator.setRandomSeed(seed);
-
-		FederationQueueProfile queueProfile = FederationQueueProfile.getDefault();
-		FederationQueue queue = FederationQueueProvider.getFederationQueue(queueProfile, federation, applications);
-		CloudSim.addEntity(queue);
-
-		CloudSim.terminateSimulation(1000000); // in milliseconds
-		CloudSim.startSimulation();
-		
-		double res = 0;
-		try {
-			for (Allocation a: federation.getAllocations()){
-				if (a.isCompleted()){
-					res = CostComputer.actualCost(a);
-					break;
-				}
-			}
-		}
-		catch (Exception e){
-			res = 0;
-		}
-		System.out.println("Optimum is " + res);
-		return res;
-	}
 	
-	protected static void write(String toWrite, File f) throws IOException{
-		FileWriter fw3 = new FileWriter(f);
-		fw3.write(toWrite);
-		fw3.flush();
-		fw3.close();
-	}
 
 }

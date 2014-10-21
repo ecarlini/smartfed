@@ -26,6 +26,7 @@ import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
 import it.cnr.isti.smartfed.federation.mapping.RandomAllocator;
+import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterFactory;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterProfile;
@@ -172,7 +173,7 @@ class TestDataset implements InterfaceDataSet
 		Application app = new SimpleApplication(userId, 1, type1);
 		
 		ApplicationVertex av1 = app.vertexSet().iterator().next();
-		av1.setCountry("Italy");
+		av1.setCountry(Country.Italy);
 		av1.setBudget(Double.parseDouble("100.0"));
 		
 		List<Application> apps = new ArrayList<Application>();

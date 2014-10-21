@@ -71,7 +71,7 @@ public class SimpleTest {
 	private FederationDatacenter createDatacenter(int dc_id, Properties prop, String place, String cost_per_mem, int ram){	
 		FederationDatacenterProfile prof = FederationDatacenterProfile.getDefault();
 		prof.set(DatacenterParams.COST_PER_MEM, cost_per_mem);
-		prof.set(DatacenterParams.COUNTRY, "italia");
+		prof.set(DatacenterParams.COUNTRY, Country.Italy.toString());
 		
 		int hostListSize = Integer.parseInt(prop.getProperty(Constant.DATACENTER_SIZE));
 		List<Host> hostList = new ArrayList<Host>();
@@ -111,8 +111,8 @@ public class SimpleTest {
 
 		// Datacenter
 		DataSetMS dataSet= new DataSetMS(dc_prop, app_prop); // TODO: never used, is this really needed?
-		FederationDatacenter dc1 = createDatacenter(0,dc_prop,"italia", "1.0", 2740);
-		FederationDatacenter dc2 = createDatacenter(1,dc_prop,"italia", "3.0", 4740);
+		FederationDatacenter dc1 = createDatacenter(0,dc_prop,Country.Italy.toString(), "1.0", 2740);
+		FederationDatacenter dc2 = createDatacenter(1,dc_prop,Country.Italy.toString(), "3.0", 4740);
 		List<FederationDatacenter> dcList = new ArrayList<FederationDatacenter>();
 		dcList.add(dc1);
 		dcList.add(dc2);

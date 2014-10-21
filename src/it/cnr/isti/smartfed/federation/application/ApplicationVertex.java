@@ -21,6 +21,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 package it.cnr.isti.smartfed.federation.application;
 
 import it.cnr.isti.smartfed.federation.UtilityPrint;
+import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
 import it.cnr.isti.smartfed.federation.resources.VmFactory.VmType;
 import it.cnr.isti.smartfed.federation.resources.VmTyped;
@@ -61,7 +62,8 @@ public class ApplicationVertex
 	private String country = "";
 	private double budget = 1.0;
 	private VmType vm_type;
-	private Vm desiredVm = null; 
+	private Vm desiredVm = null;
+	private Country countryEnum; 
 	
 	public Vm getDesiredVm() {
 		return desiredVm;
@@ -135,9 +137,10 @@ public class ApplicationVertex
 	public String getCountry() {
 		return country;
 	}
-
-	public void setCountry(String place) {
-		this.country = place;
+	
+	public void setCountry(Country place) {
+		this.countryEnum = place;
+		this.country = place.toString();
 	}
 
 	public double getBudget() {
@@ -240,5 +243,10 @@ public class ApplicationVertex
 				c='c';
 		}
 		return c;
+	}
+
+	public void cloningFeatures(ApplicationVertex vertexForVm) {
+		budget = vertexForVm.getBudget();
+		country = vertexForVm.getCountry();
 	}
 }

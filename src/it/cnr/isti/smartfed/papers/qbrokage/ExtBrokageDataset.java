@@ -4,6 +4,7 @@ import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.application.CloudletProvider;
+import it.cnr.isti.smartfed.federation.generation.GenerationType;
 import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
 
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public class ExtBrokageDataset extends PaperDataset {
 	public static final double mrate = 0.27;// 20KB/req and 1000req/h
 	
 	public ExtBrokageDataset(int numVertex, int numberOfCloudlets,
-			int numOfDatacenter, int numHost, long seed) {
-		super(numVertex, numberOfCloudlets, numOfDatacenter, numHost, seed);
+			int numOfDatacenter, int numHost, long seed, GenerationType t) {
+		super(numVertex, numberOfCloudlets, numOfDatacenter, numHost, seed, t);
 	}
 
 	@Override
@@ -39,8 +40,7 @@ public class ExtBrokageDataset extends PaperDataset {
 				cloudletList.add(CloudletProvider.getDefault());
 				
 				ApplicationVertex v = new ApplicationVertex(userId, cloudletList, customVm);
-				v.setBudget(app.getVertexForVm(customVm).getBudget());
-				v.setCountry(app.getVertexForVm(customVm).getCountry());
+				v.cloningFeatures(app.getVertexForVm(customVm));
 				newApp.addVertex(v);
 		}
 		for (ApplicationVertex v: newApp.vertexSet()){
@@ -52,7 +52,6 @@ public class ExtBrokageDataset extends PaperDataset {
 					newApp.addEdge(new ApplicationEdge(msize, mrate), v, n);
 			}
 		}
-		System.out.println("****    Adding " + newApp.getEdges().size() + " edges");
 		List<Application> list = new ArrayList<>(1);
 		list.add(newApp);
 		return list;

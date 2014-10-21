@@ -4,4 +4,6 @@ public enum Country
 {
 	Italy,
 	France,
+	UK,
+	USA,
 }

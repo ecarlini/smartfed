@@ -254,7 +254,7 @@ class BenchmarkApplication1 extends BenchmarkApplication{
 		super(userId, vertexNumber);
 		Set<ApplicationVertex> vs = this.vertexSet();
 		for (ApplicationVertex v : vs)
-			v.setCountry("SouthEast Asia");
+			// v.setCountry("SouthEast Asia");
 		setName("App1");
 	}
 }
@@ -264,7 +264,7 @@ class BenchmarkApplication2 extends BenchmarkApplication{
 		super(userId, vertexNumber);
 		Set<ApplicationVertex> vs = this.vertexSet();
 		for (ApplicationVertex v : vs){
-			v.setCountry("USA");
+			// v.setCountry("USA");
 			List<Vm> vms = v.getVms();
 			vms.get(0).setBw(250*1024*1024);
 		}

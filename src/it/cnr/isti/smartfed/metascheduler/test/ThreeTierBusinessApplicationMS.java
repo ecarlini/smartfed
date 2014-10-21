@@ -21,6 +21,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 package it.cnr.isti.smartfed.metascheduler.test;
 
 
+import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.test.ThreeTierBusinessApplication;
 
 /**
@@ -46,16 +47,16 @@ public class ThreeTierBusinessApplicationMS extends ThreeTierBusinessApplication
 	}
 	*/
 	
-	public ThreeTierBusinessApplicationMS(int userId, String[] places, String[] budgets, int frontendNumber, int backendNumber, int databaseNumber)
+	public ThreeTierBusinessApplicationMS(int userId, Country place, String[] budgets, int frontendNumber, int backendNumber, int databaseNumber)
 	{
 		super(userId, frontendNumber, backendNumber, databaseNumber);
-		vertexFrontend.setCountry(places[0]);
+		vertexFrontend.setCountry(place);
 		vertexFrontend.setBudget(Double.parseDouble(budgets[0]));
 		
-		vertexBackend.setCountry(places[1]);
+		vertexBackend.setCountry(place);
 		vertexBackend.setBudget(Double.parseDouble(budgets[1]));
 		
-		vertexDatabase.setCountry(places[2]);
+		vertexDatabase.setCountry(place);
 		vertexDatabase.setBudget(Double.parseDouble(budgets[2]));
 	}
 }

@@ -27,6 +27,7 @@ import it.cnr.isti.smartfed.federation.generation.DatacenterGenerator;
 import it.cnr.isti.smartfed.federation.generation.Range;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
+import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
 import it.cnr.isti.smartfed.metascheduler.JGAPMapping;
@@ -159,7 +160,7 @@ class LockInDatset extends DataSet{
 
 		Application app = new Application();
 		ApplicationVertex av1 = new ApplicationVertex(userId, cloudletList, type1);
-		av1.setCountry("Italy");
+		av1.setCountry(Country.Italy);
 		av1.setBudget(Double.parseDouble("5.0"));
 		app.addVertex(av1);
 

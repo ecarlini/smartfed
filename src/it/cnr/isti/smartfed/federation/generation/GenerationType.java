@@ -29,4 +29,13 @@ public enum GenerationType
 	/* Generates a random value for each of the range. 
 	 */
 	NON_UNIFORM;
+	
+	@Override
+	  public String toString() {
+	    switch(this) {
+	      case UNIFORM: return "uniform";
+	      case NON_UNIFORM: return "nonuniform";
+	      default: throw new IllegalArgumentException();
+	    }
+	  }
 }

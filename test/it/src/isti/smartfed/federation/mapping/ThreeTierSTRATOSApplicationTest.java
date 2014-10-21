@@ -28,6 +28,7 @@ import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
 import it.cnr.isti.smartfed.federation.mapping.RandomAllocator;
+import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterFactory;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterProfile;
@@ -243,17 +244,17 @@ class StratosAmazonThreeTierBusinessApplication extends Application{
 	 */
 	public StratosAmazonThreeTierBusinessApplication(int userId, int frontendNumber, int backendNumber, int databaseNumber) {
 		vertexFrontend = createFrontend(userId, frontendNumber);
-		vertexFrontend.setCountry("Italy");
+		vertexFrontend.setCountry(Country.Italy);
 		vertexFrontend.setBudget(0.5);
 		vertexFrontend.setDesiredVm(VmFactory.getDesiredVm(userId, 1000, 1, 1*1024, 1000, 160*1024));
 		
 		vertexBackend = createBackend(userId, backendNumber);
-		vertexBackend.setCountry("Italy");
+		vertexBackend.setCountry(Country.Italy);
 		vertexBackend.setBudget(0.5);
 		vertexBackend.setDesiredVm(VmFactory.getDesiredVm(userId, 1000, 1, 1*1024, 1000, 160*1024));
 		
 		vertexDatabase = createDatabase(userId, databaseNumber);	
-		vertexDatabase.setCountry("Italy");
+		vertexDatabase.setCountry(Country.Italy);
 		vertexDatabase.setBudget(0.5);
 		vertexDatabase.setDesiredVm(VmFactory.getDesiredVm(userId, 1000, 6, 4*1024, 1000, 160*1024));
 		createConnections();

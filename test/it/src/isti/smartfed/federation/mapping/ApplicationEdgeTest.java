@@ -176,16 +176,16 @@ class EdgeTestDataset implements InterfaceDataSet
 		Application app = new SimpleApplication(userId, ApplicationEdgeTest.vnumber, type1);
 		Iterator<ApplicationVertex> i = app.vertexSet().iterator();
 		ApplicationVertex av1 = i.next();
-		av1.setCountry(Country.Italy.toString());
+		av1.setCountry(Country.Italy);
 		av1.setBudget(Double.parseDouble("10.0"));
 		
 		
 		ApplicationVertex av2 = i.next();
-		av2.setCountry(Country.France.toString());
+		// av2.setCountry(Country.France.toString());
 		av2.setBudget(Double.parseDouble("10.0"));
 		
 		ApplicationVertex av3 = i.next();
-		av3.setCountry(Country.Italy.toString());
+		av3.setCountry(Country.Italy);
 		av3.setBudget(Double.parseDouble("10.0"));
 		
 		app.addEdge(ApplicationEdgeTest.edge, av1, av2);

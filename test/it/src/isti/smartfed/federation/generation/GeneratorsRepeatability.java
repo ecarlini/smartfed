@@ -73,6 +73,7 @@ public class GeneratorsRepeatability
 			for (Host h : l){
 				Assert.assertEquals(h.getStorage(), f.getMSCharacteristics().getHighestStorage());
 			}
+			System.out.println(f.getMSCharacteristics());
 		}
 	}
 

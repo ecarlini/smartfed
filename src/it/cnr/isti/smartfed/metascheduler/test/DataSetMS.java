@@ -21,6 +21,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 package it.cnr.isti.smartfed.metascheduler.test;
 
 import it.cnr.isti.smartfed.federation.application.Application;
+import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterFactory;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenterProfile;
@@ -204,7 +205,7 @@ public class DataSetMS implements InterfaceDataSet
 
 	public Application generateApplication(int userId, int numberOfCloudlets) 
 	{
-		String[] places = app_prop.getProperty(Constant.APPLICATION_PLACES).toString().split(",");
+		Country place = Country.Italy;
 		String[] budgets = app_prop.getProperty(Constant.APPLICATION_BUDGET).toString().split(",");
 		for (String b : budgets)
 			System.out.println("Budgets for each cloudlet " + b);
@@ -216,7 +217,7 @@ public class DataSetMS implements InterfaceDataSet
 		int database = new Double(Math.ceil(number * 20 / 100)).intValue();
 		int appserver = number.intValue() - frontend - database;
 		
-		return new ThreeTierBusinessApplicationMS(userId, places, budgets, frontend, appserver, database);
+		return new ThreeTierBusinessApplicationMS(userId, place, budgets, frontend, appserver, database);
 	}
 
 	@Override

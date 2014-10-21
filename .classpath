@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="lib/cloning-1.8.5.jar"/>
-	<classpathentry kind="lib" path="lib/cloudsim-3.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/cloudsim-3.0.2.jar" sourcepath="lib/cloudsim-3.0.2-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons-math3-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/federation-core-0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/hamcrest-core-1.1.jar"/>

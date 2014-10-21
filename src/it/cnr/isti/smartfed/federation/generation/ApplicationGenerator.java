@@ -23,6 +23,7 @@ package it.cnr.isti.smartfed.federation.generation;
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.application.CloudletProvider;
+import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
 
 import java.util.ArrayList;
@@ -123,7 +124,7 @@ public class ApplicationGenerator extends AbstractGenerator
 				
 				ApplicationVertex av = new ApplicationVertex(userId, cloudletList, sample);
 				av.setBudget(ApplicationGenerator.BUDGET);
-				av.setCountry("Italy");
+				av.setCountry(Country.Italy);
 				application.addVertex(av);
 			}
 		}

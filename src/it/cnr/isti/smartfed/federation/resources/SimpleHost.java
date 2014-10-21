@@ -40,20 +40,20 @@ public class SimpleHost extends Host{
 		}
 
 		if (!getRamProvisioner().allocateRamForVm(vm, vm.getCurrentRequestedRam())) {
-			Log.printLine("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId()
+			FederationLog.debugLog("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId()
 					+ " failed by RAM (" + vm.getRam() + " vs " + this.getRam() + ")");
 			return false;
 		}
 
 		if (!getBwProvisioner().allocateBwForVm(vm, vm.getCurrentRequestedBw())) {
-			Log.printLine("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId()
+			FederationLog.debugLog("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId()
 					+ " failed by BW");
 			getRamProvisioner().deallocateRamForVm(vm);
 			return false;
 		}
 
 		if (!getVmScheduler().allocatePesForVm(vm, vm.getCurrentRequestedMips())) {
-			Log.printLine("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId()
+			FederationLog.debugLog("[VmScheduler.vmCreate] Allocation of VM #" + vm.getId() + " to Host #" + getId()
 					+ " failed by MIPS (" + vm.getMips() + " vs " + this.getTotalMips() + ")");
 			getRamProvisioner().deallocateRamForVm(vm);
 			getBwProvisioner().deallocateBwForVm(vm);

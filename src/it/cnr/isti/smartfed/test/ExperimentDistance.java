@@ -33,7 +33,7 @@ public class ExperimentDistance extends Experiment
 	}
 
 	private double optimum;
-	
+
 	public double getOptimum() {
 		return optimum;
 	}
@@ -46,15 +46,15 @@ public class ExperimentDistance extends Experiment
 		dataset = d;
 	}
 
-	public void run (AbstractAllocator allocator) {
+	public boolean run (AbstractAllocator allocator) {
 		// init the cloudsim simulator
 		Log.enable();
 		int num_user = 1;   // users
 		Calendar calendar = Calendar.getInstance();
 		boolean trace_flag = true;  // trace events
 		CloudSim.init(num_user, calendar, trace_flag);
-			
-		
+
+
 		// create the federation
 		Federation federation = new Federation(allocator, randomSeed);
 		CloudSim.addEntity(federation);
@@ -62,44 +62,44 @@ public class ExperimentDistance extends Experiment
 		// init the dataset
 		if (dataset instanceof PreciseDataset)
 			((PreciseDataset)dataset).init(federation.getId());
-			
+
 		// reset counter for the resources
 		ResourceCounter.reset();
-		
+
 		// create datacenters for the experiment
 		List<FederationDatacenter> datacenters = dataset.createDatacenters();
 		federation.setDatacenters(datacenters);
-		
+
 		// create net estimator
 		InternetEstimator internetEstimator = dataset.createInternetEstimator(datacenters);
-		
+
 		// create monitoring
 		int schedulingInterval = 1; // probably simulation time
 		MonitoringHub monitor = new MonitoringHub(datacenters, schedulingInterval);
 		CloudSim.addEntity(monitor);
-			
+
 		// creating the applications
 		List<Application> applications = dataset.createApplications(federation.getId());
-		
+
 		// setup the allocator
 		allocator.setMonitoring(monitor);
 		allocator.setNetEstimator(internetEstimator);
 		allocator.setRandomSeed(randomSeed);
-		
+
 		FederationQueueProfile queueProfile = FederationQueueProfile.getDefault();
 		FederationQueue queue = FederationQueueProvider.getFederationQueue(queueProfile, federation, applications);
 		CloudSim.addEntity(queue);
-		
+
 		// manually setup the end of the simulation
 		CloudSim.terminateSimulation(1000000); // in milliseconds
 
 		// actually start the simulation
 		CloudSim.startSimulation();
-		
+
 		// print the cloudlet
 		List<Cloudlet> newList = federation.getReceivedCloudlet();
 		// UtilityPrint.printCloudletList(newList);	
-		
+
 		// calculates the vendor lock-in metric on the mapping plan
 		MappingSolution sol = allocator.getSolution();
 		//System.out.println(sol);
@@ -107,44 +107,47 @@ public class ExperimentDistance extends Experiment
 		for (FederationDatacenter fd: sol.getMapping().values()){
 			myset.add(fd);
 		}
-		
+
 		// MetaschedulerUtilities.saveFederationToTxt("datacenters" + datacenters.size() + ".txt", new ArrayList<FederationDatacenter>(myset));
-		
+
 		int usedDc = myset.size();// / datacenters.size();
 		TestResult.getLockDegree().addValue(usedDc);
-		
-		// add the values to the TestResult class
-		for (Allocation a: federation.getAllocations())
-		{
-			if (a.isCompleted())
-			{
-				double budget = 0;
-				for (ApplicationVertex av : a.getApplication().vertexSet())
-					budget += av.getBudget();
-			
-				double total = CostComputer.actualCost(a);
-				System.out.println("TOTAL --------> "+total);
-				
-				if (optimum != 0){
-					double dop = (total - optimum) / optimum;
-					TestResult.getCostDistance().addValue(dop);
-					System.out.println("MYTOTAL --------> " + dop);
-				}
-				System.out.println("OPT --------> " + optimum);
-				
-				double totalNet = CostComputer.actualNetCost(a);
-				TestResult.getNetCost().addValue(totalNet);
-				System.out.println("NETCOST --------> " + totalNet);
-				
-				TestResult.getCost().addValue(total);
-				TestResult.getBerger().addValue(Math.log(total / budget));
+
+		boolean goodAllocation = false;
+		Allocation a = null;
+		if (federation.getAllocations().iterator().hasNext())
+			a = federation.getAllocations().iterator().next();
+		if (a != null && a.isCompleted()){
+			double budget = 0;
+			for (ApplicationVertex av : a.getApplication().vertexSet())
+				budget += av.getBudget();
+
+			double total = CostComputer.actualCost(a);
+			System.out.println("TOTAL --------> "+total);
+
+			if (optimum != 0){
+				double dop = (total - optimum) / optimum;
+				TestResult.getCostDistance().addValue(dop);
+				System.out.println("MYTOTAL --------> " + dop);
 			}
-			else
-				System.out.println("Not completed");
+			System.out.println("OPT --------> " + optimum);
+
+			double totalNet = CostComputer.actualNetCost(a);
+			TestResult.getNetCost().addValue(totalNet);
+			System.out.println("NETCOST --------> " + totalNet);
+
+			TestResult.getCost().addValue(total);
+			TestResult.getBerger().addValue(Math.log(total / budget));
+
+			goodAllocation = true;
 		}
+		else {
+			System.out.println("Not completed");
+		}
+		return goodAllocation;
 		// UtilityPrint.printCloudletList(newList);
 	}
-	
+
 
 	public String toString(){
 		return "ExperimentDistance with " + allocator.getClass().getSimpleName();

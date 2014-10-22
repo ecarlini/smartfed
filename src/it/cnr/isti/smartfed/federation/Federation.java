@@ -308,6 +308,10 @@ public class Federation extends SimEntity
 		return this.receivedCloudlet;
 	}
 	
+	/**
+	 * Return all the allocations of the Federation (one for each application)
+	 * @return
+	 */
 	public Collection<Allocation> getAllocations()
 	{
 		return appToAllocation.values();

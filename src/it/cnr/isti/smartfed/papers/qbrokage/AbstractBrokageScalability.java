@@ -102,7 +102,8 @@ abstract class AbstractBrokageScalability {
 		ExperimentDistance e = new ExperimentDistance();
 
 		long seed = 0;
-		for (int i=0; i<repetitions; i++) {
+		int i = 0;
+		while (i < repetitions){
 			double optimum = 0;
 			PaperDataset dataset = null;
 			long j = seed;
@@ -118,7 +119,11 @@ abstract class AbstractBrokageScalability {
 			e.setOptimum(optimum);
 			e.setRandomSeed(seed);
 			((GeneticAllocator) allocator).resetConstraints();
-			e.run(allocator);	
+			
+			if (e.run(allocator)){
+				i++;
+			}
+			
 			seed++;
 		}
 
@@ -190,17 +195,14 @@ abstract class AbstractBrokageScalability {
 		CloudSim.startSimulation();
 		
 		double res = 0;
-		try {
-			for (Allocation a: federation.getAllocations()){
-				if (a.isCompleted()){
-					res = CostComputer.actualCost(a);
-					break;
-				}
-			}
+		Allocation a = null;
+		if (federation.getAllocations().iterator().hasNext())
+			a = federation.getAllocations().iterator().next();
+		if (a != null && a.isCompleted()){
+			res = CostComputer.actualCost(a);
 		}
-		catch (Exception e){
+		else 
 			res = 0;
-		}
 		System.out.println("Optimum is " + res);
 		System.out.println("####################################################\n");
 		return res;

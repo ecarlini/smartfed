@@ -93,7 +93,7 @@ public class FederationQueue extends SimEntity
 	@Override
 	public void startEntity() 
 	{
-		Log.printLine("FederationQueue is starting...");
+		FederationLog.debugLog("FederationQueue is starting...");
 	}
 	
 	

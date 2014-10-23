@@ -91,7 +91,7 @@ public class MonitoringHub extends SimEntity
 
 	@Override
 	public void startEntity() {
-		Log.printLine("Monitoring hub (cloudSim id "+ getId() + ") is starting ...");
+		FederationLog.debugLog("Monitoring hub (cloudSim id "+ getId() + ") is starting ...");
 	}
 	
 	private List<FederationDatacenter> cloneList(List<FederationDatacenter> list)

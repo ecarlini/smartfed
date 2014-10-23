@@ -180,9 +180,9 @@ public class Federation extends SimEntity
 	{		
 		Application ag = ((LinkedList<Application>) ev.getData()).pollFirst();
 		
-		System.out.println("############# APPLICATION ###################");
-		System.out.println(ag.toString());
-		System.out.println("#############################################");
+		FederationLog.timeLogDebug("############# APPLICATION ###################");
+		FederationLog.timeLogDebug(ag.toString());
+		FederationLog.timeLogDebug("#############################################");
 		
 		Allocation allocation = appToAllocation.get(ag);
 		if (allocation == null)

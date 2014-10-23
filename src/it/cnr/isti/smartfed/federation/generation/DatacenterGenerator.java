@@ -59,6 +59,11 @@ public class DatacenterGenerator extends AbstractGenerator
 	protected Range coreAmount;
 	protected Range mipsAmount;
 	
+	protected Country[] countries;
+	
+	public void setCountries(Country[] c){
+		this.countries = c;
+	}
 	
 	public DatacenterGenerator(long seed)
 	{
@@ -74,6 +79,8 @@ public class DatacenterGenerator extends AbstractGenerator
 		stoAmount = new Range(4096, 10*1024*1024); // 10TB max
 		coreAmount = new Range(1, 8);
 		mipsAmount = new Range(1000, 25000);
+		
+		countries = Country.values();
 	}
 
 	/**
@@ -158,22 +165,17 @@ public class DatacenterGenerator extends AbstractGenerator
 			// profile.set(DatacenterParams.COST_PER_SEC, costPerSec.sample()+"");
 			profile.set(DatacenterParams.COST_PER_SEC, "0");
 			profile.set(DatacenterParams.COST_PER_MEM, costMem+"");
+			profile.set(DatacenterParams.MAX_BW_FOR_VM, bw+"");
 			
 			// choose a random country
-			Range rangecountry = new Range(0, Country.values().length);
+			Range rangecountry = new Range(0, countries.length);
 			int index = (int) Math.floor(rangecountry.denormalize(distribution.sample()));
-			Country place = Country.values()[index];
+			Country place = countries[index];
 			profile.set(DatacenterParams.COUNTRY, place.toString());
 			
-			// create the storage
 			List<Storage> storageList = new ArrayList<Storage>(); // if empty, no SAN attached
-			
-			// create the hosts
 			List<Host> hostList = new ArrayList<Host>();
-			
-
-			// create the virtual processor (PE)
-			List<Pe> peList = new ArrayList<Pe>();
+			List<Pe> peList = new ArrayList<Pe>();// create the virtual processor (PE)
 			
 			for (int j=0; j<numCore; j++)
 			{

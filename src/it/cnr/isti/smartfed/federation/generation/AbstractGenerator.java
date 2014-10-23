@@ -32,7 +32,7 @@ public class AbstractGenerator
 	public AbstractGenerator(long seed)
 	{
 		distribution = new UniformRealDistribution();
-		type = GenerationType.NON_UNIFORM;
+		type = GenerationType.UNIFORM;
 		this.resetSeed(seed);
 	}
 	

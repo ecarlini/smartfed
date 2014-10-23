@@ -39,7 +39,7 @@ public class FederationDatacenterFactory
 	
 	private static FederationDatacenter createFederationDatacenter(String dcName, FederationDatacenterProfile profile, List<Host> hosts, List<Storage> storages) {
 		// create the datacenter characteristics
-		DatacenterCharacteristics dc = new DatacenterCharacteristicsMS(
+		DatacenterCharacteristicsMS dc = new DatacenterCharacteristicsMS(
 				Country.valueOf(profile.get(DatacenterParams.COUNTRY)),
 				profile.get(DatacenterParams.ARCHITECTURE),
 				profile.get(DatacenterParams.OS),
@@ -56,6 +56,8 @@ public class FederationDatacenterFactory
 						Double.parseDouble(profile.get(DatacenterParams.COST_PER_VM_XLARGE))}
 				);
 
+		dc.setHighestBw(Long.parseLong(profile.get(DatacenterParams.MAX_BW_FOR_VM)));
+		
 		// creating vm allocation policy class
 		VmAllocationPolicy vmAllocationPolicy = null;
 		try {

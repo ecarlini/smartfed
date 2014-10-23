@@ -31,6 +31,7 @@ public class DatacenterCharacteristicsMS extends DatacenterCharacteristics {
 
 	private Country country;
 	private double[] costVmTypes = null;
+	private long maxBwForVm = 0;
 		
 	public double[] getCostVmTypes() {
 		return costVmTypes;
@@ -117,6 +118,14 @@ public class DatacenterCharacteristicsMS extends DatacenterCharacteristics {
 	}
 	
 	public long getHighestBw() {
+		return (long) this.maxBwForVm;
+	}
+	
+	public void setHighestBw(long bw) {
+		this.maxBwForVm = bw;
+	}
+	
+	public long getHighestAllocatedBwAmongHosts() {
 		List<Host> list = super.getHostList();
 		Host max = Collections.max(list, new Comparator<Host>() {
 		    @Override

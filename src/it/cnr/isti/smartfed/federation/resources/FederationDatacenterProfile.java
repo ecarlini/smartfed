@@ -42,6 +42,7 @@ public class FederationDatacenterProfile
 		COST_PER_VM_MEDIUM("0.0"),
 		COST_PER_VM_LARGE("0.0"),
 		COST_PER_VM_XLARGE("0.0"),
+		MAX_BW_FOR_VM("0"),
 		SCHEDULING_INTERNAL("0");
 		
 		private String def;

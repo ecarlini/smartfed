@@ -188,10 +188,14 @@ public class Federation extends SimEntity
 		if (allocation == null)
 		{
 			// compute the mapping solution
-			long before = System.currentTimeMillis();
+			// long before = System.currentTimeMillis();
 			MappingSolution[] sols = mappingModule.findAllocation(ag);
-			long after = System.currentTimeMillis();
-			TestResult.getMappingTime().addValue(after - before);
+			
+			// commented because it is better to retrieve time from the mappingSolution object 
+			// inside Experiment class
+			
+			// long after = System.currentTimeMillis();
+			// TestResult.getMappingTime().addValue(after - before);
 			
 			if (sols[0].isValid() == false)
 			{
@@ -259,7 +263,7 @@ public class Federation extends SimEntity
 			
 			if (allocation.isCompleted())
 			{
-				TestResult.getAllocationTime().addValue(allocation.getSimDuration());
+				// TestResult.getAllocationTime().addValue(allocation.getSimDuration());
 				TestResult.getVmDifference().addValue(allocation.differenceWithSolution());
 				startCloudlets(allocation);
 			}

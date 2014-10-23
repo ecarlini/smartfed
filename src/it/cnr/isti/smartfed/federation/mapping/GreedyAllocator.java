@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.CloudSim;
 
 
 public class GreedyAllocator extends AbstractAllocator
@@ -36,6 +37,8 @@ public class GreedyAllocator extends AbstractAllocator
 	@Override
 	public MappingSolution[] findAllocation(Application application) 
 	{
+		startSimTime = CloudSim.clock();
+		startRealTime = System.currentTimeMillis();
 		
 		// keeps the list of datanceters
 		List<FederationDatacenter> dcs = getMonitoringHub().getView();
@@ -134,9 +137,16 @@ public class GreedyAllocator extends AbstractAllocator
 				System.out.println("GreedyAllocator -> cannot find a mapping for VM: "+vm.getId());
 				// throw new Error(application+" cannot be mapped.");
 				solution.setValid(false);
+				
+				finishSimTime = CloudSim.clock();
+				finishRealTime = System.currentTimeMillis();
+				
 				return new MappingSolution[]{solution};
 			}
 		}
+		
+		finishSimTime = CloudSim.clock();
+		finishRealTime = System.currentTimeMillis();
 		
 		solution.setAllocatorName(this.getClass().getSimpleName());
 		return new MappingSolution[]{solution};

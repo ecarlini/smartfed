@@ -34,6 +34,7 @@ public class ExperimentDistance extends Experiment
 	}
 
 	private double optimum;
+	private double optimumTime;
 
 	public double getOptimum() {
 		return optimum;
@@ -41,6 +42,14 @@ public class ExperimentDistance extends Experiment
 
 	public void setOptimum(double optimum) {
 		this.optimum = optimum;
+	}
+	
+	public double getOptimumTime() {
+		return optimumTime;
+	}
+
+	public void setOptimumTime(double optimum) {
+		this.optimumTime = optimum;
 	}
 
 	public void setDataset(InterfaceDataSet d){
@@ -101,6 +110,8 @@ public class ExperimentDistance extends Experiment
 		List<Cloudlet> newList = federation.getReceivedCloudlet();
 		// UtilityPrint.printCloudletList(newList);	
 
+		TestResult.getMappingTime().addValue(allocator.getRealDuration());
+		
 		// calculates the vendor lock-in metric on the mapping plan
 		MappingSolution sol = allocator.getSolution();
 		//System.out.println(sol);
@@ -145,7 +156,11 @@ public class ExperimentDistance extends Experiment
 		else {
 			System.out.println("Not completed");
 		}
+		
+		System.out.println(applications.get(0));
+		
 		return goodAllocation;
+		
 		// UtilityPrint.printCloudletList(newList);
 	}
 

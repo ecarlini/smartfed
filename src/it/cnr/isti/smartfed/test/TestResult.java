@@ -68,10 +68,16 @@ public class TestResult
 		TestResult.lockDegree = lockDegree;
 	}
 
+	@Deprecated
 	public static SummaryStatistics getAllocationTime() {
 		return allocationTime;
 	}
 
+	/**
+	 * It is the time to compute a mapping, that is a plan for
+	 * allocating an application.
+	 * @return
+	 */
 	public static SummaryStatistics getMappingTime() {
 		return mappingTime;
 	}

@@ -16,6 +16,7 @@ import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -46,7 +47,7 @@ public class ExperimentDistance extends Experiment
 		dataset = d;
 	}
 
-	public boolean run (AbstractAllocator allocator) {
+	public boolean run (AbstractAllocator allocator) throws IOException {
 		// init the cloudsim simulator
 		Log.enable();
 		int num_user = 1;   // users
@@ -125,11 +126,11 @@ public class ExperimentDistance extends Experiment
 			double total = CostComputer.actualCost(a);
 			System.out.println("TOTAL --------> "+total);
 
-			if (optimum != 0){
-				double dop = (total - optimum) / optimum;
-				TestResult.getCostDistance().addValue(dop);
-				System.out.println("MYTOTAL --------> " + dop);
-			}
+			if (optimum == 0) throw new IOException("Error!!!");
+
+			double dop = (total - optimum) / optimum;
+			TestResult.getCostDistance().addValue(dop);
+			System.out.println("MYDISTANCE --------> " + dop);
 			System.out.println("OPT --------> " + optimum);
 
 			double totalNet = CostComputer.actualNetCost(a);

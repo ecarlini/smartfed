@@ -31,7 +31,7 @@ import org.workflowsim.utils.Parameters;
 import org.workflowsim.utils.ReplicaCatalog;
 
 public class WorkflowApplication extends Application{
-	public String daxPath = "Montage_100.xml";
+	public String daxPath = "resources/Montage_100.xml";
 	
 	void setWorkflowSimConfig(){
 		int vmNum = 20;//number of vms;

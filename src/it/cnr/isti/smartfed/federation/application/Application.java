@@ -275,7 +275,8 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 				prefix = "\n...\n";
 			}
 			res.append(av.toCompleteString());
-		}			
+		}
+		res.append("\n");
 		res.append(edgesRepresentation());
 		return res.toString();
 	}

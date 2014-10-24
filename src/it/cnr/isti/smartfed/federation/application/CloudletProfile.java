@@ -27,7 +27,7 @@ public class CloudletProfile
 {
 	public enum CloudletParams
 	{
-		LENGTH("4000"), //it seems the smallest lenght for having something back
+		LENGTH("4000"), //it seems the smallest length for having something back
 		PES_NUM("1"),
 		FILE_SIZE("100"),
 		OUTPUT_SIZE("100"),

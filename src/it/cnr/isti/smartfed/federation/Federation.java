@@ -333,5 +333,15 @@ public class Federation extends SimEntity
 
 	public void setMappingModule(AbstractAllocator mappingModule) {
 		this.mappingModule = mappingModule;
-	}		
+	}
+	
+	public static FederationDatacenter findDatacenter(List<FederationDatacenter> list, Integer id)
+	{
+		for (FederationDatacenter fd: list)
+		{
+			if (fd.getId() == id)
+				return fd;
+		}
+		return null;
+	}
 }

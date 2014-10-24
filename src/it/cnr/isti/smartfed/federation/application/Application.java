@@ -126,6 +126,18 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 		return graph.edgesOf(av1); 
 	}
 
+	
+	public Set<ApplicationEdge> incomingEdgesOf(ApplicationVertex av1)
+	{
+		return graph.incomingEdgesOf(av1); 
+	}
+	
+	public Set<ApplicationEdge> outgoingEdgesOf(ApplicationVertex av1)
+	{
+		return graph.outgoingEdgesOf(av1); 
+	}
+	
+	
 	/**
 	 * Returns all the ApplicationEdges of the application.
 	 * @return

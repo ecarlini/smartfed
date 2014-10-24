@@ -113,6 +113,8 @@ public class ExperimentDistance extends Experiment
 		int usedDc = myset.size();// / datacenters.size();
 		TestResult.getLockDegree().addValue(usedDc);
 
+		WorkflowComputer.getPipeCompletionTime((WorkflowApplication) applications.get(0), datacenters);
+		
 		boolean goodAllocation = false;
 		Allocation a = null;
 		if (federation.getAllocations().iterator().hasNext())

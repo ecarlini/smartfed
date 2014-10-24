@@ -31,7 +31,8 @@ public class ExtBrokageWorkflow extends AbstractBrokageScalability {
 		return new ExtBrokageWorkflowDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, seed, t);
 	}
 
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException
+	{
 		FederationLog.disable();
 		ExtBrokageWorkflow ext = new ExtBrokageWorkflow(GenerationType.UNIFORM);
 		GeneticAllocator gen_allocator = new GeneticAllocator();

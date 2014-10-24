@@ -20,6 +20,7 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 
 package it.cnr.isti.smartfed.federation.mapping;
 
+import it.cnr.isti.smartfed.federation.Federation;
 import it.cnr.isti.smartfed.federation.FederationLog;
 import it.cnr.isti.smartfed.federation.MonitoringHub;
 import it.cnr.isti.smartfed.federation.application.Application;
@@ -143,7 +144,7 @@ public class GeneticAllocator extends AbstractAllocator {
 			Cloudlet cl = vertex.getAssociatedCloudlet(vm);
 			
 			// FederationDatacenter dc = dcs.get(hm.get(vmId)-3); // hm.get(vmId) is the datacenter position, with -3 we have ids for metascheduler
-			FederationDatacenter dc = this.findDatacenter(dcs, hm.get(vmId));
+			FederationDatacenter dc = Federation.findDatacenter(dcs, hm.get(vmId));
 			map.set(cl, dc);
 		}
 		map.setValid(s.getCompleteSatisfaction());
@@ -163,16 +164,6 @@ public class GeneticAllocator extends AbstractAllocator {
 		return vm;
 	}
 	
-	private FederationDatacenter findDatacenter(List<FederationDatacenter> list, Integer id)
-	{
-		for (FederationDatacenter fd: list)
-		{
-			if (fd.getId() == id)
-				return fd;
-		}
-		return null;
-	}
-
 	public List<FederationDatacenter> getDcs() {
 		return dcs;
 	}

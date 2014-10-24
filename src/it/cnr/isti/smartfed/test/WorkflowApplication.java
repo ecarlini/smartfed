@@ -30,10 +30,11 @@ import org.workflowsim.utils.OverheadParameters;
 import org.workflowsim.utils.Parameters;
 import org.workflowsim.utils.ReplicaCatalog;
 
-public class WorkflowApplication extends Application{
-	public static String fileName = "Montage_100";
+public class WorkflowApplication extends Application
+{
+	public static String fileName = "Montage_25";
 	public String daxPath = "resources/" + fileName + ".xml";
-	
+
 	void setWorkflowSimConfig(){
 		int vmNum = 20;//number of vms;
 		Parameters.SchedulingAlgorithm sch_method = Parameters.SchedulingAlgorithm.MINMIN;
@@ -88,6 +89,22 @@ public class WorkflowApplication extends Application{
 		
 	}
 	
+	public List<Task> getTasksWithDepth(int depth)
+	{
+		List<Task> tasks = new ArrayList<Task>();
+		if (depth < 0)
+			return tasks;
+		
+		for (Cloudlet c: getAllCloudlets())
+		{
+			Task t = (Task) c;
+			if (t.getDepth() == depth)
+				tasks.add(t);
+		}
+		
+		return tasks;
+	}
+	
 	private <T extends Cloudlet> void build(int userId, List<T> tasks){
 		for (T t: tasks){
 			List<Cloudlet> cloudlets = new ArrayList<>();
@@ -114,7 +131,7 @@ public class WorkflowApplication extends Application{
 					outputSize += f.getSize(); // this size is in bytes
 			}
 	
-			outputSize = outputSize / 1024; // obtaining KB as applicationEdge requires
+			outputSize = outputSize / 1024d; // obtaining KB as applicationEdge requires
 			
 			List<Task> childs = ((Task) t).getChildList();
 			for (Task c: childs){

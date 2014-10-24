@@ -88,6 +88,12 @@ public class ApplicationEdge extends DefaultEdge
 		return this.bandwidth;
 	}
 
+	
+	public double getMessageLength()
+	{
+		return this.messageLength;
+	}
+
 	public SecuritySupport getSecurity()
 	{
 		return this.security;

@@ -29,6 +29,7 @@ import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
 import it.cnr.isti.smartfed.federation.mapping.RandomAllocator;
+import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.test.DataSet;
 import it.cnr.isti.smartfed.test.Experiment;
@@ -166,6 +167,7 @@ class PaperDataset extends DataSet
 	{
 		DatacenterGenerator dg = new DatacenterGenerator(this.seed * 15);
 		dg.setType(gentype);
+		dg.setCountries(new Country[]{Country.Italy});
 		return dg.getDatacenters(numOfDatacenters, numHost);
 	}
 	

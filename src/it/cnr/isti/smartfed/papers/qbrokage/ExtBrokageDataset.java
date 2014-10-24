@@ -4,7 +4,10 @@ import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.application.CloudletProvider;
+import it.cnr.isti.smartfed.federation.generation.DatacenterGenerator;
 import it.cnr.isti.smartfed.federation.generation.GenerationType;
+import it.cnr.isti.smartfed.federation.resources.Country;
+import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
 
 import java.util.ArrayList;
@@ -26,6 +29,15 @@ public class ExtBrokageDataset extends PaperDataset {
 		super(numVertex, numberOfCloudlets, numOfDatacenter, numHost, seed, t);
 	}
 
+	@Override
+	public List<FederationDatacenter> createDatacenters() 
+	{
+		DatacenterGenerator dg = new DatacenterGenerator(this.seed * 15);
+		dg.setType(gentype);
+		dg.setCountries(new Country[]{Country.Italy});
+		return dg.getDatacenters(numOfDatacenters, numHost);
+	}
+	
 	@Override
 	public List<Application> createApplications(int userId) 
 	{

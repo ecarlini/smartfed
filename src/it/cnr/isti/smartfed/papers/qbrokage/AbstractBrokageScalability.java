@@ -59,7 +59,7 @@ abstract class AbstractBrokageScalability {
 		return str;
 	}
 	
-	protected String executeSingleSetCost_lessVariability(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter){
+	protected String executeSingleSetCost_lessVariability(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter) throws IOException{
 		counter = 0;
 		int numOfVertex = 3;
 		
@@ -70,10 +70,13 @@ abstract class AbstractBrokageScalability {
 
 		long seed = 0;
 		double optimum = 0;
+		double baseTime = 0;
 		long j = seed;
 		while (optimum == 0){
 			dataset = this.createDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, j, gentype);
-			optimum = computeOptimum(dataset, j);
+			double res[] = computeOptimum(dataset, j);
+			optimum = res[0];
+			baseTime = res[1];
 			if (optimum == 0) {
 				counter++;
 			}
@@ -83,6 +86,7 @@ abstract class AbstractBrokageScalability {
 		for (int i=0; i<repetitions; i++) {
 			e.setDataset(dataset);
 			e.setOptimum(optimum);
+			e.setBaselineTime(baseTime);
 			e.setRandomSeed(seed);
 			((GeneticAllocator) allocator).resetConstraints();
 			e.run(allocator);	
@@ -93,7 +97,7 @@ abstract class AbstractBrokageScalability {
 		return str;
 	}
 
-	private String executeSingleSetCost(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter){
+	private String executeSingleSetCost(AbstractAllocator allocator, int numOfCloudlets, int numOfDatacenter) throws IOException{
 		counter = 0;
 		int numOfVertex = 3;
 	
@@ -105,19 +109,25 @@ abstract class AbstractBrokageScalability {
 		int i = 0;
 		while (i < repetitions){
 			double optimum = 0;
+			double baseTime = 0;
 			PaperDataset dataset = null;
 			long j = seed;
 			while (optimum == 0){
 				dataset = this.createDataset(numOfVertex, numOfCloudlets, numOfDatacenter, numHost, j, gentype);
-				optimum = computeOptimum(dataset, j);
+				double res[] = computeOptimum(dataset, j);
+				optimum = res[0];
+				baseTime = res[1];
 				if (optimum == 0) {
 					counter++;
 				}
 				seed = j++;
 			}
+			if (optimum == 0) throw new IOException();
 			e.setDataset(dataset);
 			e.setOptimum(optimum);
+			e.setBaselineTime(baseTime);
 			e.setRandomSeed(seed);
+			
 			((GeneticAllocator) allocator).resetConstraints();
 			
 			if (e.run(allocator)){
@@ -156,7 +166,8 @@ abstract class AbstractBrokageScalability {
 		str += "\n";
 		return str;
 	}
-	protected double computeOptimum(PaperDataset da, long seed){
+	
+	protected double[] computeOptimum(PaperDataset da, long seed){
 		AbstractAllocator allocator = createOptimumAllocator();
 		InterfaceDataSet dataset = da;
 		Log.enable();
@@ -195,6 +206,7 @@ abstract class AbstractBrokageScalability {
 		CloudSim.startSimulation();
 		
 		double res = 0;
+		double time = allocator.getRealDuration();
 		Allocation a = null;
 		if (federation.getAllocations().iterator().hasNext())
 			a = federation.getAllocations().iterator().next();
@@ -204,8 +216,9 @@ abstract class AbstractBrokageScalability {
 		else 
 			res = 0;
 		System.out.println("Optimum is " + res);
+		System.out.println("Timeis " + time);
 		System.out.println("####################################################\n");
-		return res;
+		return new double[]{res, time};
 	}
 	
 	

@@ -45,6 +45,7 @@ public class BrokageScalability extends AbstractBrokageScalability{
 	public String logResults(){
 		String str = "";
 		double result = TestResult.getCostDistance().getMean(); 
+		System.out.println("*******************NUmero di elementi registrati" + TestResult.getCostDistance().getN());
 		double resultSTD = TestResult.getCostDistance().getStandardDeviation();
 		double time = TestResult.getMappingTime().getMean();
 		double timeSTD = TestResult.getMappingTime().getStandardDeviation();
@@ -69,28 +70,26 @@ public class BrokageScalability extends AbstractBrokageScalability{
 	}
 	
 	public static void main (String[] args) throws IOException{
-		FederationLog.disable();
+		FederationLog.setDebug(false);
 		BrokageScalability n = new BrokageScalability(GenerationType.UNIFORM);
 		AbstractAllocator allocator = new GeneticAllocator();
 		String str = "";
 		str = n.execute(allocator);
 		write(str, new File("plots/cost-dc" + n.dcToString() +"cross0.35-mut10_" + n.gentype +".dat"));
 		System.out.println(counter);
+	}
+
+	private static void executeLessVariability() throws IOException{
+		String str = "";
 		
-		n = new BrokageScalability(GenerationType.NON_UNIFORM);
-		allocator = new GeneticAllocator();
-		str = n.execute(allocator);
-		write(str, new File("plots/cost-dc" + n.dcToString() +"cross0.35-mut10_" + n.gentype +".dat"));
-		System.out.println(counter);
-		
-		/* Uniform + less variability */
-		n = new BrokageScalability(GenerationType.UNIFORM);
-		allocator = new GeneticAllocator();
+		// Uniform + less variability
+		BrokageScalability n = new BrokageScalability(GenerationType.UNIFORM);
+		AbstractAllocator allocator = new GeneticAllocator();
 		str = n.execute_lessVariability(allocator);
 		write(str, new File("plots/cost-dc" + n.dcToString() +"cross0.35-mut10_" + n.gentype + "LessVar" + ".dat"));
 		System.out.println(counter);
-		
-		/* Non_Uniform + less variability */
+
+		// Non_Uniform + less variability
 		n = new BrokageScalability(GenerationType.NON_UNIFORM);
 		allocator = new GeneticAllocator();
 		str = n.execute_lessVariability(allocator);

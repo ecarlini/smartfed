@@ -31,7 +31,8 @@ import org.workflowsim.utils.Parameters;
 import org.workflowsim.utils.ReplicaCatalog;
 
 public class WorkflowApplication extends Application{
-	public String daxPath = "resources/Montage_100.xml";
+	public static String fileName = "Montage_100";
+	public String daxPath = "resources/" + fileName + ".xml";
 	
 	void setWorkflowSimConfig(){
 		int vmNum = 20;//number of vms;
@@ -61,7 +62,7 @@ public class WorkflowApplication extends Application{
          * Specifying the clusters.size = 2 means each job has two tasks
          */
        ClusteringParameters.ClusteringMethod method = ClusteringParameters.ClusteringMethod.HORIZONTAL;
-       ClusteringParameters cp = new ClusteringParameters(1, 0, method, null); // this is for having a pipe
+       ClusteringParameters cp = new ClusteringParameters(1, 0, method, null); // this is for having a pipe (not really!)
         
 
         Parameters.init(vmNum, daxPath, null,
@@ -105,7 +106,7 @@ public class WorkflowApplication extends Application{
 		
 		for (T t: tasks){
 			ApplicationVertex base = this.getVertexForCloudlet(t);
-			long outputSize = 0;
+			double outputSize = 0;
 			double mrate = 1;
 			List<File> files = ((Task) t).getFileList();
 			for (File f: files){
@@ -134,7 +135,10 @@ public class WorkflowApplication extends Application{
         
 		WorkflowApplication g;
 		try {
-			g = new WorkflowApplication(0, true);
+			boolean taskClustering = true;
+			g = new WorkflowApplication(0, taskClustering);
+			String add = taskClustering == true ? "clust" : "";
+			g.export("plots/" + fileName + add + ".dot");
 			System.out.println(g);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

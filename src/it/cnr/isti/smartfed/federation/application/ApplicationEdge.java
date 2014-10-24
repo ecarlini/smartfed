@@ -21,6 +21,8 @@ along with SmartFed. If not, see <http://www.gnu.org/licenses/>.
 package it.cnr.isti.smartfed.federation.application;
 
 
+import java.util.Locale;
+
 import it.cnr.isti.smartfed.networking.SecuritySupport;
 
 import org.cloudbus.cloudsim.Vm;
@@ -102,7 +104,12 @@ public class ApplicationEdge extends DefaultEdge
 	}
 	
 	public String toString(){
-		return "(" + super.getSource() + "->" + super.getTarget() + ")";
+		double message = this.messageLength;
+		String size = message > 1024 ? "MB": "KB";
+		message = message > 1024 ? message/1024: message;
+		String res = String.format(Locale.ENGLISH, "%.2f", message);
+		return res + size;
+		// return "(" + super.getSource() + "->" + super.getTarget() + ")";
 	}
 	
 	public Vm getSourceVm(){

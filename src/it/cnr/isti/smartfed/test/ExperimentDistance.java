@@ -34,7 +34,7 @@ public class ExperimentDistance extends Experiment
 	}
 
 	private double optimum;
-	private double optimumTime;
+	private double baselineTime;
 
 	public double getOptimum() {
 		return optimum;
@@ -44,12 +44,12 @@ public class ExperimentDistance extends Experiment
 		this.optimum = optimum;
 	}
 	
-	public double getOptimumTime() {
-		return optimumTime;
+	public double getBaselineTime() {
+		return baselineTime;
 	}
 
-	public void setOptimumTime(double optimum) {
-		this.optimumTime = optimum;
+	public void setBaselineTime(double optimum) {
+		this.baselineTime = optimum;
 	}
 
 	public void setDataset(InterfaceDataSet d){
@@ -111,6 +111,7 @@ public class ExperimentDistance extends Experiment
 		// UtilityPrint.printCloudletList(newList);	
 
 		TestResult.getMappingTime().addValue(allocator.getRealDuration());
+		TestResult.getTimeDifference().addValue(allocator.getRealDuration() - baselineTime);
 		
 		// calculates the vendor lock-in metric on the mapping plan
 		MappingSolution sol = allocator.getSolution();
@@ -142,11 +143,11 @@ public class ExperimentDistance extends Experiment
 			double dop = (total - optimum) / optimum;
 			TestResult.getCostDistance().addValue(dop);
 			System.out.println("MYDISTANCE --------> " + dop);
-			System.out.println("OPT --------> " + optimum);
+			System.out.println("BASE --------> " + optimum);
 
 			double totalNet = CostComputer.actualNetCost(a);
 			TestResult.getNetCost().addValue(totalNet);
-			System.out.println("NETCOST --------> " + totalNet);
+			// System.out.println("NETCOST --------> " + totalNet);
 
 			TestResult.getCost().addValue(total);
 			TestResult.getBerger().addValue(Math.log(total / budget));

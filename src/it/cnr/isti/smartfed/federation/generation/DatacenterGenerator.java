@@ -75,7 +75,7 @@ public class DatacenterGenerator extends AbstractGenerator
 		costPerBw = new Range(0.05, 0.15); //former (0.001, 0.05)
 		
 		ramAmount = new Range(512, 1024*16);
-		bwAmount = new Range(10*1024, 100*1024*1024);
+		bwAmount = new Range(1*1024*1024, 1024*1024*1024);
 		stoAmount = new Range(4096, 10*1024*1024); // 10TB max
 		coreAmount = new Range(1, 8);
 		mipsAmount = new Range(1000, 25000);

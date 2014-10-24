@@ -22,6 +22,9 @@ package it.cnr.isti.smartfed.federation.application;
 
 
 import it.cnr.isti.smartfed.federation.resources.VmTyped;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +36,12 @@ import java.util.Iterator;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.Vm;
+import org.jgrapht.ext.DOTExporter;
+import org.jgrapht.ext.EdgeNameProvider;
+import org.jgrapht.ext.IntegerNameProvider;
+import org.jgrapht.ext.StringEdgeNameProvider;
+import org.jgrapht.ext.StringNameProvider;
+import org.jgrapht.ext.VertexNameProvider;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
 /**
@@ -289,5 +298,21 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 		}
 		res += "\n";
 		return res;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void export(String filename){
+		VertexNameProvider<ApplicationVertex> vertID = new IntegerNameProvider<ApplicationVertex>();
+		VertexNameProvider<ApplicationVertex> vertName = new IntegerNameProvider<ApplicationVertex>();
+		EdgeNameProvider<ApplicationEdge> edgeName = new StringEdgeNameProvider<ApplicationEdge>();
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		DOTExporter t = new DOTExporter(vertID,vertName,edgeName);
+		try {
+			t.export(new FileWriter(filename), this.graph );
+
+		} catch (IOException e) {
+			System.out.println("Eccezione");
+			e.printStackTrace();
+		}
 	}
 }

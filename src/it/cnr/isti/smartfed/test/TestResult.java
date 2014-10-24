@@ -33,6 +33,8 @@ public class TestResult
 	private static SummaryStatistics lockDegree;
 	private static SummaryStatistics netCost;
 	private static SummaryStatistics costDistance;
+	private static SummaryStatistics timeDifference;
+	
 	
 	static
 	{
@@ -50,6 +52,7 @@ public class TestResult
 		lockDegree = new SummaryStatistics();
 		netCost = new SummaryStatistics();
 		costDistance = new SummaryStatistics();
+		timeDifference = new SummaryStatistics();
 	}
 		
 	public static SummaryStatistics getNetCost() {
@@ -100,5 +103,9 @@ public class TestResult
 
 	public static void setVmDifference(SummaryStatistics vmDifference) {
 		TestResult.vmDifference = vmDifference;
+	}
+
+	public static SummaryStatistics getTimeDifference() {
+		return timeDifference;
 	}
 }

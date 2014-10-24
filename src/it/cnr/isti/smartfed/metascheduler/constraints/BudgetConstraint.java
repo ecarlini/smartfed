@@ -42,7 +42,7 @@ public class BudgetConstraint extends MSPolicy {
 	private double highRamCost;
 	private double highStorageCost;
 	
-	public BudgetConstraint(double weight, double highestValue, char c) {
+	public BudgetConstraint(double weight, double highestValue, ConstraintScope c) {
 		super(weight, MSPolicy.DESCENDENT_TYPE, c);
 		this.constraintName = "Budget";
 		highRamCost = highestValue;
@@ -53,7 +53,7 @@ public class BudgetConstraint extends MSPolicy {
 	 * @param weight
 	 * @param highestValues
 	 */
-	public BudgetConstraint(double weight, double[] highestValues, char c) {
+	public BudgetConstraint(double weight, double[] highestValues, ConstraintScope c) {
 		super(weight, MSPolicy.DESCENDENT_TYPE, c);
 		this.constraintName = "Budget";
 		highRamCost = highestValues[0];

@@ -1,6 +1,7 @@
 package it.cnr.isti.smartfed.metascheduler;
 
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
+import it.cnr.isti.smartfed.metascheduler.MSPolicy.ConstraintScope;
 import it.cnr.isti.smartfed.metascheduler.constraints.PolicyContainer;
 
 import java.util.Collections;
@@ -18,29 +19,32 @@ public class MSPolicyFactory {
 		COST_PER_VM,
 		LOCATION,
 		LOCATION_NET, 
-		DEFAULT_COST_EQUAL_RIGHTS;
+		LOCATION_NET_GLOBAL, GLOBAL_COST_BW, LOCAL_COST_BW;
 	}
 
 	public static PolicyContainer createPolicy(List<FederationDatacenter> dcList, PolicyType type){
 		PolicyContainer policy = null;
 		switch (type){
 		case DEFAULT_COST: 
-			policy = MSPolicyFactory.createPoliciesDefault(dcList);
-			break;
-		case DEFAULT_COST_EQUAL_RIGHTS: 
-			policy = MSPolicyFactory.createPoliciesDefault(dcList, new double[]{5, 5, 95, 95});
+			policy = MSPolicyFactory.createPoliciesDefault(dcList, new double[]{1, 1, 1, 197}, ConstraintScope.Local);
 			break;
 		case DEFAULT_COST_NET: 
-			policy = MSPolicyFactory.createPoliciesDefaultNet(dcList);
+			policy = MSPolicyFactory.createPoliciesDefault(dcList, new double[]{ 1, 1, 1, 197}, ConstraintScope.Global);
+			break;
+		case GLOBAL_COST_BW: 
+			policy = MSPolicyFactory.createPoliciesDefaultNetBw(dcList, new double[]{ 1, 1, 1, 196, 1}, ConstraintScope.Global);
+			break;
+		case LOCAL_COST_BW: 
+			policy = MSPolicyFactory.createPoliciesDefaultNetBw(dcList, new double[]{ 1, 1, 1, 196, 1}, ConstraintScope.Local);
 			break;
 		case COST_PER_VM:
 			policy = MSPolicyFactory.createPoliciesCostPerVm(dcList);
 			break;
-		case LOCATION:
-			policy = MSPolicyFactory.createPoliciesDefault(dcList);
-			break;
 		case LOCATION_NET:
-			policy = MSPolicyFactory.createPoliciesNet(dcList);
+			policy = MSPolicyFactory.createPoliciesNet(dcList, ConstraintScope.Local);
+			break;
+		case LOCATION_NET_GLOBAL:
+			policy = MSPolicyFactory.createPoliciesNet(dcList, ConstraintScope.Global);
 			break;
 		default:
 			policy = MSPolicyFactory.createPoliciesDefault(dcList);
@@ -48,74 +52,48 @@ public class MSPolicyFactory {
 		return policy;
 	}
 
-	private static PolicyContainer createPoliciesNet(List<FederationDatacenter> dcList) {
-		long highBw = findMaxBwAllDatacenters(dcList);
-		PolicyContainer.highBwValue = highBw;
-		
-		System.out.println("         " + highBw);
-		PolicyContainer constraint = new PolicyContainer(new double[]{1,1});
-		constraint.add(constraint.locationConstraint(1));
-		constraint.add(constraint.networkConstraint(1));
-		return constraint;
+	public static PolicyContainer createPoliciesDefault(List<FederationDatacenter> dcList){
+		return MSPolicyFactory.createPoliciesDefault(dcList, new double[]{1, 1, 1, 197}, ConstraintScope.Local);
 	}
 
-	public static PolicyContainer createPoliciesDefaultNet(List<FederationDatacenter> dcList ){
-		double[] weights = new double[]{ 1, 1, 1, 197};
-		System.out.println("*** Creating default policy with net***");
-		// finding the datacenter with the highest cost per ram (default criteria in the compare method)
-		Collections.sort(dcList);
-		double highCostRam_dc = dcList.get(dcList.size()-1).getMSCharacteristics().getCostPerMem();
-		PolicyContainer.highCostValueRam = highCostRam_dc;
-
+	private static PolicyContainer createPoliciesNet(List<FederationDatacenter> dcList, ConstraintScope netscope) {
 		long highBw = findMaxBwAllDatacenters(dcList);
 		PolicyContainer.highBwValue = highBw;
 		
-		double highRam_dc = findMaxRamAllDatacenters(dcList);
-		PolicyContainer.highRamValue = (int) highRam_dc;
-
-		double highStorage_dc = findMaxStorageAllDatacenters(dcList);
-		PolicyContainer.highStorageValue = (long) highStorage_dc;
-		PolicyContainer.highCostValueStorage = findDatacenterMaxStorage(dcList).getMSCharacteristics().getCostPerStorage();
+		System.out.println("         High Bw is " + highBw);
+		PolicyContainer constraint = new PolicyContainer(new double[]{1,1});
+		constraint.add(constraint.locationConstraint(1));
+		constraint.add(constraint.networkConstraint(1, netscope));
+		return constraint;
+	}
+	
+	public static PolicyContainer createPoliciesDefaultNetBw(List<FederationDatacenter> dcList, double[] weights, ConstraintScope scope){
+		System.out.println("*** Creating " + scope.toString() + " policy with net and bw ***");
+		findCommonMaxValues(dcList);
 
 		PolicyContainer constraint = new PolicyContainer(weights);
-		// constraint.add(constraint.networkConstraint(weights[0]));
 		constraint.add(constraint.ramConstraint(weights[0]));
 		constraint.add(constraint.storageConstraint(weights[1]));
 		constraint.add(constraint.locationConstraint(weights[2]));
-		constraint.add(constraint.costPerResourceConstraint_Global(weights[3]));
-		// constraint.add(constraint.cpuNumberConstraint((weights[4]));
+		constraint.add(constraint.costPerResourceConstraint(weights[3], scope));
+		constraint.add(constraint.networkConstraint(weights[4], scope));
 		System.out.println(constraint);
 		return constraint;
 	}
 	
-	public static PolicyContainer createPoliciesDefault(List<FederationDatacenter> dcList, double[] weights){
-		System.out.println("*** Creating default policy ***");
-		// finding the datacenter with the highest cost per ram (default criteria in the compare method)
-		Collections.sort(dcList);
-		double highCostRam_dc = dcList.get(dcList.size()-1).getMSCharacteristics().getCostPerMem();
-		PolicyContainer.highCostValueRam = highCostRam_dc;
-
-		double highRam_dc = findMaxRamAllDatacenters(dcList);
-		PolicyContainer.highRamValue = (int) highRam_dc;
-
-		double highStorage_dc = findMaxStorageAllDatacenters(dcList);
-		if (highStorage_dc > 10*1024*1024) 
-			log.severe("Inconsistency in storage values");
-		PolicyContainer.highStorageValue = (long) highStorage_dc;
-		PolicyContainer.highCostValueStorage = findDatacenterMaxStorage(dcList).getMSCharacteristics().getCostPerStorage();
+	public static PolicyContainer createPoliciesDefault(List<FederationDatacenter> dcList, double[] weights, ConstraintScope scope){
+		System.out.println("*** Creating default " + scope.toString() + " policy ***");
+		findCommonMaxValues(dcList);
 
 		PolicyContainer constraint = new PolicyContainer(weights);
 		constraint.add(constraint.ramConstraint(weights[0]));
 		constraint.add(constraint.storageConstraint(weights[1]));
 		constraint.add(constraint.locationConstraint(weights[2]));
-		constraint.add(constraint.costPerResourceConstraint_Local(weights[3]));
-		log.fine(constraint.toString());
+		constraint.add(constraint.costPerResourceConstraint(weights[3], scope));
+		System.out.println(constraint);
 		return constraint;
 	}
 	
-	public static PolicyContainer createPoliciesDefault(List<FederationDatacenter> dcList){
-		return createPoliciesDefault(dcList, new double[]{1, 1, 1, 197});
-	}
 
 	public static PolicyContainer createPoliciesCostPerVm(List<FederationDatacenter> dcList){
 		double[] weights = new double[]{1,28,1};
@@ -190,4 +168,20 @@ public class MSPolicyFactory {
 		return high;
 	}
 	
+	private static void findCommonMaxValues(List<FederationDatacenter> dcList){
+		// finding the datacenter with the highest cost per ram (default criteria in the compare method)
+		Collections.sort(dcList);
+		double highCostRam_dc = dcList.get(dcList.size()-1).getMSCharacteristics().getCostPerMem();
+		PolicyContainer.highCostValueRam = highCostRam_dc;
+
+		long highBw = findMaxBwAllDatacenters(dcList);
+		PolicyContainer.highBwValue = highBw;
+		
+		double highRam_dc = findMaxRamAllDatacenters(dcList);
+		PolicyContainer.highRamValue = (int) highRam_dc;
+
+		double highStorage_dc = findMaxStorageAllDatacenters(dcList);
+		PolicyContainer.highStorageValue = (long) highStorage_dc;
+		PolicyContainer.highCostValueStorage = findDatacenterMaxStorage(dcList).getMSCharacteristics().getCostPerStorage();
+	}
 }

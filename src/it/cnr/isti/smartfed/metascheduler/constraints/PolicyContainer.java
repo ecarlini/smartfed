@@ -22,6 +22,7 @@ package it.cnr.isti.smartfed.metascheduler.constraints;
 
 
 import it.cnr.isti.smartfed.metascheduler.MSPolicy;
+import it.cnr.isti.smartfed.metascheduler.MSPolicy.ConstraintScope;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,18 +107,11 @@ public class PolicyContainer {
 	}
 	
 	
-	public MSPolicy costPerResourceConstraint_Local(double weight){
+	public MSPolicy costPerResourceConstraint(double weight, ConstraintScope scope){
 		double normWeight = calculateNormWeight(weight);
 		log.info("Norm weight into costPerResourceConstraint " + normWeight);
 		double [] highCostValue = {highCostValueRam, highCostValueStorage};
-		return new BudgetConstraint(normWeight, highCostValue, MSPolicy.LOCAL_CONSTRAINT);
-	}
-	
-	public MSPolicy costPerResourceConstraint_Global(double weight){
-		double normWeight = calculateNormWeight(weight);
-		log.info("Norm weight into costPerResourceConstraint " + normWeight);
-		double [] highCostValue = {highCostValueRam, highCostValueStorage};
-		return new BudgetConstraint(normWeight, highCostValue, MSPolicy.GLOBAL_CONSTRAINT);
+		return new BudgetConstraint(normWeight, highCostValue, scope);
 	}
 	
 	public MSPolicy storageConstraint(double weight){
@@ -126,10 +120,10 @@ public class PolicyContainer {
 		return new StorageConstraint(normWeight, highStorageValue);
 	}
 	
-	public MSPolicy networkConstraint(double weight){
+	public MSPolicy networkConstraint(double weight, ConstraintScope c){
 		double normWeight = calculateNormWeight(weight);
 		log.info("Norm weight into networkConstraint " + normWeight);
-		return new NetworkConstraint(normWeight, highBwValue);
+		return new NetworkConstraint(normWeight, highBwValue, c);
 	}
 	
 	public String toString(){

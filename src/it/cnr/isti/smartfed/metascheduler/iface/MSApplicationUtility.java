@@ -94,8 +94,7 @@ public class MSApplicationUtility {
 		storeParam.put(Constant.STORE, vm.getSize());
 		storage.setCharacteristic(storeParam);
 		
-		// netParam.put(Constant.BW, aggregateEdgesBW(edges)+"");
-		netParam.put(Constant.BW, vm.getBw());
+		netParam.put(Constant.BW, aggregateOutBwFromVm(edges, vm));
 		network.setCharacteristic(netParam);
 		
 		appNode.setComputing(computing);
@@ -111,12 +110,12 @@ public class MSApplicationUtility {
 		return appNode;
 	}
 	
-	private static long aggregateEdgesBW(Set<ApplicationEdge> edges){
-		long bw =0;
-		Iterator<ApplicationEdge> edge = edges.iterator();
-		while (edge.hasNext()) {
-			ApplicationEdge next = edge.next();
-			bw += next.getBandwidth();
+	private static long aggregateOutBwFromVm(Set<ApplicationEdge> edges, Vm vm){
+		long bw = 0;
+		for (ApplicationEdge e: edges){
+			if (e.getSourceVmId() == vm.getId()){
+				bw += (e.getBandwidth() * 1024); // from KB to Bytes
+			}
 		}
 		return bw;
 	    

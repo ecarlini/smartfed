@@ -63,8 +63,7 @@ public class LatencyConstraint extends MSPolicy
 		
 		if (numofdifference == 0)
 		{
-			// This should mean no links for the application?
-			distance = -1;
+			distance = MAXSATISFACTION_DISTANCE;
 		}
 		else
 		{

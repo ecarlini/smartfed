@@ -25,45 +25,53 @@ import java.util.List;
 import org.jgap.Gene;
 import org.jgap.IChromosome;
 
+import it.cnr.isti.smartfed.metascheduler.constraints.NetworkConstraint;
 import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
 
+
+
 public abstract class MSPolicy  {
+	
+	public enum ConstraintScope
+	{
+		Global,
+		Local
+	}
 	
 	public static final char ASCENDENT_TYPE = 'A';
 	public static final char DESCENDENT_TYPE = 'D';
 	public static final char EQUAL_TYPE = 'E';
-	public static final char GLOBAL_CONSTRAINT ='G';
-	public static final char LOCAL_CONSTRAINT = 'L';
 	
 	protected final static int RUNTIME_ERROR = 1000;
+	protected final int MAXSATISFACTION_DISTANCE = -1;
 	protected static final boolean DEBUG = false;
 	
 	private double weight;
 	private char type;
-	private char group;
+	private ConstraintScope scope;
 	protected String constraintName = "Generic";
 	
-	public MSPolicy(double weight, char type, char group){
+	public MSPolicy(double weight, char type, ConstraintScope group){
 		this.weight = weight;
 		this.type = type;
-		this.group = group;
+		this.scope = group;
 	}
 	
 	public MSPolicy(double weight, char type){
-		this(weight, type, MSPolicy.LOCAL_CONSTRAINT);
+		this(weight, type, ConstraintScope.Local);
 	}
 
 	public double evaluatePolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov, InternetEstimator internet){
 		double res;
 		
-		switch (this.group){
-		case MSPolicy.GLOBAL_CONSTRAINT: 
+		switch (this.scope){
+		case Global: 
 			res = evaluateGlobalPolicy(gene_index, chromos, app, prov, internet);
 			break;
-		case MSPolicy.LOCAL_CONSTRAINT:
+		case Local:
 			res = evaluateLocalPolicy(chromos.getGene(gene_index), app.getNodes().get(gene_index), prov, internet);
 			break;
 		default:
@@ -85,8 +93,8 @@ public abstract class MSPolicy  {
 	public char getType(){
 		return type;
 	}
-	public char getGroup(){
-		return group;
+	public ConstraintScope getScope(){
+		return scope;
 	}
 	public double getWeight(){
 		return weight;
@@ -146,7 +154,7 @@ public abstract class MSPolicy  {
 		return distance;
 	}
 	
-	protected double calculateDistance_ErrHandling(Integer cost, Integer budget, Double max){
+	protected double calculateDistance_ErrHandling(long cost, long budget, Double max){
 		String name = this.constraintName;
 		double distance;
 		try {
@@ -156,8 +164,14 @@ public abstract class MSPolicy  {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-		if (DEBUG)
-			System.out.println("\tEval on " + name + " " + cost + "-" + budget + "/" + max + "=" + distance);
+		if (DEBUG){
+			if (this instanceof NetworkConstraint){
+				System.out.println("\tEval on " + name + " " + NetworkConstraint.printMBperSec(cost) + "-" + NetworkConstraint.printMBperSec(budget)
+						+ "/" + NetworkConstraint.printMBperSec(max) + "=" + distance);
+			}
+			else 
+				System.out.println("\tEval on " + name + " " + cost + "-" + budget + "/" + max + "=" + distance);
+		}
 		return distance;
 	}
 

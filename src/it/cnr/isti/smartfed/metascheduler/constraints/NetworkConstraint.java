@@ -36,68 +36,80 @@ import org.jgap.IChromosome;
 
 public class NetworkConstraint extends MSPolicy {
 
-	private static double highNetworkValue;
+	private static long highNetworkValue;
 
-	public static double getHighNetworkValue() {
+	
+	public static long getHighNetworkValue() {
 		return highNetworkValue;
 	}
 
-	public void setHighNetworkValue(double highNetValue) {
+	public void setHighNetworkValue(long highNetValue) {
 		highNetworkValue = highNetValue;
 	}
 
-	public NetworkConstraint(double weight, double highestValue) {
-		super(weight, MSPolicy.ASCENDENT_TYPE);
+	public NetworkConstraint(double weight, long highestValue, ConstraintScope c) {
+		super(weight, MSPolicy.ASCENDENT_TYPE, c);
 		highNetworkValue = highestValue;
+		constraintName = "network";
 	}
 
 	public double evaluateLocalPolicy(Gene g, MSApplicationNode node, IMSProvider prov, InternetEstimator internet) {
-		// System.out.println(prov.getNetwork().getCharacteristic().get(Constant.BW));
-		long nodeStore =  (Long) node.getNetwork().getCharacteristic().get(Constant.BW); // what I want
-		long provStore =  (Long) prov.getNetwork().getCharacteristic().get(Constant.BW); // what I have
+		long nodeBw =  (Long) node.getNetwork().getCharacteristic().get(Constant.BW); // what I want
+		long provBw =  (Long) prov.getNetwork().getCharacteristic().get(Constant.BW); // what I have
+		double maxBw = highNetworkValue;
 		double distance;
-		try {
-			distance = evaluateDistance(provStore, nodeStore, highNetworkValue);
-		} catch (Exception e) {
-			distance = RUNTIME_ERROR; // a positive value in order to not consider this constraint
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+		if (nodeBw > 0){
+			distance = calculateDistance_ErrHandling(provBw, nodeBw, maxBw);
 		}
-		if (DEBUG)
-			System.out.println("\tEval on network (node, prov)" + printMBperSec(nodeStore) + "-" + printMBperSec(provStore) 
-					+ "/" + printMBperSec(highNetworkValue) + "=" + distance);
+		else 
+			distance = MAXSATISFACTION_DISTANCE;
+		
 		return distance * getWeight();
 	}
 	
-	private String printMBperSec(double val){
-		String s = "";
+	public static String printMBperSec(double val){
 		double res = val /1024 /1024;
-		s += res + "MB/s";
+		String s = res + "MBps";
 		return s;
 	}
 	
 	@Override
 	public double evaluateGlobalPolicy(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov, InternetEstimator internet){
-		// NON SENSE CODE, SAFELY REMOVE IT
-		Gene[] genes = chromos.getGenes();
-		int current_prov = (int) genes[gene_index].getAllele();
-		// if (DEBUG)
-			System.out.println("\tMe is app " + gene_index + " on prov " + current_prov);
-		MSApplication am = (MSApplication) app;
+		long app_bw = calcBwFromEdges(gene_index, chromos, app, prov);
+		long provBw = (long) prov.getNetwork().getCharacteristic().get(Constant.BW);
 		
-		int counter = 0;
-		int total = 0;
-		Set<ApplicationEdge> set = am.getEdges();
-		for (ApplicationEdge e: set){
-			if (e.getSourceVmId() == gene_index){
-				int pair_prov = (int) genes[e.getTargetVmId()].getAllele();
-				total ++;
-				if (pair_prov == current_prov)
-					counter++;
-			}
-		}
-		System.out.println("Having " + counter + "/" + total + " pairs on same prov" );
-		return 0;
+		double maxBw = highNetworkValue;
+		double distance;
+		if (app_bw > 0)
+			distance = calculateDistance_ErrHandling(provBw, app_bw, maxBw);
+		else 
+			distance = MAXSATISFACTION_DISTANCE;
+		
+		return distance * getWeight();
 	}
 
+	private static long calcBwFromEdges(int gene_index, IChromosome chromos, IMSApplication app, IMSProvider prov){
+		Gene[] genes = chromos.getGenes();
+		int current_prov = (int) genes[gene_index].getAllele();
+		MSApplicationNode curr_node = app.getNodes().get(gene_index); // this is safe
+		int geneVmId = curr_node.getID();
+		MSApplication am = (MSApplication) app;
+		double bw = 0;
+		Set<ApplicationEdge> set = am.getEdges();
+		for (ApplicationEdge e: set){
+			if (e.getSourceVmId() == geneVmId){
+				int target_index = MSPolicy.getGeneIndexFromNodeId(e.getTargetVmId(), genes, app);
+				
+				int tProvId = (int) genes[target_index].getAllele();
+				if (current_prov != tProvId){
+					bw += e.getBandwidth();
+				}
+			}
+		}
+		long byteBw = ((long) (bw * 1024)); 
+		
+		if (DEBUG)
+			System.out.println("Output reuqired bw from Node " + gene_index + " is " + printMBperSec(byteBw) + " MBps");
+		return byteBw;
+	}
 }

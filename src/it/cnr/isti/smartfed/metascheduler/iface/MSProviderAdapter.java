@@ -102,7 +102,7 @@ public class MSProviderAdapter {
 
 		List<Host> hostList = datacenter.getHostList();
 		DatacenterCharacteristicsMS dcCharacter = datacenter.getMSCharacteristics();
-		//aggregazione della lista degli host
+		//aggregating host list
 		HashMap<String, Object> aggregateHost = new HashMap<String, Object>(); //aggregateHostInfo(hostList);
 		aggregateHost.put(Constant.STORE, hostList.get(0).getStorage());
 		aggregateHost.put(Constant.MIPS, hostList.get(0).getAvailableMips());
@@ -114,7 +114,7 @@ public class MSProviderAdapter {
 		computingCharacteristic.put(Constant.MIPS, aggregateHost.get(Constant.MIPS));
 
 		//network
-		networkCharacteristic.put(Constant.BW, aggregateHost.get(Constant.BW));
+		networkCharacteristic.put(Constant.BW, dcCharacter.getHighestBw());
 		// networkCharacteristic.put(Constant.COST_BW, dcCharacterisitc.getCostPerBw());
 		networkCharacteristic.put(Constant.COST_BW, CostComputer.getCostPerBw(datacenter));
 
@@ -152,8 +152,6 @@ public class MSProviderAdapter {
 			}
 		}
 		return p;
-		
-		//return providerList.get(providerID-3);
 	}
 
 }

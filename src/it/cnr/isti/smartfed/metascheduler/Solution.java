@@ -37,6 +37,7 @@ public class Solution {
 	private double fit;
 	IChromosome chromosome = null;
 	private double costAmount;
+	private boolean valid;
 	
 	public IChromosome getChromosome() {
 		return chromosome;
@@ -66,6 +67,22 @@ public class Solution {
 		this.setChromosome(chromosome);
 		this.associationMap = createMapping(nodes);
 		this.fit = chromosome.getFitnessValue();
+		this.valid = checkCompleteRequirementsSatisfaction(chromosome);
+	}
+	
+	private boolean checkCompleteRequirementsSatisfaction(IChromosome chromosome){
+		boolean res = true;
+		Gene[] genes = chromosome.getGenes();
+		int i = 0;
+		while (i < genes.length){
+			CIntegerGene g = (CIntegerGene) genes[i];
+			if (g.getLocalFitness() == 0){
+				res = false;
+				break;
+			}
+			i++;
+		}
+		return res;
 	}
 	
 	/**
@@ -141,5 +158,9 @@ public class Solution {
 	
 	public double getCostAmount(){
 		return costAmount; 
+	}
+
+	public boolean getCompleteSatisfaction() {
+		return valid;
 	}
 }

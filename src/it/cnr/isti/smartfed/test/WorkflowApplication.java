@@ -4,7 +4,10 @@ import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.resources.Country;
+import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
+import it.cnr.isti.smartfed.federation.resources.VmTyped;
+import it.cnr.isti.smartfed.federation.resources.VmFactory.VmType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.File;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -32,7 +36,7 @@ import org.workflowsim.utils.ReplicaCatalog;
 
 public class WorkflowApplication extends Application
 {
-	public static String fileName = "Montage_25";
+	public static String fileName = "Epigenomics_24";
 	public String daxPath = "resources/" + fileName + ".xml";
 
 	void setWorkflowSimConfig(){
@@ -105,16 +109,38 @@ public class WorkflowApplication extends Application
 		return tasks;
 	}
 	
+	private Vm createSmallVm_NoID(int userId){
+		return VmFactory.getDesiredVm(
+					userId, 
+					6502.18, 
+					1, 
+					new Double(1.7 * 1024 ).intValue(), // RAM: 1.7 GB
+					new Long(1 * 1024 * 1024), // i assume at least 1MB p/s  
+					new Long(160 * 1024) // DISK: 160 GB
+					);
+	}
+	
+	private Vm createXLargeVm_NoID(int userId){
+		return VmFactory.getDesiredVm(
+			userId, 
+			5202.15 * 4, 
+			4, 
+			new Double(15 * 1024).intValue(), // 15 GB
+			new Long(1 * 1024 * 1024), // i assume at least 1MB p/s  
+			new Long(1690 * 1024) // 1690 GB
+			);
+	}
+	
 	private <T extends Cloudlet> void build(int userId, List<T> tasks){
 		for (T t: tasks){
 			List<Cloudlet> cloudlets = new ArrayList<>();
 			cloudlets.add(t);
-			Vm vm = VmFactory.getDesiredVm(userId, 
-					8022, 
-					2, 
-					new Double(7.5 * 1024).intValue(), // 7.5 GB
-					new Long(1 * 1024 * 1024), // i assume at least 1MB p/s  
-					new Long(850 * 1024));
+			Vm vm = null;
+			if (t.getCloudletLength() > 50000)
+				vm = createXLargeVm_NoID(userId);
+			else 
+				vm = createSmallVm_NoID(userId);
+			
 			ApplicationVertex v = new ApplicationVertex(userId, cloudlets, vm);
 			v.setCountry(Country.Italy);
 			v.setBudget(50);

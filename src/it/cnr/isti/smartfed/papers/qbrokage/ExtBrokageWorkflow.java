@@ -38,7 +38,8 @@ public class ExtBrokageWorkflow extends AbstractBrokageScalability {
 		GeneticAllocator gen_allocator = new GeneticAllocator();
 		gen_allocator.setPolicyType(PolicyType.DEFAULT_COST_NET);
 		String str = ext.execute(gen_allocator);
-		write(str, new File("plots/cost-dc" + ext.dcToString() + "-" + ext.repetitions + "rep" +"_workflow-" + ext.gentype +".dat"));
+		write(str, new File("plots/cost-dc" + ext.dcToString() + "-" + ext.repetitions + "rep" +"_" 
+				+ WorkflowApplication.fileName + "-" + ext.gentype +".dat"));
 		System.out.println("Fallito " + counter + " times");
 		
 	}
@@ -60,13 +61,18 @@ public class ExtBrokageWorkflow extends AbstractBrokageScalability {
 		double lockin = TestResult.getLockDegree().getMean();
 		double timeDiff = TestResult.getTimeDifference().getMean();
 		double timeDiffStd = TestResult.getTimeDifference().getStandardDeviation();
-		str += String.format(Locale.ENGLISH, "%.5f", result) + "\t";
+		double completionDiff = TestResult.getCompletionDistance().getMean();
+		if (result > 0)
+			str += String.format(Locale.ENGLISH, "%.5f", result) + "\t";
+		else 
+			str += String.format(Locale.ENGLISH, "%.4f", result) + "\t";
 		str += String.format(Locale.ENGLISH, "%.2f", time) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", lockin) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", resultSTD) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", timeSTD) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", timeDiff) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", timeDiffStd) + "\t"; 
+		str += String.format(Locale.ENGLISH, "%.2f", completionDiff) + "\t"; 
 		TestResult.reset();
 		return str;
 	}

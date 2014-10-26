@@ -33,23 +33,50 @@ public class ExperimentDistance extends Experiment
 		super(null, null);
 	}
 
-	private double optimum;
-	private double baselineTime;
+	public class Baseline {
 
-	public double getOptimum() {
-		return optimum;
-	}
+		private double cost;
+		private double time;
+		private double completion;
 
-	public void setOptimum(double optimum) {
-		this.optimum = optimum;
-	}
+		public Baseline() {
+		}
+		
+		public Baseline(double optimum, double baseTime, double cTime) {
+			cost = optimum;
+			time = baseTime;
+			completion = cTime;
+		}
+
+		public double getOptimum() {
+			return cost;
+		}
+
+		public void setOptimum(double optimum) {
+			this.cost = optimum;
+		}
+
+		public double getBaselineTime() {
+			return time;
+		}
+
+		public void setBaselineTime(double optimum) {
+			this.time = optimum;
+		}
+
+		public double getBaselineCompletion() {
+			return completion;
+		}
+
+		public void setBaselineCompletion(double baselineCompletion) {
+			this.completion = baselineCompletion;
+		}
+	} 
 	
-	public double getBaselineTime() {
-		return baselineTime;
-	}
-
-	public void setBaselineTime(double optimum) {
-		this.baselineTime = optimum;
+	private Baseline baseline;
+	
+	public void setBaseline(Baseline b) {
+		this.baseline = b;
 	}
 
 	public void setDataset(InterfaceDataSet d){
@@ -110,23 +137,17 @@ public class ExperimentDistance extends Experiment
 		List<Cloudlet> newList = federation.getReceivedCloudlet();
 		// UtilityPrint.printCloudletList(newList);	
 
-		TestResult.getMappingTime().addValue(allocator.getRealDuration());
-		TestResult.getTimeDifference().addValue(allocator.getRealDuration() - baselineTime);
-		
 		// calculates the vendor lock-in metric on the mapping plan
 		MappingSolution sol = allocator.getSolution();
-		//System.out.println(sol);
 		Set<FederationDatacenter> myset = new HashSet<FederationDatacenter>();
 		for (FederationDatacenter fd: sol.getMapping().values()){
 			myset.add(fd);
 		}
+		int usedDc = myset.size();
+		
 
 		// MetaschedulerUtilities.saveFederationToTxt("datacenters" + datacenters.size() + ".txt", new ArrayList<FederationDatacenter>(myset));
 
-		int usedDc = myset.size();// / datacenters.size();
-		TestResult.getLockDegree().addValue(usedDc);
-
-		WorkflowComputer.getPipeCompletionTime((WorkflowApplication) applications.get(0), datacenters);
 		
 		boolean goodAllocation = false;
 		Allocation a = null;
@@ -140,36 +161,37 @@ public class ExperimentDistance extends Experiment
 			double total = CostComputer.actualCost(a);
 			System.out.println("TOTAL --------> "+total);
 
-			if (optimum == 0) throw new IOException("Error!!!");
+			if (baseline.cost == 0) throw new IOException("Error!!!");
 
-			double dop = (total - optimum) / optimum;
+			double dop = (total - baseline.cost) / baseline.cost;
 			TestResult.getCostDistance().addValue(dop);
 			System.out.println("MYDISTANCE --------> " + dop);
-			System.out.println("BASE --------> " + optimum);
+			System.out.println("BASE --------> " + baseline.cost);
 
 			double totalNet = CostComputer.actualNetCost(a);
 			TestResult.getNetCost().addValue(totalNet);
 			// System.out.println("NETCOST --------> " + totalNet);
 
+			double completion = WorkflowComputer.getPipeCompletionTime((WorkflowApplication) applications.get(0), datacenters);
+
 			TestResult.getCost().addValue(total);
 			TestResult.getBerger().addValue(Math.log(total / budget));
-
+			TestResult.getLockDegree().addValue(usedDc);
+			TestResult.getCompletionDistance().addValue((completion- baseline.completion) / baseline.completion);
+			TestResult.getMappingTime().addValue(allocator.getRealDuration());
+			TestResult.getTimeDifference().addValue(allocator.getRealDuration() - baseline.time);
+			
 			goodAllocation = true;
 		}
 		else {
 			System.out.println("Not completed");
 		}
-		
-		System.out.println(applications.get(0));
-		
+
+		// System.out.println(applications.get(0));
+
 		return goodAllocation;
-		
+
 		// UtilityPrint.printCloudletList(newList);
-	}
-
-
-	public String toString(){
-		return "ExperimentDistance with " + allocator.getClass().getSimpleName();
 	}
 
 }

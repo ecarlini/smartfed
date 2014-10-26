@@ -34,6 +34,7 @@ public class TestResult
 	private static SummaryStatistics netCost;
 	private static SummaryStatistics costDistance;
 	private static SummaryStatistics timeDifference;
+	private static SummaryStatistics completionDistance;
 	
 	
 	static
@@ -53,10 +54,15 @@ public class TestResult
 		netCost = new SummaryStatistics();
 		costDistance = new SummaryStatistics();
 		timeDifference = new SummaryStatistics();
+		completionDistance = new SummaryStatistics();
 	}
 		
 	public static SummaryStatistics getNetCost() {
 		return netCost;
+	}
+	
+	public static SummaryStatistics getCompletionDistance() {
+		return completionDistance;
 	}
 	
 	public static SummaryStatistics getCostDistance() {

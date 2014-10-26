@@ -3,15 +3,11 @@ package it.cnr.isti.smartfed.test;
 import it.cnr.isti.smartfed.federation.Federation;
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
-import it.cnr.isti.smartfed.federation.mapping.MappingSolution;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.SimEntity;
 import org.workflowsim.Task;
 
 public class WorkflowComputer 
@@ -54,11 +50,10 @@ public class WorkflowComputer
 			if (edge != null)
 			{
 				latency = edge.getLatency(); //TODO	
-			
-				FederationDatacenter fd = Federation.findDatacenter(dcs, next_task.getResourceId());	
-				transfer_time = (edge.getMessageLength() / 1024) / 40;//fd.getMSCharacteristics().getHighestBw();
+				FederationDatacenter fd = Federation.findDatacenter(dcs, next_task.getResourceId());
+				transfer_time = (edge.getMessageLength() * 1024) / fd.getMSCharacteristics().getHighestBw();
 				
-				System.out.println("Message Length: "+edge.getMessageLength()/1024);
+				System.out.println("Message Length (KB): " + edge.getMessageLength());
 				System.out.println("Highest bw: "+fd.getMSCharacteristics().getHighestBw());
 				System.out.println("Transfer Time: "+transfer_time);
 			}

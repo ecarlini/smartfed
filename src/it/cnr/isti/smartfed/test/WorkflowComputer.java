@@ -3,19 +3,18 @@ package it.cnr.isti.smartfed.test;
 import it.cnr.isti.smartfed.federation.Federation;
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
-import it.cnr.isti.smartfed.federation.mapping.MappingSolution;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.SimEntity;
 import org.workflowsim.Task;
 
 public class WorkflowComputer 
 {	
+	
 	public static double getPipeCompletionTime(WorkflowApplication workflow, List<FederationDatacenter> dcs)
 	{
 		System.out.println("\n\nFREE BEER! Now that I have your attention, be warned: " +
@@ -32,13 +31,11 @@ public class WorkflowComputer
 			System.out.println("Number of children: "+next_task.getChildList().size());
 			
 			// service time of the node
-			long filesize = next_task.getCloudletLength();
-			
+			long filesize = next_task.getCloudletLength();	
 			double expected_service_time = filesize / workflow.getVertexForCloudlet(next_task).getAssociatedVm(next_task).getMips();
 			double cloudsim_service_time = next_task.getActualCPUTime();
 			
-			
-			
+					
 			System.out.println("Cloudlet Length: "+filesize);
 			System.out.println("Cloudsim Service time: "+cloudsim_service_time+" Expected: "+expected_service_time);
 			
@@ -77,36 +74,65 @@ public class WorkflowComputer
 		return tc;
 	}
 
-	public static void getFlowCompletionTime(WorkflowApplication workflow)
+	public static void getFlowCompletionTime(WorkflowApplication workflow, List<FederationDatacenter> dcs)
 	{
 		int depth = 1;
 		List<Task> tasks = workflow.getTasksWithDepth(depth);
+		Map<ApplicationEdge, Double> edgeTimeMap = new HashMap<ApplicationEdge, Double>();
 		
-		// TODO, iterate for all the depths
-		
-		for (Task t: tasks)
+		while (tasks.size() != 0)
 		{
-			ApplicationVertex av = workflow.getVertexForCloudlet(t);
-			
-			// check for the entering edges to compute the time of 
-			Set<ApplicationEdge> in_edges = workflow.incomingEdgesOf(av);
-			
-			double offset = 0;
-			for (ApplicationEdge ae: in_edges)
+			for (Task t: tasks)
 			{
-				// TODO: check for max here
+				ApplicationVertex av = workflow.getVertexForCloudlet(t);
+				
+				// check for the entering edges to compute the time of 
+				Set<ApplicationEdge> in_edges = workflow.incomingEdgesOf(av);
+				double offset_time = 0;
+				for (ApplicationEdge ae: in_edges)
+				{
+					double time = edgeTimeMap.get(ae);
+					if (time > offset_time)
+						offset_time = time;
+				}
+				
+				// compute the time of the task here
+				double task_time = taskTime(t, workflow);
+				
+				// set the time for the outer edges
+				Set<ApplicationEdge> out_edges = workflow.outgoingEdgesOf(av);
+				for (ApplicationEdge ae: out_edges)
+				{
+					double edge_time = edgeTime(ae, t, dcs);
+					double total_time = offset_time + task_time + edge_time;
+					System.out.println("Total_time: "+total_time);
+					edgeTimeMap.put(ae, total_time);
+				}	
 			}
 			
-			// compute the time of the task here
-			// TODO: a method that does that.. 
-			
-			Set<ApplicationEdge> out_edges = workflow.outgoingEdgesOf(av);
-			
-			
-			// calcola il Ts degli archi in uscita e mettilo dentro una hashmap
-			// TODO
-			
-			
+			depth ++;
+			tasks = workflow.getTasksWithDepth(depth);
 		}
+		
+		
+	}
+
+	private static double taskTime(Task t, WorkflowApplication workflow)
+	{
+		long filesize = t.getCloudletLength();	
+		double expected_service_time = filesize / workflow.getVertexForCloudlet(t).getAssociatedVm(t).getMips();
+		double cloudsim_service_time = t.getActualCPUTime();
+		
+		return expected_service_time;
+	}
+	
+	private static double edgeTime(ApplicationEdge edge, Task t, List<FederationDatacenter> dcs)
+	{
+		double latency = edge.getLatency(); // TODO from InternetEstimator
+		
+		FederationDatacenter fd = Federation.findDatacenter(dcs, t.getResourceId());	
+		double transfer_time = (edge.getMessageLength() / 1024) / 40;
+		
+		return latency + transfer_time;
 	}
 }

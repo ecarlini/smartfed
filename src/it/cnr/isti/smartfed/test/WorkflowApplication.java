@@ -45,7 +45,7 @@ public class WorkflowApplication extends Application
          * clustering delay must be added, if you don't need it, you can set all the clustering
          * delay to be zero, but not null
          */
-        Map<Integer, DistributionGenerator> clusteringDelay = new HashMap();
+        Map<Integer, DistributionGenerator> clusteringDelay = new HashMap<Integer, DistributionGenerator>();
          
         int maxLevel = 11; // Montage has at most 11 horizontal levels 
         for (int level = 0; level < maxLevel; level++ ){

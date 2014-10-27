@@ -4,6 +4,7 @@ import it.cnr.isti.smartfed.federation.Federation;
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
+import it.cnr.isti.smartfed.networking.InternetEstimator;
 
 import java.util.HashMap;
 import java.util.List;
@@ -74,11 +75,12 @@ public class WorkflowComputer
 		return tc;
 	}
 
-	public static void getFlowCompletionTime(WorkflowApplication workflow, List<FederationDatacenter> dcs)
+	public static double getFlowCompletionTime(WorkflowApplication workflow, List<FederationDatacenter> dcs, InternetEstimator internet)
 	{
 		int depth = 1;
 		List<Task> tasks = workflow.getTasksWithDepth(depth);
 		Map<ApplicationEdge, Double> edgeTimeMap = new HashMap<ApplicationEdge, Double>();
+		double total_time = 0;
 		
 		while (tasks.size() != 0)
 		{
@@ -103,9 +105,8 @@ public class WorkflowComputer
 				Set<ApplicationEdge> out_edges = workflow.outgoingEdgesOf(av);
 				for (ApplicationEdge ae: out_edges)
 				{
-					double edge_time = edgeTime(ae, t, dcs);
-					double total_time = offset_time + task_time + edge_time;
-					System.out.println("Total_time: "+total_time);
+					double edge_time = edgeTime(ae, workflow, t, dcs, internet);
+					total_time = offset_time + task_time + edge_time;
 					edgeTimeMap.put(ae, total_time);
 				}	
 			}
@@ -114,7 +115,8 @@ public class WorkflowComputer
 			tasks = workflow.getTasksWithDepth(depth);
 		}
 		
-		
+		System.out.println("Total time: "+total_time);
+		return total_time;
 	}
 
 	private static double taskTime(Task t, WorkflowApplication workflow)
@@ -126,11 +128,17 @@ public class WorkflowComputer
 		return expected_service_time;
 	}
 	
-	private static double edgeTime(ApplicationEdge edge, Task t, List<FederationDatacenter> dcs)
+	private static double edgeTime(ApplicationEdge edge, WorkflowApplication workflow, Task t, List<FederationDatacenter> dcs, InternetEstimator internet)
 	{
+		
+		ApplicationVertex av;
+		t.getChildList();
 		double latency = edge.getLatency(); // TODO from InternetEstimator
 		
-		FederationDatacenter fd = Federation.findDatacenter(dcs, t.getResourceId());	
+		FederationDatacenter dc_source = Federation.findDatacenter(dcs, t.getResourceId());
+		FederationDatacenter dc_target = null;
+		// double latency = internet.getInternetLink(dc_source, dc_target).getLatency();
+			
 		double transfer_time = (edge.getMessageLength() / 1024) / 40;
 		
 		return latency + transfer_time;

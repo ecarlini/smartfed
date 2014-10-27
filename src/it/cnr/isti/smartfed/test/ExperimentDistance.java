@@ -127,7 +127,7 @@ public class ExperimentDistance extends Experiment
 		TestResult.getLockDegree().addValue(usedDc);
 
 		WorkflowComputer.getPipeCompletionTime((WorkflowApplication) applications.get(0), datacenters);
-		WorkflowComputer.getFlowCompletionTime((WorkflowApplication) applications.get(0), datacenters);
+		WorkflowComputer.getFlowCompletionTime((WorkflowApplication) applications.get(0), datacenters, internetEstimator);
 		
 		boolean goodAllocation = false;
 		Allocation a = null;

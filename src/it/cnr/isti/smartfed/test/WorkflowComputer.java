@@ -76,4 +76,37 @@ public class WorkflowComputer
 		System.out.println("Tempo di completamento: "+tc);
 		return tc;
 	}
+
+	public static void getFlowCompletionTime(WorkflowApplication workflow)
+	{
+		int depth = 1;
+		List<Task> tasks = workflow.getTasksWithDepth(depth);
+		
+		// TODO, iterate for all the depths
+		
+		for (Task t: tasks)
+		{
+			ApplicationVertex av = workflow.getVertexForCloudlet(t);
+			
+			// check for the entering edges to compute the time of 
+			Set<ApplicationEdge> in_edges = workflow.incomingEdgesOf(av);
+			
+			double offset = 0;
+			for (ApplicationEdge ae: in_edges)
+			{
+				// TODO: check for max here
+			}
+			
+			// compute the time of the task here
+			// TODO: a method that does that.. 
+			
+			Set<ApplicationEdge> out_edges = workflow.outgoingEdgesOf(av);
+			
+			
+			// calcola il Ts degli archi in uscita e mettilo dentro una hashmap
+			// TODO
+			
+			
+		}
+	}
 }

@@ -6,6 +6,7 @@ import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
 import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
 import it.cnr.isti.smartfed.test.TestResult;
+import it.cnr.isti.smartfed.test.WorkflowApplication;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +24,8 @@ public class ExtBrokageWorkflowBw extends ExtBrokageWorkflow {
 		GeneticAllocator gen_allocator = new GeneticAllocator();
 		gen_allocator.setPolicyType(PolicyType.GLOBAL_COST_BW);
 		String str = ext.execute(gen_allocator);
-		write(str, new File("plots/cost-dc" + ext.dcToString() + "-" + ext.repetitions + "rep" +"_workflowBw-" + ext.gentype +".dat"));
+		write(str, new File("plots/cost-dc" + ext.dcToString() + "-" + ext.repetitions + "rep" +"_"
+				+ WorkflowApplication.fileName + "-" + ext.gentype +".dat"));
 		System.out.println("Fallito " + counter + " times");
 		
 	}

@@ -75,15 +75,15 @@ public class GeneticAllocator extends AbstractAllocator {
 			dcs = monitoring.getView(); // maybe we can avoid to perform algorithm if the view has not changed
 		}
 		solutions = Metascheduler.getMapping(application, constraint.getList(), dcs, this.netEstimator, randomSeed);
-		System.out.println(chooseSolution(solutions));
+		// System.out.println(chooseSolution(solutions));
+		
+		finishSimTime = CloudSim.clock();
+		finishRealTime = System.currentTimeMillis();
 		
 		MappingSolution[] sols = new MappingSolution[solutions.length];
 		for (int i=0; i < sols.length; i++)
 			sols[i] = convert(solutions[i], application, dcs);
 		
-		finishSimTime = CloudSim.clock();
-		finishRealTime = System.currentTimeMillis();
-
 		this.setSolution(sols[0]);
 		return sols;
 	}

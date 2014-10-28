@@ -27,6 +27,8 @@ import it.cnr.isti.smartfed.networking.InternetEstimator;
 import it.cnr.isti.smartfed.test.ExperimentDistance;
 import it.cnr.isti.smartfed.test.InterfaceDataSet;
 import it.cnr.isti.smartfed.test.PreciseDataset;
+import it.cnr.isti.smartfed.test.WorkflowApplication;
+import it.cnr.isti.smartfed.test.WorkflowComputer;
 
 abstract class AbstractBrokageScalability {
 
@@ -83,10 +85,10 @@ abstract class AbstractBrokageScalability {
 			seed = j++;
 		}
 		
+		ExperimentDistance.Baseline b = e.new Baseline(optimum, baseTime, 0);
 		for (int i=0; i<repetitions; i++) {
 			e.setDataset(dataset);
-			e.setOptimum(optimum);
-			e.setBaselineTime(baseTime);
+			e.setBaseline(b);
 			e.setRandomSeed(seed);
 			((GeneticAllocator) allocator).resetConstraints();
 			e.run(allocator);	
@@ -110,6 +112,7 @@ abstract class AbstractBrokageScalability {
 		while (i < repetitions){
 			double optimum = 0;
 			double baseTime = 0;
+			double completion = 0;
 			PaperDataset dataset = null;
 			long j = seed;
 			while (optimum == 0){
@@ -117,15 +120,16 @@ abstract class AbstractBrokageScalability {
 				double res[] = computeOptimum(dataset, j);
 				optimum = res[0];
 				baseTime = res[1];
+				completion = res[2];
 				if (optimum == 0) {
 					counter++;
 				}
 				seed = j++;
 			}
 			if (optimum == 0) throw new IOException();
+			ExperimentDistance.Baseline b = e.new Baseline(optimum, baseTime, completion);
 			e.setDataset(dataset);
-			e.setOptimum(optimum);
-			e.setBaselineTime(baseTime);
+			e.setBaseline(b);
 			e.setRandomSeed(seed);
 			
 			((GeneticAllocator) allocator).resetConstraints();
@@ -208,17 +212,22 @@ abstract class AbstractBrokageScalability {
 		double res = 0;
 		double time = allocator.getRealDuration();
 		Allocation a = null;
+		double completion = 0;
+		
 		if (federation.getAllocations().iterator().hasNext())
 			a = federation.getAllocations().iterator().next();
 		if (a != null && a.isCompleted()){
 			res = CostComputer.actualCost(a);
+			if (applications.get(0) instanceof WorkflowApplication)
+				completion = WorkflowComputer.getPipeCompletionTime((WorkflowApplication) applications.get(0), datacenters);
 		}
 		else 
 			res = 0;
+
 		System.out.println("Optimum is " + res);
-		System.out.println("Timeis " + time);
+		System.out.println("Time is " + time);
 		System.out.println("####################################################\n");
-		return new double[]{res, time};
+		return new double[]{res, time, completion};
 	}
 	
 	

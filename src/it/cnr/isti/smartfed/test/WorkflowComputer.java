@@ -28,8 +28,8 @@ public class WorkflowComputer
 		
 		while (next_task != null)
 		{
-			System.out.println("Executing "+next_task.getCloudletId()+" depth: "+next_task.getDepth());			
-			System.out.println("Number of children: "+next_task.getChildList().size());
+			//System.out.println("Executing "+next_task.getCloudletId()+" depth: "+next_task.getDepth());			
+			//System.out.println("Number of children: "+next_task.getChildList().size());
 			
 			// service time of the node
 			long filesize = next_task.getCloudletLength();	
@@ -45,18 +45,16 @@ public class WorkflowComputer
 			Set<ApplicationEdge> outedges = workflow.outgoingEdgesOf(av);
 			
 			ApplicationEdge edge = outedges.iterator().hasNext() ? outedges.iterator().next() : null;
-			System.out.println("Numero di edge: "+outedges.size());
 			
 			double latency = 0;
 			double transfer_time = 0;
 			if (edge != null)
 			{
 				latency = edge.getLatency(); //TODO	
-			
-				FederationDatacenter fd = Federation.findDatacenter(dcs, next_task.getResourceId());	
-				transfer_time = (edge.getMessageLength() / 1024) / 40;//fd.getMSCharacteristics().getHighestBw();
+				FederationDatacenter fd = Federation.findDatacenter(dcs, next_task.getResourceId());
+				transfer_time = (edge.getMessageLength() * 1024) / fd.getMSCharacteristics().getHighestBw();
 				
-				System.out.println("Message Length: "+edge.getMessageLength()/1024);
+				System.out.println("Message Length (KB): " + edge.getMessageLength());
 				System.out.println("Highest bw: "+fd.getMSCharacteristics().getHighestBw());
 				System.out.println("Transfer Time: "+transfer_time);
 			}
@@ -141,7 +139,7 @@ public class WorkflowComputer
 			latency = internet.getInternetLink(dc_source, dc_target).getLatency();
 		}
 		
-		double transfer_time = (edge.getMessageLength() / 1024) / 40;
+		double transfer_time = (edge.getMessageLength() * 1024) / dc_source.getMSCharacteristics().getHighestBw();
 		
 		return latency + transfer_time;
 	}

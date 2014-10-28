@@ -45,7 +45,7 @@ public class BrokageScalability extends AbstractBrokageScalability{
 	public String logResults(){
 		String str = "";
 		double result = TestResult.getCostDistance().getMean(); 
-		System.out.println("*******************NUmero di elementi registrati" + TestResult.getCostDistance().getN());
+		// System.out.println("*******************NUmero di elementi registrati" + TestResult.getCostDistance().getN());
 		double resultSTD = TestResult.getCostDistance().getStandardDeviation();
 		double time = TestResult.getMappingTime().getMean();
 		double timeSTD = TestResult.getMappingTime().getStandardDeviation();
@@ -73,9 +73,13 @@ public class BrokageScalability extends AbstractBrokageScalability{
 		FederationLog.setDebug(false);
 		BrokageScalability n = new BrokageScalability(GenerationType.UNIFORM);
 		AbstractAllocator allocator = new GeneticAllocator();
+		
+		BrokageTuning.execute(allocator, 5, new int[]{3}, new int[]{10});// just for warm-up
+		
 		String str = "";
 		str = n.execute(allocator);
-		write(str, new File("plots/cost-dc" + n.dcToString() +"cross0.35-mut10_" + n.gentype +".dat"));
+		write(str, new File("plots/cost-dc" + n.dcToString() + "rep" + n.repetitions + "conc1" +
+				"_" + n.gentype +".dat"));
 		System.out.println(counter);
 	}
 

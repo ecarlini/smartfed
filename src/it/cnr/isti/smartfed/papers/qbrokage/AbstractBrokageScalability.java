@@ -219,12 +219,13 @@ abstract class AbstractBrokageScalability {
 		if (a != null && a.isCompleted()){
 			res = CostComputer.actualCost(a);
 			if (applications.get(0) instanceof WorkflowApplication)
-				completion = WorkflowComputer.getPipeCompletionTime((WorkflowApplication) applications.get(0), datacenters);
+				completion = WorkflowComputer.getFlowCompletionTime((WorkflowApplication) applications.get(0), datacenters, internetEstimator);
 		}
 		else 
 			res = 0;
 
 		System.out.println("Optimum is " + res);
+		System.out.println("Completion is " + completion);
 		System.out.println("Time is " + time);
 		System.out.println("####################################################\n");
 		return new double[]{res, time, completion};

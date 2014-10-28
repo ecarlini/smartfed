@@ -175,7 +175,8 @@ public class ExperimentDistance extends Experiment
 			if (applications.get(0) instanceof WorkflowApplication){
 				double completion = WorkflowComputer.getFlowCompletionTime((WorkflowApplication) applications.get(0), datacenters, internetEstimator);
 				TestResult.getCompletionDistance().addValue((completion - baseline.completion) / baseline.completion);
-				System.out.println("COMPLETION -----------> " + (completion - baseline.completion) / baseline.completion);
+				// System.out.println("COMPLETION -----------> " + (completion - baseline.completion) / baseline.completion);
+				System.out.println("COMPLETION -----------> " + completion);
 			}
 
 			TestResult.getCost().addValue(total);

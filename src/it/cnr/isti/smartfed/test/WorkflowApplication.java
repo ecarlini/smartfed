@@ -4,10 +4,7 @@ import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.resources.Country;
-import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
-import it.cnr.isti.smartfed.federation.resources.VmTyped;
-import it.cnr.isti.smartfed.federation.resources.VmFactory.VmType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.File;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -36,7 +32,7 @@ import org.workflowsim.utils.ReplicaCatalog;
 
 public class WorkflowApplication extends Application
 {
-	public static String fileName = "Epigenomics_24";
+	public static String fileName = "Montage_25";
 	public String daxPath = "resources/" + fileName + ".xml";
 
 	void setWorkflowSimConfig(){

@@ -24,7 +24,7 @@ public class ExtBrokageWorkflowBw extends ExtBrokageWorkflow {
 		GeneticAllocator gen_allocator = new GeneticAllocator();
 		gen_allocator.setPolicyType(PolicyType.GLOBAL_COST_BW);
 		String str = ext.execute(gen_allocator);
-		write(str, new File("plots/cost-dc" + ext.dcToString() + "-" + ext.repetitions + "rep" +"_"
+		write(str, new File("plots/cost-dc" + ext.dcToString() + "-" + ext.repetitions + "rep" +"_bw"
 				+ WorkflowApplication.fileName + "-" + ext.gentype +".dat"));
 		System.out.println("Fallito " + counter + " times");
 		
@@ -38,6 +38,7 @@ public class ExtBrokageWorkflowBw extends ExtBrokageWorkflow {
 		return optimumAlloc;
 	}
 
+	/*
 	@Override
 	public String logResults() {
 		String str = "";
@@ -56,6 +57,7 @@ public class ExtBrokageWorkflowBw extends ExtBrokageWorkflow {
 		TestResult.reset();
 		return str;
 	}
+	*/
 
 }
 

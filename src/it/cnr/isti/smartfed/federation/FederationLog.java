@@ -31,6 +31,26 @@ public class FederationLog extends Log
 	
 	private static boolean debug = false;
 	
+	public static void disable()
+	{
+		debug = false;
+	}
+	
+	public static void print(Object message)
+	{
+		println(String.valueOf(message));
+	}
+	
+	public static void print(String message)
+	{
+		debugLog(message);
+	}
+	
+	public static void println(String message)
+	{
+		debugLog(message + "\n");
+	}
+	
 	public static void setDebug(boolean flag)
 	{
 		debug = flag;

@@ -52,7 +52,7 @@ public class LatencyConstraint extends MSPolicy
 				
 				// check this edge's latency requirement against internet estimator
 				double internet_latency = internet.getInternetLink(prov.getID(), targetProvider).getLatency();
-				double  application_latency = e.getLatency();
+				double application_latency = e.getLatency();
 				
 				// evaluate the distance
 				double res = calculateDistance_ErrHandling(internet_latency, application_latency, maxLatency);

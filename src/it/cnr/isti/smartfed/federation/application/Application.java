@@ -146,6 +146,15 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 		return graph.outgoingEdgesOf(av1); 
 	}
 	
+	public ApplicationVertex getEdgeSource(ApplicationEdge edge)
+	{
+		return graph.getEdgeSource(edge);
+	}
+	
+	public ApplicationVertex getEdgeTarget(ApplicationEdge edge)
+	{
+		return graph.getEdgeTarget(edge);
+	}
 	
 	/**
 	 * Returns all the ApplicationEdges of the application.
@@ -204,6 +213,17 @@ public class Application // extends Multigraph<ApplicationVertex, ApplicationEdg
 	public ApplicationVertex getVertexForCloudlet(Cloudlet cloudlet)
 	{
 		return cloudletToVertex.get(cloudlet);
+	}
+	
+	public Cloudlet getCloudletFromVertex(ApplicationVertex av)
+	{
+		for (Cloudlet c: cloudletToVertex.keySet())
+		{
+			if (cloudletToVertex.get(c).equals(av))
+				return c;
+		}
+		
+		return null;
 	}
 
 	/**

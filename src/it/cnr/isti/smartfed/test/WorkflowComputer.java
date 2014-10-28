@@ -130,15 +130,17 @@ public class WorkflowComputer
 	
 	private static double edgeTime(ApplicationEdge edge, WorkflowApplication workflow, Task t, List<FederationDatacenter> dcs, InternetEstimator internet)
 	{
-		
-		ApplicationVertex av;
-		t.getChildList();
-		double latency = edge.getLatency(); // TODO from InternetEstimator
+		ApplicationVertex target_vertex = workflow.getEdgeTarget(edge);
+		Task target_task = (Task) workflow.getCloudletFromVertex(target_vertex);
 		
 		FederationDatacenter dc_source = Federation.findDatacenter(dcs, t.getResourceId());
-		FederationDatacenter dc_target = null;
-		// double latency = internet.getInternetLink(dc_source, dc_target).getLatency();
-			
+		FederationDatacenter dc_target = Federation.findDatacenter(dcs, target_task.getResourceId());
+		double latency = 0;
+		if (dc_source.getId() != dc_target.getId())
+		{
+			latency = internet.getInternetLink(dc_source, dc_target).getLatency();
+		}
+		
 		double transfer_time = (edge.getMessageLength() / 1024) / 40;
 		
 		return latency + transfer_time;

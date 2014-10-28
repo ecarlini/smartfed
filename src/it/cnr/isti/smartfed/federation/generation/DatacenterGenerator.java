@@ -30,7 +30,6 @@ import it.cnr.isti.smartfed.federation.resources.HostProfile;
 import it.cnr.isti.smartfed.federation.resources.HostProfile.HostParams;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
@@ -39,8 +38,6 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class DatacenterGenerator extends AbstractGenerator
 {

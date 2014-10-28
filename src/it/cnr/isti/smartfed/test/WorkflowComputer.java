@@ -24,8 +24,8 @@ public class WorkflowComputer
 		
 		while (next_task != null)
 		{
-			System.out.println("Executing "+next_task.getCloudletId()+" depth: "+next_task.getDepth());			
-			System.out.println("Number of children: "+next_task.getChildList().size());
+			//System.out.println("Executing "+next_task.getCloudletId()+" depth: "+next_task.getDepth());			
+			//System.out.println("Number of children: "+next_task.getChildList().size());
 			
 			// service time of the node
 			long filesize = next_task.getCloudletLength();
@@ -43,7 +43,6 @@ public class WorkflowComputer
 			Set<ApplicationEdge> outedges = workflow.outgoingEdgesOf(av);
 			
 			ApplicationEdge edge = outedges.iterator().hasNext() ? outedges.iterator().next() : null;
-			System.out.println("Numero di edge: "+outedges.size());
 			
 			double latency = 0;
 			double transfer_time = 0;

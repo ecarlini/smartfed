@@ -3,6 +3,7 @@ package it.cnr.isti.smartfed.test;
 import it.cnr.isti.smartfed.federation.Allocation;
 import it.cnr.isti.smartfed.federation.CostComputer;
 import it.cnr.isti.smartfed.federation.Federation;
+import it.cnr.isti.smartfed.federation.FederationLog;
 import it.cnr.isti.smartfed.federation.FederationQueue;
 import it.cnr.isti.smartfed.federation.FederationQueueProfile;
 import it.cnr.isti.smartfed.federation.FederationQueueProvider;
@@ -159,25 +160,29 @@ public class ExperimentDistance extends Experiment
 				budget += av.getBudget();
 
 			double total = CostComputer.actualCost(a);
-			System.out.println("TOTAL --------> "+total);
+			FederationLog.println("TOTAL --------> "+total);
 
 			if (baseline.cost == 0) throw new IOException("Error!!!");
 
 			double dop = (total - baseline.cost) / baseline.cost;
 			TestResult.getCostDistance().addValue(dop);
-			System.out.println("MYDISTANCE --------> " + dop);
-			System.out.println("BASE --------> " + baseline.cost);
+			FederationLog.println("MYDISTANCE --------> " + dop);
+			FederationLog.println("BASE --------> " + baseline.cost);
 
 			double totalNet = CostComputer.actualNetCost(a);
 			TestResult.getNetCost().addValue(totalNet);
 			// System.out.println("NETCOST --------> " + totalNet);
 
-			double completion = WorkflowComputer.getPipeCompletionTime((WorkflowApplication) applications.get(0), datacenters);
+			if (applications.get(0) instanceof WorkflowApplication){
+				double completion = WorkflowComputer.getPipeCompletionTime((WorkflowApplication) applications.get(0), datacenters);
+				TestResult.getCompletionDistance().addValue((completion - baseline.completion) / baseline.completion);
+				System.out.println("COMPLETION -----------> " + (completion - baseline.completion) / baseline.completion);
+			}
 
 			TestResult.getCost().addValue(total);
 			TestResult.getBerger().addValue(Math.log(total / budget));
 			TestResult.getLockDegree().addValue(usedDc);
-			TestResult.getCompletionDistance().addValue((completion- baseline.completion) / baseline.completion);
+			System.out.println("TIME -----------> " + allocator.getRealDuration());
 			TestResult.getMappingTime().addValue(allocator.getRealDuration());
 			TestResult.getTimeDifference().addValue(allocator.getRealDuration() - baseline.time);
 			

@@ -72,7 +72,7 @@ public class ExtBrokageWorkflow extends AbstractBrokageScalability {
 		str += String.format(Locale.ENGLISH, "%.2f", timeSTD) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", timeDiff) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", timeDiffStd) + "\t"; 
-		str += String.format(Locale.ENGLISH, "%.2f", completionDiff) + "\t"; 
+		str += String.format(Locale.ENGLISH, "%.5f", completionDiff) + "\t"; 
 		TestResult.reset();
 		return str;
 	}

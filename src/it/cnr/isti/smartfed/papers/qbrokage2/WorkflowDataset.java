@@ -14,8 +14,8 @@ import it.cnr.isti.smartfed.test.InterfaceDataSet;
 
 public class WorkflowDataset implements InterfaceDataSet
 {
-	protected long seed = 48;
-	protected GenerationType gentype = GenerationType.NON_UNIFORM;
+	protected long seed = 77;
+	protected GenerationType gentype = GenerationType.UNIFORM;
 	
 	private String filename;
 	private int numOfDatacenters;
@@ -24,6 +24,11 @@ public class WorkflowDataset implements InterfaceDataSet
 	{
 		this.filename = filename;
 		this.numOfDatacenters = numOfDatacenters;
+	}
+	
+	public void setSeed(long seed)
+	{
+		this.seed = seed;
 	}
 	
 	@Override

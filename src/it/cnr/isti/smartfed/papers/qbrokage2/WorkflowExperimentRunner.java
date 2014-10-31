@@ -1,12 +1,11 @@
 package it.cnr.isti.smartfed.papers.qbrokage2;
 
-import java.util.Locale;
-
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
-import it.cnr.isti.smartfed.federation.mapping.GreedyAllocator;
 import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
 import it.cnr.isti.smartfed.test.Experiment;
 import it.cnr.isti.smartfed.test.TestResult;
+
+import java.util.Locale;
 
 public class WorkflowExperimentRunner 
 {
@@ -16,8 +15,8 @@ public class WorkflowExperimentRunner
 	{
 		sb.append("\t\t").append("b Tc\t").append("b cost\t").append("net tc\t").append("net cost").append("\n");
 		
-		String[] files = new String[]{"Epigenomics_24"};
-		//String[] files = new String[]{"Montage_25", "Montage_100"};
+		// String[] files = new String[]{"Epigenomics_24"};
+		String[] files = new String[]{"Montage_25", "Montage_50", "Montage_100"};// , "Montage_1000"};
 		for (String file: files)
 			runWorkflow(file);
 		
@@ -33,8 +32,11 @@ public class WorkflowExperimentRunner
 		GeneticAllocator allocator = new GeneticAllocator();
 		allocator.setPolicyType(PolicyType.DEFAULT_COST);
 		
-		for (int i=0; i<1; i++)
+		
+		for (int i=0; i<10; i++)
 		{
+			allocator.setRandomSeed(i);
+			dataset.setSeed(i*7);
 			Experiment experiment = new Experiment(allocator, dataset);		
 			experiment.run();
 		}
@@ -46,12 +48,14 @@ public class WorkflowExperimentRunner
 		// *** Computing the networked ***
 		TestResult.reset();
 		
-		
 		allocator = new GeneticAllocator();
+		allocator.resetConstraints();
 		allocator.setPolicyType(PolicyType.GLOBAL_COST_BW);
 		
-		for (int i=0; i<1; i++)
+		for (int i=0; i<10; i++)
 		{
+			allocator.setRandomSeed(i);
+			dataset.setSeed(i*7);
 			Experiment experiment = new Experiment(allocator, dataset);		
 			experiment.run();
 		}

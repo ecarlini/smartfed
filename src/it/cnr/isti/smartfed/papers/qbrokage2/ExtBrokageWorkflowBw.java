@@ -1,12 +1,12 @@
-package it.cnr.isti.smartfed.papers.qbrokage;
+package it.cnr.isti.smartfed.papers.qbrokage2;
 
 import it.cnr.isti.smartfed.federation.FederationLog;
+import it.cnr.isti.smartfed.federation.application.WorkflowApplication;
 import it.cnr.isti.smartfed.federation.generation.GenerationType;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
 import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
 import it.cnr.isti.smartfed.test.TestResult;
-import it.cnr.isti.smartfed.test.WorkflowApplication;
 
 import java.io.File;
 import java.io.IOException;

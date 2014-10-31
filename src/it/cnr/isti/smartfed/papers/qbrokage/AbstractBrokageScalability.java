@@ -16,7 +16,9 @@ import it.cnr.isti.smartfed.federation.FederationQueue;
 import it.cnr.isti.smartfed.federation.FederationQueueProfile;
 import it.cnr.isti.smartfed.federation.FederationQueueProvider;
 import it.cnr.isti.smartfed.federation.MonitoringHub;
+import it.cnr.isti.smartfed.federation.WorkflowComputer;
 import it.cnr.isti.smartfed.federation.application.Application;
+import it.cnr.isti.smartfed.federation.application.WorkflowApplication;
 import it.cnr.isti.smartfed.federation.generation.GenerationType;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
@@ -27,18 +29,16 @@ import it.cnr.isti.smartfed.networking.InternetEstimator;
 import it.cnr.isti.smartfed.test.ExperimentDistance;
 import it.cnr.isti.smartfed.test.InterfaceDataSet;
 import it.cnr.isti.smartfed.test.PreciseDataset;
-import it.cnr.isti.smartfed.test.WorkflowApplication;
-import it.cnr.isti.smartfed.test.WorkflowComputer;
 
-abstract class AbstractBrokageScalability {
+public abstract class AbstractBrokageScalability {
 
 	public final int[] numCloudlets = {12};
-	public int[] numDatacenters = {5, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
+	public int[] numDatacenters = {50, 100, 150, 200, 250, 300, 350, 400, 450, 500}; // {5, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500};
 	public int repetitions = 20;
-	GenerationType gentype = null;
-	String file_header = "";
+	public GenerationType gentype = null;
+	public String file_header = "";
 	
-	static int counter = 0;
+	public static int counter = 0;
 	
 	public AbstractBrokageScalability(GenerationType t){
 		gentype = t;
@@ -109,7 +109,8 @@ abstract class AbstractBrokageScalability {
 
 		long seed = 0;
 		int i = 0;
-		while (i < repetitions){
+		while (i < repetitions)
+		{
 			double optimum = 0;
 			double baseTime = 0;
 			double completion = 0;
@@ -126,7 +127,10 @@ abstract class AbstractBrokageScalability {
 				}
 				seed = j++;
 			}
-			if (optimum == 0) throw new IOException();
+			
+			if (optimum == 0) 
+				throw new IOException("Optimum is zero!");
+			
 			ExperimentDistance.Baseline b = e.new Baseline(optimum, baseTime, completion);
 			e.setDataset(dataset);
 			e.setBaseline(b);

@@ -9,8 +9,10 @@ import it.cnr.isti.smartfed.federation.FederationQueueProfile;
 import it.cnr.isti.smartfed.federation.FederationQueueProvider;
 import it.cnr.isti.smartfed.federation.MonitoringHub;
 import it.cnr.isti.smartfed.federation.UtilityPrint;
+import it.cnr.isti.smartfed.federation.WorkflowComputer;
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
+import it.cnr.isti.smartfed.federation.application.WorkflowApplication;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.MappingSolution;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
@@ -174,8 +176,10 @@ public class ExperimentDistance extends Experiment
 
 			if (applications.get(0) instanceof WorkflowApplication){
 				double completion = WorkflowComputer.getFlowCompletionTime((WorkflowApplication) applications.get(0), datacenters, internetEstimator);
-				TestResult.getCompletionDistance().addValue((completion - baseline.completion) / baseline.completion);
-				// System.out.println("COMPLETION -----------> " + (completion - baseline.completion) / baseline.completion);
+				// TestResult.getCompletion().addValue((completion - baseline.completion) / baseline.completion);
+				TestResult.getCompletion().addValue(completion);
+				TestResult.getCompletionDifference().addValue(completion - baseline.completion);
+				
 				System.out.println("COMPLETION -----------> " + completion);
 			}
 

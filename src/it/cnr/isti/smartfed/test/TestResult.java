@@ -34,8 +34,8 @@ public class TestResult
 	private static SummaryStatistics netCost;
 	private static SummaryStatistics costDistance;
 	private static SummaryStatistics timeDifference;
-	private static SummaryStatistics completionDistance;
-	
+	private static SummaryStatistics completion;
+	private static SummaryStatistics completionDifference;
 	
 	static
 	{
@@ -54,15 +54,22 @@ public class TestResult
 		netCost = new SummaryStatistics();
 		costDistance = new SummaryStatistics();
 		timeDifference = new SummaryStatistics();
-		completionDistance = new SummaryStatistics();
+		
+		// workflow completion
+		completion = new SummaryStatistics();
+		completionDifference = new SummaryStatistics();
 	}
 		
 	public static SummaryStatistics getNetCost() {
 		return netCost;
 	}
 	
-	public static SummaryStatistics getCompletionDistance() {
-		return completionDistance;
+	public static SummaryStatistics getCompletion() {
+		return completion;
+	}
+	
+	public static SummaryStatistics getCompletionDifference() {
+		return completionDifference;
 	}
 	
 	public static SummaryStatistics getCostDistance() {

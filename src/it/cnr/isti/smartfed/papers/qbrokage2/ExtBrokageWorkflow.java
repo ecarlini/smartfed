@@ -1,7 +1,8 @@
-package it.cnr.isti.smartfed.papers.qbrokage;
+package it.cnr.isti.smartfed.papers.qbrokage2;
 
 import it.cnr.isti.smartfed.federation.FederationLog;
 import it.cnr.isti.smartfed.federation.application.Application;
+import it.cnr.isti.smartfed.federation.application.WorkflowApplication;
 import it.cnr.isti.smartfed.federation.generation.DatacenterGenerator;
 import it.cnr.isti.smartfed.federation.generation.GenerationType;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
@@ -9,8 +10,9 @@ import it.cnr.isti.smartfed.federation.mapping.GeneticAllocator;
 import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.metascheduler.MSPolicyFactory.PolicyType;
+import it.cnr.isti.smartfed.papers.qbrokage.AbstractBrokageScalability;
+import it.cnr.isti.smartfed.papers.qbrokage.PaperDataset;
 import it.cnr.isti.smartfed.test.TestResult;
-import it.cnr.isti.smartfed.test.WorkflowApplication;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +63,8 @@ public class ExtBrokageWorkflow extends AbstractBrokageScalability {
 		double lockin = TestResult.getLockDegree().getMean();
 		double timeDiff = TestResult.getTimeDifference().getMean();
 		double timeDiffStd = TestResult.getTimeDifference().getStandardDeviation();
-		double completionDiff = TestResult.getCompletionDistance().getMean();
+		double completion = TestResult.getCompletion().getMean();
+		double completionDiff = TestResult.getCompletionDifference().getMean();
 		if (result > 0)
 			str += String.format(Locale.ENGLISH, "%.5f", result) + "\t";
 		else 
@@ -72,6 +75,7 @@ public class ExtBrokageWorkflow extends AbstractBrokageScalability {
 		str += String.format(Locale.ENGLISH, "%.2f", timeSTD) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", timeDiff) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.2f", timeDiffStd) + "\t"; 
+		str += String.format(Locale.ENGLISH, "%.5f", completion) + "\t"; 
 		str += String.format(Locale.ENGLISH, "%.5f", completionDiff) + "\t"; 
 		TestResult.reset();
 		return str;
@@ -99,7 +103,8 @@ class ExtBrokageWorkflowDataset extends PaperDataset {
 	public List<Application> createApplications(int userId) 
 	{
 		List<Application> list = new ArrayList<>(1);
-		list.add(new WorkflowApplication(userId, true));
+		// list.add(new WorkflowApplication(userId, true));
+		list.add(new WorkflowApplication(userId, false));
 		return list;
 	}
 }

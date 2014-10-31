@@ -1,4 +1,4 @@
-package it.cnr.isti.smartfed.papers.qbrokage;
+package it.cnr.isti.smartfed.papers.qbrokage2;
 
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
@@ -9,6 +9,7 @@ import it.cnr.isti.smartfed.federation.generation.GenerationType;
 import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.federation.resources.ResourceCounter;
+import it.cnr.isti.smartfed.papers.qbrokage.PaperDataset;
 
 import java.util.ArrayList;
 import java.util.Iterator;

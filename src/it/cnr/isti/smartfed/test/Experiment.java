@@ -8,8 +8,10 @@ import it.cnr.isti.smartfed.federation.FederationQueueProfile;
 import it.cnr.isti.smartfed.federation.FederationQueueProvider;
 import it.cnr.isti.smartfed.federation.MonitoringHub;
 import it.cnr.isti.smartfed.federation.UtilityPrint;
+import it.cnr.isti.smartfed.federation.WorkflowComputer;
 import it.cnr.isti.smartfed.federation.application.Application;
 import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
+import it.cnr.isti.smartfed.federation.application.WorkflowApplication;
 import it.cnr.isti.smartfed.federation.mapping.AbstractAllocator;
 import it.cnr.isti.smartfed.federation.mapping.MappingSolution;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
@@ -119,7 +121,7 @@ public class Experiment
 		
 		// calculates the vendor lock-in metric on the mapping plan
 		MappingSolution sol = allocator.getSolution();
-		//System.out.println(sol);
+		System.out.println(sol);
 		Set<FederationDatacenter> myset = new HashSet<FederationDatacenter>();
 		for (FederationDatacenter fd: sol.getMapping().values()){
 			myset.add(fd);
@@ -145,6 +147,13 @@ public class Experiment
 			}
 			else
 				System.out.println("Not completed");
+		}
+		
+		if (applications.get(0) instanceof WorkflowApplication)
+		{
+			double completion = WorkflowComputer.getFlowCompletionTime((WorkflowApplication) applications.get(0), datacenters, internetEstimator);
+			TestResult.getCompletion().addValue(completion);
+			System.out.println("COMPLETION -----------> " + completion);
 		}
 		
 	}

@@ -1,8 +1,5 @@
-package it.cnr.isti.smartfed.test;
+package it.cnr.isti.smartfed.federation.application;
 
-import it.cnr.isti.smartfed.federation.application.Application;
-import it.cnr.isti.smartfed.federation.application.ApplicationEdge;
-import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.resources.Country;
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
 
@@ -32,10 +29,11 @@ import org.workflowsim.utils.ReplicaCatalog;
 
 public class WorkflowApplication extends Application
 {
-	public static String fileName = "Montage_25";
+	public static String fileName = "Epigenomics_46";
 	public String daxPath = "resources/" + fileName + ".xml";
 
-	void setWorkflowSimConfig(){
+	void setWorkflowSimConfig()
+	{
 		int vmNum = 20;//number of vms;
 		Parameters.SchedulingAlgorithm sch_method = Parameters.SchedulingAlgorithm.MINMIN;
         Parameters.PlanningAlgorithm pln_method = Parameters.PlanningAlgorithm.INVALID;
@@ -88,6 +86,34 @@ public class WorkflowApplication extends Application
 		
 		
 	}
+	
+	public WorkflowApplication(List<Task> tasks, int userId, boolean clustering)
+	{
+		if (clustering){
+			List<Job> jobs = processClustering(tasks);
+			build(userId, jobs);
+		}
+		else
+			build(userId, tasks);
+	}
+	
+	public WorkflowApplication(String filename, int userId, boolean clustering)
+	{	
+		daxPath = "resources/" + filename + ".xml";
+		setWorkflowSimConfig();
+		
+		WorkflowParser parser = new WorkflowParser(userId, null, null, daxPath);
+		parser.parse();
+		List<Task> tasks = parser.getTaskList();
+		
+		if (clustering){
+			List<Job> jobs = processClustering(tasks);
+			build(userId, jobs);
+		}
+		else
+			build(userId, tasks);
+	}
+	
 	
 	public List<Task> getTasksWithDepth(int depth)
 	{
@@ -174,7 +200,7 @@ public class WorkflowApplication extends Application
         
 		WorkflowApplication g;
 		try {
-			boolean taskClustering = true;
+			boolean taskClustering = false;
 			g = new WorkflowApplication(0, taskClustering);
 			String add = taskClustering == true ? "clust" : "";
 			g.export("plots/" + fileName + add + ".dot");

@@ -69,7 +69,7 @@ public class InternetEstimator
 				}
 				else // regular edge
 				{
-					InternetLink il = new InternetLink(1024*1024*10, 100, SecuritySupport.ADVANCED);
+					InternetLink il = new InternetLink(1024*1024*10, 0.1, SecuritySupport.ADVANCED);
 					graph.addEdge(outer, inner, il);
 				}
 			}
@@ -81,9 +81,16 @@ public class InternetEstimator
 	 * @param a
 	 * @param b
 	 * @return
+	 * @throws Exception 
 	 */
-	public InternetLink getInternetLink(FederationDatacenter a, FederationDatacenter b)
+	public InternetLink getInternetLink(FederationDatacenter a, FederationDatacenter b) throws Exception
 	{
+		if ((a == null) || (graph.containsVertex(a) == false))
+			throw new Exception("Vertex not found or null: "+a);
+		
+		if ((b == null) || (graph.containsVertex(b) == false))
+			throw new Exception("Vertex not found or null: "+b);
+		
 		return graph.getEdge(a, b);
 	}
 	
@@ -93,8 +100,9 @@ public class InternetEstimator
 	 * @param id_a
 	 * @param id_b
 	 * @return
+	 * @throws Exception 
 	 */
-	public InternetLink getInternetLink(Integer id_a, Integer id_b)
+	public InternetLink getInternetLink(Integer id_a, Integer id_b) throws Exception
 	{
 		FederationDatacenter a = (FederationDatacenter) CloudSim.getEntity(id_a);
 		FederationDatacenter b = (FederationDatacenter) CloudSim.getEntity(id_b);

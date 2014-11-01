@@ -36,7 +36,7 @@ public class WorkflowDataset implements InterfaceDataSet
 	{
 		DatacenterGenerator dg = new DatacenterGenerator(this.seed * 15);
 		dg.setType(gentype);
-		dg.setCountries(new Country[]{Country.Italy});
+		dg.setCountries(new Country[]{Country.Italy, Country.France});
 		int numHost = 100  * numOfDatacenters; // it will assign more or less 100 host to each datacenter
 		List<FederationDatacenter> dcs = dg.getDatacenters(numOfDatacenters, numHost);
 		return dcs;

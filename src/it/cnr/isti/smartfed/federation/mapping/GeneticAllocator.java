@@ -128,7 +128,7 @@ public class GeneticAllocator extends AbstractAllocator {
 		*/
 
 		MappingSolution map = new MappingSolution(application);
-		map.setAllocatorName(this.getClass().getSimpleName());
+		map.setAllocatorName(this.getClass().getSimpleName() + " "+ this.type);
 
 		//the map is HashMap<vmId,dc2Id>
 		HashMap<Integer,Integer> hm = s.getAllocationMap();

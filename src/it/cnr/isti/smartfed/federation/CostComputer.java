@@ -152,6 +152,7 @@ public class CostComputer
 		double cost = 0;
 		if (e.getSourceVmId() == sVmId){
 			if (sProvId != tProvId){
+				//System.out.println("Data: "+e.getMBperHour()+ "Price: "+price);
 				cost += e.getMBperHour() * price;
 			}
 		}
@@ -226,7 +227,7 @@ public class CostComputer
 	 */
 	public static double getCostPerBw(FederationDatacenter fd){
 		double costPerBw = fd.getMSCharacteristics().getCostPerBw();
-		return costPerBw / 1024;
+		return costPerBw / 1024d;
 	}
 	
 	/**

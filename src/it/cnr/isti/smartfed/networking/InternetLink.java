@@ -29,11 +29,11 @@ package it.cnr.isti.smartfed.networking;
 public class InternetLink
 {
 	private long bandwidth; // bps
-	private int latency; //ms
+	private double latency; // seconds
 	private SecuritySupport security;
 	
 	
-	public InternetLink(long bandwidth, int latency, SecuritySupport security)
+	public InternetLink(long bandwidth, double latency, SecuritySupport security)
 	{
 		this.bandwidth = bandwidth;
 		this.latency = latency;
@@ -51,7 +51,7 @@ public class InternetLink
 		this.bandwidth = bandwidth;
 	}
 
-	public int getLatency() {
+	public double getLatency() {
 		return latency;
 	}
 

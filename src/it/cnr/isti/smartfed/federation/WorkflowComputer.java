@@ -5,6 +5,7 @@ import it.cnr.isti.smartfed.federation.application.ApplicationVertex;
 import it.cnr.isti.smartfed.federation.application.WorkflowApplication;
 import it.cnr.isti.smartfed.federation.resources.FederationDatacenter;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
+import it.cnr.isti.smartfed.networking.InternetLink;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,12 +45,22 @@ public class WorkflowComputer
 				
 				// set the time for the outer edges
 				Set<ApplicationEdge> out_edges = workflow.outgoingEdgesOf(av);
-				for (ApplicationEdge ae: out_edges)
+				
+				if (out_edges.size() <= 0) // last node
 				{
-					double edge_time = edgeTime(ae, workflow, t, dcs, internet);
-					total_time = offset_time + task_time + edge_time;
-					edgeTimeMap.put(ae, total_time);
-				}	
+					total_time = offset_time + task_time;
+				}
+				else
+				{
+					for (ApplicationEdge ae: out_edges)
+					{
+						double edge_time = edgeTime(ae, workflow, t, dcs, internet);
+						total_time = offset_time + task_time + edge_time;
+						edgeTimeMap.put(ae, total_time);
+					}
+				}
+				
+				// System.out.println("Task "+t.getCloudletId()+ " offset: "+offset_time+ " task time: "+task_time+ " total_time: "+total_time);
 			}
 			
 			depth ++;
@@ -59,7 +70,7 @@ public class WorkflowComputer
 		System.out.println("Total time: "+total_time);
 		return total_time;
 	}
-
+	
 	private static double taskTime(Task t, WorkflowApplication workflow)
 	{
 		long filesize = t.getCloudletLength();	
@@ -79,12 +90,39 @@ public class WorkflowComputer
 		double latency = 0;
 		if (dc_source.getId() != dc_target.getId())
 		{
-			// latency = internet.getInternetLink(dc_source, dc_target).getLatency();
-			latency = 100;
+			InternetLink link = null;
+			try { link = internet.getInternetLink(dc_source, dc_target);} 
+			catch (Exception e) {e.printStackTrace();}
+					
+			latency = link.getLatency();
 		}
 		
 		double transfer_time = (edge.getMessageLength() * 1024) / dc_source.getMSCharacteristics().getHighestBw();
 		
+		//System.out.println("--- Length: "+edge.getMessageLength() * 1024);
+		//System.out.println("--- Band:   "+dc_source.getMSCharacteristics().getHighestBw());
+		
+		
 		return latency + transfer_time;
+	}
+
+	public static double getFlowCostPerHour(Allocation allocation, double completionTime)
+	{
+		double total = CostComputer.actualCost(allocation);
+		double net = CostComputer.actualNetCost(allocation);
+		
+		// cost of only resources per hour
+		double resourcesPerHour = total - net;
+		
+		// times we execute a workflow per hour
+		double workflowPerHour = 3600d / completionTime;
+		
+		// cost of network for one run of the workflow
+		double netOneRun = net / 3600;
+		
+		// cost of only network per hour
+		double netPerHour = netOneRun * workflowPerHour;
+		
+		return resourcesPerHour + netPerHour;
 	}
 }

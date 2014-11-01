@@ -139,21 +139,31 @@ public class Experiment
 				for (ApplicationVertex av : a.getApplication().vertexSet())
 					budget += av.getBudget();
 			
-				double total = CostComputer.actualCost(a);
-				System.out.println("TOTAL --------> "+total);
 
-				TestResult.getCost().addValue(total);
-				TestResult.getBerger().addValue(Math.log(total / budget));
+
+				if (applications.get(0) instanceof WorkflowApplication)
+				{			
+					double completion = WorkflowComputer.getFlowCompletionTime((WorkflowApplication) applications.get(0), datacenters, internetEstimator);
+					double cost = WorkflowComputer.getFlowCostPerHour(a, completion);
+					TestResult.getCompletion().addValue(completion);
+					TestResult.getCost().addValue(cost);
+					System.out.println("COMPLETION -----------> " + completion);
+				}
+				else
+				{
+					
+					double total = CostComputer.actualCost(a);
+					double netcost = CostComputer.actualNetCost(a);
+					System.out.println("TOTAL --------> "+total);
+					
+					TestResult.getCost().addValue(total);
+					TestResult.getNetCost().addValue(netcost);
+					TestResult.getBerger().addValue(Math.log(total / budget));
+				}
+					
 			}
 			else
 				System.out.println("Not completed");
-		}
-		
-		if (applications.get(0) instanceof WorkflowApplication)
-		{
-			double completion = WorkflowComputer.getFlowCompletionTime((WorkflowApplication) applications.get(0), datacenters, internetEstimator);
-			TestResult.getCompletion().addValue(completion);
-			System.out.println("COMPLETION -----------> " + completion);
 		}
 		
 	}

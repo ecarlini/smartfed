@@ -44,7 +44,7 @@ import org.jgap.util.ICloneable;
 public class JGAPMapping {
 
 	public static int POP_SIZE = 50;
-	public static int EVOLUTION_STEP = 20;
+	public static int EVOLUTION_STEP = 150;
 	
 	public static final int INTERNAL_SOLUTION_NUMBER = 10;
 	public static final int SOLUTION_NUMBER = 3;

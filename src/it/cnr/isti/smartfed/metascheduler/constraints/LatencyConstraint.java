@@ -7,6 +7,7 @@ import it.cnr.isti.smartfed.metascheduler.resources.MSApplicationNode;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSApplication;
 import it.cnr.isti.smartfed.metascheduler.resources.iface.IMSProvider;
 import it.cnr.isti.smartfed.networking.InternetEstimator;
+import it.cnr.isti.smartfed.networking.InternetLink;
 
 import java.util.Set;
 
@@ -51,7 +52,12 @@ public class LatencyConstraint extends MSPolicy
 				int targetProvider = (int) chromos.getGenes()[target_index].getAllele();
 				
 				// check this edge's latency requirement against internet estimator
-				double internet_latency = internet.getInternetLink(prov.getID(), targetProvider).getLatency();
+				
+				InternetLink link = null;
+				try {link = internet.getInternetLink(prov.getID(), targetProvider);} 
+				catch (Exception e1) {e1.printStackTrace();}
+				
+				double internet_latency = link.getLatency();
 				double application_latency = e.getLatency();
 				
 				// evaluate the distance

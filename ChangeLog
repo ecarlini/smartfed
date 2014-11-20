@@ -1,11 +1,3 @@
-10-04-2014 Gaetano F. Anastasi, Emanuele Carlini
-  * SmartFed 0.2 Released
-    * Added genetic scheduler to the Federation, as described in the following paper:
-    	 G. F. Anastasi, E. Carlini, M. Coppola, and P. Dazzi, “QBrokage: a Genetic Approach for QoS Cloud Brokering,” in 
-    	 Cloud Computing (CLOUD), 2014 IEEE 7th International Conference on, June 2014, p. (To Appear).
-    	 
-    * Support for Amazon-like vm instances
-
 26-09-2013 Gaetano F. Anastasi
 
   * SmartFed 0.1.1 Released

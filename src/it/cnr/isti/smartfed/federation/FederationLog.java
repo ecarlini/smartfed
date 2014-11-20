@@ -36,22 +36,16 @@ public class FederationLog extends Log
 		debug = flag;
 	}
 	
-	public static void debugLog(String message)
-	{
-		if (debug)
-			printLine("[SmartFed] "+ message);
-	}
-	
 	public static void timeLog(String message)
 	{
 		if (debug)
-			printLine("[SmartFed "+getSimTime()+"] "+ message);
+			printLine("[Fed "+getSimTime()+"] "+ message);
 	}
 	
 	public static void timeLogDebug(String message)
 	{
 		if (debug)
-			printLine("[SmartFed "+getSimTime()+"] "+ message);
+			printLine("[Fed "+getSimTime()+"] "+ message);
 	}
 	
 	private static String getSimTime()

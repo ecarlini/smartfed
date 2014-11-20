@@ -22,7 +22,6 @@ package it.cnr.isti.smartfed.federation.application;
 
 import it.cnr.isti.smartfed.federation.resources.VmFactory;
 import it.cnr.isti.smartfed.federation.resources.VmFactory.VmType;
-import it.cnr.isti.smartfed.federation.resources.VmTyped;
 import it.cnr.isti.smartfed.federation.utils.UtilityPrint;
 
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ import org.cloudbus.cloudsim.Vm;
  * This class also contains the method to get the associated VM from
  * a cloudlet, and viceversa.
  * 
- * @author carlini, anastasi
+ * @author carlini
  *
  */
 public class ApplicationVertex
@@ -83,8 +82,7 @@ public class ApplicationVertex
 		
 		for (Cloudlet c : cloudlets)
 		{
-			Vm clone = VmFactory.getVm(vmtype, userId);
-			VmTyped cloned = new VmTyped(clone, vmtype);
+			Vm cloned = VmFactory.getVm(vmtype, userId);
 			this.vms.add(cloned);
 			this.cloudletMap.put(c, cloned);
 			this.vmMap.put(cloned, c);
@@ -98,12 +96,6 @@ public class ApplicationVertex
 		construct(userId, cloudlets, vmtype);
 	}
 	
-	/**
-	 * Constructor for ApplicationVertex
-	 * @param userId
-	 * @param cloudlets
-	 * @param vmtype
-	 */
 	public ApplicationVertex(int userId, List<Cloudlet> cloudlets, VmType vmtype)
 	{
 		this("", userId, cloudlets, vmtype);
@@ -111,7 +103,6 @@ public class ApplicationVertex
 	
 	public ApplicationVertex(int userId, List<Cloudlet> cloudlets, Vm sample)
 	{
-		this.vm_type = VmType.CUSTOM;
 		this.cloudlets = cloudlets;
 		this.cloudletMap = new HashMap<Cloudlet, Vm>();
 		this.vmMap = new HashMap<Vm, Cloudlet>();
@@ -119,13 +110,13 @@ public class ApplicationVertex
 		
 		for (Cloudlet c : cloudlets)
 		{
-			Vm clone = VmFactory.cloneVMnewId(sample);
-			VmTyped cloned = new VmTyped(clone, vm_type);
+			Vm cloned = VmFactory.cloneVMnewId(sample);
 			this.vms.add(cloned);
 			this.cloudletMap.put(c, cloned);
 			this.vmMap.put(cloned, c);
 		}
 		
+		this.vm_type = VmType.CUSTOM;
 	}
 	
 	public String getCountry() {

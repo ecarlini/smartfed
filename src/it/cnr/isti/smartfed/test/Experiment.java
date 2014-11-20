@@ -31,11 +31,7 @@ public class Experiment
 	protected InterfaceDataSet dataset;
 	protected long randomSeed;
 
-	/**
-	 * If using this constructor you should set manually the random seed for the experiment.
-	 * @param allocator
-	 * @param d
-	 */
+
 	public Experiment(AbstractAllocator allocator, InterfaceDataSet d)
 	{
 		this.allocator = allocator;
@@ -144,7 +140,7 @@ public class Experiment
 				TestResult.getBerger().addValue(Math.log(total / budget));
 			}
 			else
-				System.out.println("Not completed");
+				System.out.println("PUPAZZA");
 		}
 		
 	}

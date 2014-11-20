@@ -82,7 +82,7 @@ public class VmFactory
 				new Long(160 * 1024), // DISK: 160 GB
 				"Xen", 
 				new CloudletSchedulerTimeShared());
-		VmTyped vmt = new VmTyped(vm, VmType.SMALL);
+		
 		return vm;
 	}
 	
@@ -97,7 +97,7 @@ public class VmFactory
 				new Long(410 * 1024), // 410 GB
 				"Xen", 
 				new CloudletSchedulerTimeShared());
-		VmTyped vmt = new VmTyped(vm, VmType.MEDIUM);
+		
 		return vm;
 	}
 
@@ -112,7 +112,7 @@ public class VmFactory
 				new Long(850 * 1024), // 850 GB
 				"Xen", 
 				new CloudletSchedulerTimeShared());
-		VmTyped vmt = new VmTyped(vm, VmType.LARGE);
+		
 		return vm;
 	}
 	
@@ -127,7 +127,7 @@ public class VmFactory
 				new Long(1690 * 1024), // 1690 GB
 				"Xen", 
 				new CloudletSchedulerTimeShared());
-		VmTyped vmt = new VmTyped(vm, VmType.XLARGE);
+		
 		return vm;
 	}
 
@@ -141,9 +141,8 @@ public class VmFactory
 				bandMB,
 				diskMB,
 				"Xen", 
-				new CloudletSchedulerTimeShared());	
-		VmTyped vmt = new VmTyped(vm, VmType.CUSTOM);
-		return vmt;
+				new CloudletSchedulerTimeShared());		
+		return vm;
 	}
 	
 	public static Vm cloneVMnewId(Vm vm)

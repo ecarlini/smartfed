@@ -94,7 +94,6 @@ public class CostComputer
 		return amount;
 	}
 	
-	
 	/**
 	 * Compute the cost of a single VM on the give datacenter.
 	 * @param vm
@@ -124,12 +123,6 @@ public class CostComputer
 		case CUSTOM:
 			amount = calculateCostCustomVm(datacenter, vm);
 		}
-		
-		// the provider does not have a price for this type (case of providers with mixed cost models)
-		if (Double.isNaN(amount)){
-			amount = calculateCostCustomVm(datacenter, vm);
-		}
-		
 		FederationLog.timeLogDebug("(CostComputer) total vm cost: " + amount);
 		return amount;
 	}	

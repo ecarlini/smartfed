@@ -46,10 +46,6 @@ public abstract class DataSet implements InterfaceDataSet
 
 	@Override
 	public InternetEstimator createInternetEstimator(List<FederationDatacenter> datacenters){
-		return createDefaultInternetEstimator(datacenters);
-	}
-	
-	public static InternetEstimator createDefaultInternetEstimator(List<FederationDatacenter> datacenters){
 		InternetEstimator inetEst = new InternetEstimator(datacenters.size());
 		for (FederationDatacenter top: datacenters){
 			for (FederationDatacenter bot: datacenters){

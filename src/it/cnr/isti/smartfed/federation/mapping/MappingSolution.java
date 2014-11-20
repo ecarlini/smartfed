@@ -50,11 +50,6 @@ public class MappingSolution
 	private String allocatorName = "UNKNOWN";
 	private Application application;
 	
-	/**
-	 * It constructs a MappingSolution, given an application. The solutions should be 
-	 * set with the set method. 
-	 * @param application
-	 */
 	public MappingSolution(Application application)
 	{
 		this.application = application;
